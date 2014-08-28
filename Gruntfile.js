@@ -101,7 +101,7 @@ module.exports = function (grunt) {
             out: [
                 '<%= pkg.directories.out %>'
             ],
-            docs: [
+            doc: [
                 '<%= pkg.directories.doc %>/**/*',
                 '!<%= pkg.directories.doc %>/jsdoc.json'
             ]
@@ -252,6 +252,33 @@ module.exports = function (grunt) {
             }
         });
     }());
+    // scripts exposed from package.json
+    // coverage script
+    grunt.registerTask('coverage', [
+        'clean:out',
+        'env:coverage',
+        'instrument',
+        'test',
+        'storeCoverage',
+        'makeReport',
+        'exec:coverage'
+    ]);
+    // init script
+    grunt.registerTask('init', [
+    ]);
+    // test script
+    grunt.registerTask('test', [
+        'jslint:lib',
+        'jslint:test',
+        'jslint:build',
+        'jasmine_node:test'
+    ]);
+    // document script
+    grunt.registerTask('document', [
+        'clean:doc',
+        'jsdoc:lib'
+    ]);
+    // observe scripts
     // tasks to run when files change
     grunt.registerTask('lib-queue', [
         'jslint:lib',
@@ -265,35 +292,10 @@ module.exports = function (grunt) {
     grunt.registerTask('build-queue', [
         'jslint:build'
     ]);
-    // init script
-    grunt.registerTask('init', [
-        'clean',
-        'document'
-    ]);
-    // test script
-    grunt.registerTask('test', [
-        'jslint:lib',
-        'jslint:test',
-        'jslint:build',
-        'jasmine_node:test'
-    ]);
-    // coverage script
-    grunt.registerTask('coverage', [
-        'env:coverage',
-        'instrument',
-        'test',
-        'storeCoverage',
-        'makeReport',
-        'exec:coverage'
-    ]);
-    // document script
-    grunt.registerTask('document', [
-        'jsdoc:lib'
-    ]);
-    // observe script
     grunt.registerTask('observe', [
         'init',
         'test',
+        'document',
         'watch'
     ]);
     // observe script is the default task
