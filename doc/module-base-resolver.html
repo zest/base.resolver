@@ -301,7 +301,7 @@ application built on top of them.</div>
         
             
 <dt>
-    <h4 class="name" id="resolve"><span class="type-signature">&lt;static> </span>resolve<span class="signature">(componentName)</span><span class="type-signature"> &rarr; {base-specifications/base/ComponentProvider}</span></h4>
+    <h4 class="name" id="resolve"><span class="type-signature">&lt;static> </span>resolve<span class="signature">(componentName)</span><span class="type-signature"> &rarr; {q}</span></h4>
     
     
 </dt>
@@ -416,26 +416,15 @@ throws an exception. A component is instantiated lazily and only once.
 
     
     
-    
-    <h5>Throws:</h5>
-    
-            
 
-    <div class="param-desc">
-    
-        if no component under the name is registered.
-    
-    </div>
-
-
-        
     
     
     <h5>Returns:</h5>
     
             
 <div class="param-desc">
-    the resolved component object
+    promise - a promise that resolves with the resolved component object if the component is registered
+ and gets rejected if no component under the name is registered.
 </div>
 
 
@@ -446,7 +435,7 @@ throws an exception. A component is instantiated lazily and only once.
 	</dt>
 	<dd>
 		
-<span class="param-type">base-specifications/base/ComponentProvider</span>
+<span class="param-type">q</span>
 
 
 	</dd>
@@ -461,7 +450,7 @@ throws an exception. A component is instantiated lazily and only once.
         
             
 <dt>
-    <h4 class="name" id="run"><span class="type-signature">&lt;static> </span>run<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="run"><span class="type-signature">&lt;static> </span>run<span class="signature">()</span><span class="type-signature"> &rarr; {q}</span></h4>
     
     
 </dt>
@@ -536,6 +525,29 @@ throws an exception. A component is instantiated lazily and only once.
     
     
     
+    <h5>Returns:</h5>
+
+
+<div class="param-desc">
+    promise - a promise that resolves when (and if) the runnable components return.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+
+<span class="param-type">q</span>
+
+
+	</dd>
+</dl>
+
+
+
     
     
 </dd>

@@ -33,7 +33,8 @@
     ],
     "dependencies": {
         "base.logger": "soul-infra/base.logger",
-        "base.specifications": "soul-infra/base.specifications"
+        "base.specifications": "soul-infra/base.specifications",
+        "q": "*"
     },
     "devDependencies": {
         "grunt": "*",
