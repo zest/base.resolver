@@ -1,0 +1,56 @@
+{
+    "name": "base.resolver",
+    "description": "The base.resolver module provides the resolver api for running of SOUL infrastructure components",
+    "version": "0.0.1",
+    "main": "./lib/index",
+    "private": true,
+    "scripts": {
+        "coverage": "grunt coverage",
+        "clean": "grunt clean",
+        "init": "grunt init",
+        "test": "grunt test",
+        "document": "grunt document",
+        "observe": "grunt observe"
+    },
+    "maintainers": [
+        {
+            "name": "Pranav Jha",
+            "email": "jha.pranav.s@gmail.com",
+            "web": "https://github.com/soul-infra"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "unlicense",
+            "url": "http://unlicense.org"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/soul-infra/base.resolver.git"
+        }
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+        "grunt": "*",
+        "grunt-contrib-clean": "*",
+        "grunt-contrib-watch": "*",
+        "grunt-jslint": "*",
+        "ink-docstrap": "*",
+        "grunt-jsdoc": "*",
+        "grunt-jasmine-node": "*",
+        "grunt-istanbul": "*",
+        "grunt-env": "*",
+        "merge": "*",
+        "grunt-exec": "*",
+        "coveralls": "*"
+    },
+    "directories": {
+        "lib": "lib",
+        "doc": "doc",
+        "test": "test",
+        "out": ".out"
+    }
+}
