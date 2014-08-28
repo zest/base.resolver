@@ -20,32 +20,32 @@
 		<div class="navbar-inner">
 			<a class="brand" href="index.html">soul-infra / base.script</a>
 			<ul class="nav">
-
+				
 				<li class="dropdown">
 					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
 						class="caret"></b></a>
 
 					<ul class="dropdown-menu ">
-
+						
 						<li>
 							<a href="module-base-resolver.html">base-resolver</a>
 						</li>
-
+						
 
 					</ul>
 				</li>
-
+				
 			</ul>
 		</div>
 	</div>
 
 	<div class="row-fluid">
 
-
+		
 		<div class="span8">
-
+			
 				<div id="main">
-
+					
 
 
 	<h1 class="page-title">Module: base-resolver</h1>
@@ -55,42 +55,42 @@
     <h2>
     base-resolver
     </h2>
-
+    
 </header>
 
 <article>
     <div class="container-overview">
+    
 
-
-
-
+    
+        
             <div class="description">The resolver module resolves the component dependencies and is responsible for starting any
 application built on top of them.</div>
+        
 
-
-
+        
 <dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source">
 		<ul class="dummy">
@@ -99,174 +99,174 @@ application built on top of them.</div>
 			</li>
 		</ul>
 	</dd>
+	
 
+	
 
+	
 
-
-
-
-
+	
 </dl>
 
 
-
-
+        
+    
     </div>
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
-
-
-
-
-
+    
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
-
+            
 <dt>
     <h4 class="name" id="register"><span class="type-signature">&lt;static> </span>register<span class="signature">(componentName, componentClass, setting)</span><span class="type-signature"></span></h4>
-
-
+    
+    
 </dt>
 <dd>
-
-
+    
+    
     <div class="description">
         Registers a Component Class.
     </div>
+    
 
-
-
-
-
-
-
+    
+    
+    
+    
+    
         <h5>Parameters:</h5>
-
+        
 
 <table class="params table table-striped">
     <thead>
 	<tr>
-
+		
 		<th>Name</th>
-
+		
 
 		<th>Type</th>
 
+		
 
-
-
+		
 
 		<th class="last">Description</th>
 	</tr>
 	</thead>
 
 	<tbody>
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>componentName</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">String</span>
 
 
-
+            
             </td>
 
+            
 
-
-
+            
 
             <td class="description last">the name of the component</td>
         </tr>
 
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>componentClass</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">ComponentProvider</span>
 
 
-
+            
             </td>
 
+            
 
-
-
+            
 
             <td class="description last">the Class of the component</td>
         </tr>
 
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>setting</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">Object</span>
 
 
-
+            
             </td>
 
+            
 
-
-
+            
 
             <td class="description last">the Class of the component</td>
         </tr>
 
-
+	
 	</tbody>
 </table>
 
-
-
-
+    
+    
+    
 <dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source">
 		<ul class="dummy">
@@ -275,123 +275,123 @@ application built on top of them.</div>
 			</li>
 		</ul>
 	</dd>
+	
 
+	
 
+	
 
-
-
-
-
+	
 </dl>
 
+    
+    
 
+    
 
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
 </dd>
 
-
-
+        
+            
 <dt>
     <h4 class="name" id="resolve"><span class="type-signature">&lt;static> </span>resolve<span class="signature">(componentName)</span><span class="type-signature"> &rarr; {base-specifications/base/ComponentProvider}</span></h4>
-
-
+    
+    
 </dt>
 <dd>
-
-
+    
+    
     <div class="description">
         Resolves a component by its name. Returns the instantiated component if a component is registered. Otherwise,
 throws an exception. A component is instantiated lazily and only once.
     </div>
+    
 
-
-
-
-
-
-
+    
+    
+    
+    
+    
         <h5>Parameters:</h5>
-
+        
 
 <table class="params table table-striped">
     <thead>
 	<tr>
-
+		
 		<th>Name</th>
-
+		
 
 		<th>Type</th>
 
+		
 
-
-
+		
 
 		<th class="last">Description</th>
 	</tr>
 	</thead>
 
 	<tbody>
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>componentName</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">String</span>
 
 
-
+            
             </td>
 
+            
 
-
-
+            
 
             <td class="description last">the name of the component to resolve</td>
         </tr>
 
-
+	
 	</tbody>
 </table>
 
-
-
-
+    
+    
+    
 <dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source">
 		<ul class="dummy">
@@ -400,40 +400,40 @@ throws an exception. A component is instantiated lazily and only once.
 			</li>
 		</ul>
 	</dd>
+	
 
+	
 
+	
 
-
-
-
-
+	
 </dl>
 
+    
+    
 
+    
 
-
-
-
-
-
-
+    
+    
+    
     <h5>Throws:</h5>
-
-
+    
+            
 
     <div class="param-desc">
-
+    
         if no component under the name is registered.
-
+    
     </div>
 
 
-
-
-
+        
+    
+    
     <h5>Returns:</h5>
-
-
+    
+            
 <div class="param-desc">
     the resolved component object
 </div>
@@ -445,7 +445,7 @@ throws an exception. A component is instantiated lazily and only once.
 		Type
 	</dt>
 	<dd>
-
+		
 <span class="param-type">base-specifications/base/ComponentProvider</span>
 
 
@@ -453,55 +453,55 @@ throws an exception. A component is instantiated lazily and only once.
 </dl>
 
 
-
-
-
+        
+    
+    
 </dd>
 
-
-
+        
+            
 <dt>
     <h4 class="name" id="run"><span class="type-signature">&lt;static> </span>run<span class="signature">()</span><span class="type-signature"></span></h4>
-
-
+    
+    
 </dt>
 <dd>
-
-
+    
+    
     <div class="description">
         Runs all registered runnable components.
     </div>
+    
 
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
 <dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source">
 		<ul class="dummy">
@@ -510,42 +510,42 @@ throws an exception. A component is instantiated lazily and only once.
 			</li>
 		</ul>
 	</dd>
+	
 
+	
 
-
-
-
+	
 	<dt class="tag-see">See:</dt>
 	<dd class="tag-see">
 		<ul>
 			<li>base-specifications/base/RunnableProvider</li>
 			</ul>
 	</dd>
+	
 
-
-
+	
 </dl>
 
+    
+    
 
+    
 
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
 </dd>
 
         </dl>
+    
 
+    
 
-
-
-
+    
 </article>
 
 </section>
@@ -557,16 +557,16 @@ throws an exception. A component is instantiated lazily and only once.
 
 				<div class="clearfix"></div>
 				<footer>
-
+					
 					<hr/>
 					<br />
-
-
+					
+					
 		<span class="copyright">
 		<div style='text-align:left;border-color:#626262;background-color:#262626;color:#fff;padding:20px;'>This is free and unencumbered software released into the public domain.<br/>Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.<br/>In jurisdictions that recognize copyright laws, the author or authors of this software dedicate any and all copyright interest in the software to the public domain.<br/>We make this dedication for the benefit of the public at large and to the detriment of our heirs and successors.<br/>We intend this dedication to be an overt act of relinquishment in perpetuity of all present and future rights to this software under copyright law.<br/><br/>THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.<br/><br/>For more information, please refer to <a href='http://unlicense.org'>UNLICENSE</a></div>
 		</span>
 					<br />
-
+					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
 		on August, 2014 using the <a
@@ -575,11 +575,11 @@ throws an exception. A component is instantiated lazily and only once.
 				</footer>
 			</div>
 
-
+			
 			<div class="span3">
 				<div id="toc"></div>
 			</div>
-
+			
 			<br clear="both">
 		</div>
 
@@ -646,11 +646,11 @@ throws an exception. A component is instantiated lazily and only once.
 
 
 	<!--Navigation and Symbol Display-->
-
+	
 
 
 	<!--Google Analytics-->
-
+	
 
 </body>
 </html>
