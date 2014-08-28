@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "coverage": "grunt coverage",
-        "clean": "grunt clean",
+        "cleanup": "grunt cleanup",
         "init": "grunt init",
         "test": "grunt test",
         "document": "grunt document",

@@ -253,6 +253,10 @@ module.exports = function (grunt) {
         });
     }());
     // scripts exposed from package.json
+    // cleanup script
+    grunt.registerTask('cleanup', [
+        'clean:out'
+    ]);
     // coverage script
     grunt.registerTask('coverage', [
         'clean:out',
