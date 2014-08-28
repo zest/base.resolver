@@ -202,7 +202,7 @@ module.exports = function (grunt) {
             }
         },
         instrument: {
-            files: files.lib,
+            files: files.lib.concat('!**/*.json'),
             options: {
                 lazy: true,
                 basePath: '<%= pkg.directories.out %>/coverage/instrument'

@@ -1,3 +1,8 @@
+[![Quality](https://codeclimate.com/github/soul-infra/base.resolver/badges/gpa.svg)](https://codeclimate.com/github/soul-infra/base.resolver)
+[![Dependencies](https://david-dm.org/soul-infra/base.resolver.svg)](https://david-dm.org/soul-infra/base.resolver)
+[![Build Status](https://secure.travis-ci.org/soul-infra/base.resolver.svg)](https://travis-ci.org/soul-infra/base.resolver)
+[![Coverage Status](https://img.shields.io/coveralls/soul-infra/base.resolver.svg)](https://coveralls.io/r/soul-infra/base.resolver)
+
 # soul-infra / base.resolver
 > The base.resolver module provides the resolver api for running of SOUL infrastructure components. It integrates
 > components to create an application.
