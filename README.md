@@ -147,16 +147,16 @@ them. This component has the below functions
     The config function configures the resolver. This function takes one parameter. If the parameter is a string, 
     requiring the string path should return the config array. Otherwise, the config array itself can be passed.
     
-    This function returns a Promise that gets resolved when the configuration is done. This promise is rejected with 
-    the error if configuration fails.
+    This function returns a Promise that gets resolved with the resolver object when the configuration is done. This 
+    promise is rejected with the error if configuration fails.
 
  2. **`run`**`()` &#8594; `Promise`
 
     The run function runs all starting components in the configuration, injecting all other dependencies lazily.
     
-    This function returns a Promise that gets resolved when the run is executed. This promise is rejected with 
-    the error if run execution fails. If the registered run command do not resolve, this promise will never get 
-    resolved.
+    This function returns a Promise that gets resolved with the resolver object when the run is executed. This promise
+    is rejected with the error if run execution fails. If the registered run command do not resolve, this promise will
+    never get resolved.
 
  3. **`reload`**`()` &#8594; `Promise`
 
@@ -164,5 +164,6 @@ them. This component has the below functions
     Reload is synchronous and blocking in nature, if a reload is called before the previous reload is over, the 
     previous reload will be interrupted.
     
-    This function returns a Promise that gets resolved when the reload is complete. This promise is rejected with 
-    the error if reload fails. If the registered run command do not resolve, this promise will never get resolved.
+    This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
+    promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
+    never get resolved.
