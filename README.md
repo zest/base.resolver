@@ -1,9 +1,9 @@
-[![Quality](https://codeclimate.com/github/soul-infra/base.resolver/badges/gpa.svg)](https://codeclimate.com/github/soul-infra/base.resolver)
-[![Dependencies](https://david-dm.org/soul-infra/base.resolver.svg)](https://david-dm.org/soul-infra/base.resolver)
-[![Build Status](https://secure.travis-ci.org/soul-infra/base.resolver.svg)](https://travis-ci.org/soul-infra/base.resolver)
-[![Coverage Status](https://img.shields.io/coveralls/soul-infra/base.resolver.svg)](https://coveralls.io/r/soul-infra/base.resolver)
+[![Dependencies][1]][2] [![Dev Dependencies][3]][4] [![Peer Dependencies][5]][6] [![License][7]][8]
+
+[![Quality][9]][10] [![Build Status][11]][12] [![Coverage Status][13]][14] [![Coverage Status][15]][16]
 
 # soul-infra / base.resolver
+
 > The `base.resolver` component provides inversion of control and dependency injection api for running of SOUL 
 > infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components you
 > want to load. Each component registers itself with resolver, so other components can use its functions. Components
@@ -167,3 +167,20 @@ them. This component has the below functions
     This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
     promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
     never get resolved.
+
+[1]: http://img.shields.io/codeclimate/github/soul-infra/base.resolver.svg?style=flat-square
+[2]: https://codeclimate.com/github/soul-infra/base.resolver
+[3]: http://img.shields.io/travis/soul-infra/base.resolver.svg?style=flat-square
+[4]: https://travis-ci.org/soul-infra/base.resolver
+[5]: http://img.shields.io/coveralls/soul-infra/base.resolver.svg?style=flat-square
+[6]: https://coveralls.io/r/soul-infra/base.resolver
+[7]: http://img.shields.io/david/soul-infra/base.resolver.svg?style=flat-square
+[8]: https://david-dm.org/soul-infra/base.resolver#info=dependencies&view=list
+[9]: http://img.shields.io/david/dev/soul-infra/base.resolver.svg?style=flat-square
+[10]: https://david-dm.org/soul-infra/base.resolver#info=devDependencies&view=list
+[11]: http://img.shields.io/david/peer/soul-infra/base.resolver.svg?style=flat-square
+[12]: https://david-dm.org/soul-infra/base.resolver#info=peerDependencies&view=list
+[13]: http://img.shields.io/github/issues/soul-infra/base.resolver.svg?style=flat-square
+[14]: https://github.com/soul-infra/base.resolver/issues
+[15]: http://img.shields.io/badge/license-UNLICENSE-brightgreen.svg?style=flat-square
+[16]: http://unlicense.org
