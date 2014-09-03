@@ -77,7 +77,7 @@ it accesses component dependencies:
 ## package.json Structure
 
 Each component is a node module complete with a package.json file. It need not actually be in npm, it can be a simple 
-folder in the code tree. For base.resolver to register this module as a component, a `soul-resolver` entry must be
+folder in the code tree. For base.resolver to register this module as a component, a `soul-component` entry must be
 added to the package.json file of the component.
 
 The package.json structure for the component can be as described:
@@ -85,13 +85,7 @@ The package.json structure for the component can be as described:
     // package.json
     {
         ...
-        "soul-resolver": {
-            "consumes": [
-                "database",
-                "user"
-            ],
-            "provides": ["privilege"]
-        }
+        "soul-component": "privilege"
         ...
     }
 
@@ -145,7 +139,7 @@ them. This component has the below functions
     the error if run execution fails. If the registered run command do not resolve, this promise will never get 
     resolved.
 
- 2. **`reload`**`()` &#8594; `Promise`
+ 3. **`reload`**`()` &#8594; `Promise`
 
     The reload function wil re-configure and runs all starting components in the configuration, starting from scratch.
     Reload is synchronous and blocking in nature, if a reload is called before the previous reload is over, the 
@@ -153,9 +147,3 @@ them. This component has the below functions
     
     This function returns a Promise that gets resolved when the reload is complete. This promise is rejected with 
     the error if reload fails. If the registered run command do not resolve, this promise will never get resolved.
-
-
-**`base.resolver`** inherits form `EventEmitter` and emits the below events:
-
- 1. **`ready`** is emitted when the base.resolver has parsed the configuration and is ready to run the application
- 2. **`error`** is emitted whenever there is an exception or error
