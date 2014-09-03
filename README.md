@@ -93,6 +93,8 @@ The package.json structure for the component can be as described:
 
 The base.resolver component can be configured using a JavaScript array. The array structure is as shown: 
 
+```json
+
     [
         // use an object when options are required
         {
@@ -117,6 +119,8 @@ The base.resolver component can be configured using a JavaScript array. The arra
         "./filestore.disk",
         "../another-folder/another.component"
     ]
+
+```
 
 ### the resolver functions
 
