@@ -7,20 +7,25 @@
 > The `base.resolver` component provides inversion of control and dependency injection api for running of SOUL 
 > infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components you
 > want to load. Each component registers itself with resolver, so other components can use its functions. Components
-> can be maintained as NPM packages so they can be dropped in to other soul integrations
+> can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components can also 
+> just be a file that can be `require`d from node. (A javascript file or even a JSON file) 
 
 ## Component Structure
 
 For components to be compatible with the resolver, it should export a one of the following:
 
- 1. When a component exports an **object**, the value itself is used to resolve the component 
- 2. When a component exports a **function**, the function acts like a factory function for creation of the component. The 
-    function can either return the component itself, or a **Promise** object that gets resolved with the component once
-    the component is finished loading. The arguments for the function are injected dynamically by the **resolver**. For
-    dependency injection to work, the argument name and the dependency name must be same.
- 3. When the component exports is an **array**, the angular style dependency injection mechanism is used. The last element
-    of the array must always be a factory function whereas, the other arguments are dependency name strings. This 
-    factory function will be called with the parameters injected for each of the dependency names in the same sequence.  
+ 1. When a component exports a **function**, the function acts like a factory function for creation of the component.
+    The function can either return the component itself, or a **Promise** object that gets resolved with the component
+    once the component is finished loading. The arguments for the function are injected dynamically by the
+    **resolver**. For dependency injection to work, the argument name and the dependency name must be same.
+ 2. When the component exports an **array with the last element of type function and other elements of type string**, 
+    the angular style dependency injection mechanism is used. The last element of the array must always be a factory
+    function whereas, the other arguments are dependency name strings. The dependency name strings can be prepended
+    with a **`?`** specifying that an injection for that dependency is optional (meaning that, the component should
+    work fine even if this dependency is not registered). This factory function will be called with the parameters
+    injected for each of the dependency names in the same sequence.
+ 3. When a component exports **anything other than the above mentioned structures**, the value itself is used to
+    resolve the component.
 
 Example configurations are shown below:
 
@@ -38,14 +43,14 @@ _component as a factory function. Note the parameter names should match dependen
         };
     };
 
-_component as an array of dependencies and factory function. Note that parameter names can be anything here._
+_component as an array of dependencies and factory function. Note that parameter names can be anything here. Also, the
+user dependency is optional_
 
-    module.exports = ['database', 'user', 'options', 'run', function (db, user, opt, run) {
+    module.exports = ['database', 'user?', 'options', 'run', function (db, user, opt, run) {
         return {
             // component as an object
         };
     };
-
 
 _return value as a promise. Any of the above three declaration methods can return a promise instead of an object as 
 shown below_
@@ -62,8 +67,8 @@ shown below_
 
 ## Explicit Dependencies
 
-Apart from component dependencies, any component can access the below list of explicit dependencies in the same format as
-it accesses component dependencies:
+Apart from component dependencies, any component can access the below list of explicit dependencies in the same format
+as it accesses component dependencies:
 
  1. **`options`** dependency is used to inject options passed to the component for its initialization. Options for 
     components can be passed from the config object to the resolver (described below in the config object section)
@@ -74,11 +79,11 @@ it accesses component dependencies:
     starting component. 
  
 
-## package.json Structure
+## Naming Modularized Components
 
-Each component is a node module complete with a package.json file. It need not actually be in npm, it can be a simple 
-folder in the code tree. For base.resolver to register this module as a component, a `soul-component` entry must be
-added to the package.json file of the component.
+If a component is a node module complete with a package.json file (it need not actually be in npm, it can be a simple
+folder in the code tree.), for base.resolver to register this module as a named component that is injectable, a 
+`soul-component` entry must be added to the package.json file of the component.
 
 The package.json structure for the component can be as described:
 
@@ -88,6 +93,20 @@ The package.json structure for the component can be as described:
         "soul-component": "privilege"
         ...
     }
+
+
+## Naming Non-Modularized Components
+
+Components that are not node modules can be named by setting the `soul-component` attribute in the returned component
+object. Components that are JSON files can also use the same attribute.
+
+
+## Un-Named Components
+
+If a component is not named, it cannot be injected as a dependency. It might be a good idea to not name components that
+cannot be injected (eg. starting components). Since components are lazily initialized, an un-named component will not
+be initialized unless it is a starting component.
+
 
 ## configuring **`base.resolver`**
 
