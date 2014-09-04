@@ -266,7 +266,9 @@ them. This component has the below functions
 
     The config function configures the resolver. This function takes two parameter.
      -  **`configPath|configObject`** If this parameter is a string, requiring the string path should return the config
-        array. Otherwise, the config array itself can be passed.
+        array. We try to require the `configPath` directly. If that fails, it is joined with the current working
+        directory of the process for resolution. The config array itself can also be passed instead of passing a
+        `configPath`.
      -  **`basePath`** basePath is an optional parameter which provides the absolute path from where the components 
         should be resolved. If `basePath` is not provided, it is resolved as follows:
          -  if the first parameter is a `configPath` string, the `basePath` is assumed to be the `configPath`
