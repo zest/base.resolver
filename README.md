@@ -262,10 +262,10 @@ component configuration.
 **`base.resolver`** resolves the component dependencies and is responsible for starting any application built on top of 
 them. This component has the below functions
 
- 1. **`config`**`(configPath|configObject, [basePath])` &#8594; `Promise`
+ 1. **`config`**`(configPath|configArray, [basePath])` &#8594; `Promise`
 
     The config function configures the resolver. This function takes two parameter.
-     -  **`configPath|configObject`** If this parameter is a string, requiring the string path should return the config
+     -  **`configPath|configArray`** If this parameter is a string, requiring the string path should return the config
         array. We try to require the `configPath` directly. If that fails, it is joined with the current working
         directory of the process for resolution. The config array itself can also be passed instead of passing a
         `configPath`.

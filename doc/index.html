@@ -20,21 +20,7 @@
 		<div class="navbar-inner">
 			<a class="brand" href="index.html">soul-infra / base.script</a>
 			<ul class="nav">
-				
-				<li class="dropdown">
-					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
-						class="caret"></b></a>
 
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="module-base-resolver.html">base-resolver</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -72,31 +58,261 @@
 
 
     <section class="readme-section">
-        <article><p><a href="https://codeclimate.com/github/soul-infra/base.resolver"><img src="https://codeclimate.com/github/soul-infra/base.resolver/badges/gpa.svg" alt="Quality"></a>
-<a href="https://david-dm.org/soul-infra/base.resolver"><img src="https://david-dm.org/soul-infra/base.resolver.svg" alt="Dependencies"></a>
-<a href="https://travis-ci.org/soul-infra/base.resolver"><img src="https://secure.travis-ci.org/soul-infra/base.resolver.svg" alt="Build Status"></a>
-<a href="https://coveralls.io/r/soul-infra/base.resolver"><img src="https://img.shields.io/coveralls/soul-infra/base.resolver.svg" alt="Coverage Status"></a></p>
+        <article><p><a href="https://david-dm.org/soul-infra/base.resolver#info=dependencies&amp;view=list"><img src="http://img.shields.io/david/soul-infra/base.resolver.svg?style=flat-square" alt="Dependencies"></a>
+<a href="https://david-dm.org/soul-infra/base.resolver#info=devDependencies&amp;view=list"><img src="http://img.shields.io/david/dev/soul-infra/base.resolver.svg?style=flat-square" alt="Dev Dependencies"></a>
+<a href="https://david-dm.org/soul-infra/base.resolver#info=peerDependencies&amp;view=list"><img src="http://img.shields.io/david/peer/soul-infra/base.resolver.svg?style=flat-square" alt="Peer Dependencies"></a></p>
+<p><a href="https://codeclimate.com/github/soul-infra/base.resolver"><img src="http://img.shields.io/codeclimate/github/soul-infra/base.resolver.svg?style=flat-square" alt="Quality"></a>
+<a href="https://travis-ci.org/soul-infra/base.resolver"><img src="http://img.shields.io/travis/soul-infra/base.resolver.svg?style=flat-square" alt="Build Status"></a>
+<a href="https://coveralls.io/r/soul-infra/base.resolver"><img src="http://img.shields.io/coveralls/soul-infra/base.resolver.svg?style=flat-square" alt="Coverage Status"></a>
+<a href="http://unlicense.org"><img src="http://img.shields.io/badge/license-UNLICENSE-brightgreen.svg?style=flat-square" alt="License"></a></p>
 <h1>soul-infra / base.resolver</h1>
 <blockquote>
-<p>The base.resolver module provides the resolver api for running of SOUL infrastructure components. It integrates
-components to create an application.</p>
+<p>The <code>base.resolver</code> component provides inversion of control and dependency injection api for running of SOUL
+infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components you
+want to load. Each component registers itself with resolver, so other components can use its functions. Components
+can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components can also
+just be a file that can be <code>require</code>d from node. (A javascript file or even a JSON file) </p>
 </blockquote>
-<h3>the resolver</h3>
-<p>Soul framework also has a resolver in which the components will be registered.</p>
-<p><strong><code>base.resolver</code></strong> resolves the component dependencies and is responsible for starting any application built on top of 
-them. This module has the below functions</p>
+<h2>Component Structure</h2>
+<p>For components to be compatible with the resolver, it should export a one of the following:</p>
 <ol>
-<li><strong><code>register</code></strong><code>(name, component, settings)</code><ul>
-<li>registers a component.</li>
+<li><p>When a component exports a <strong>function</strong>, the function acts like a factory function for creation of the component.
+The function can either return the component itself, or a <strong>Promise</strong> object that gets resolved with the component
+once the component is finished loading. The arguments for the function are injected dynamically by the
+<strong>resolver</strong>. For dependency injection to work, the argument names must resolve to a dependency name using the
+<a href="#dependency-name-resolution">dependency name resolution mechanism</a>.</p>
+</li>
+<li><p>When the component exports an <strong>array with the last element of type function and other elements of type string</strong>,
+the angular style dependency injection mechanism is used. The last element of the array must always be a factory
+function whereas, the other arguments must resolve to a dependency name using the
+<a href="#dependency-name-resolution">dependency name resolution mechanism</a>. This factory function will be called with
+the parameters injected for each of the dependency names in the same sequence. The function can either return the
+component itself, or a <strong>Promise</strong> object that gets resolved with the component once the component is finished
+loading.</p>
+</li>
+<li><p>When a component exports <strong>a promise</strong> the value that resolves it is used as the component.</p>
+</li>
+<li><p>When a component exports <strong>anything other than the above mentioned structures</strong>, the value itself is used to
+resolve the component.</p>
+</li>
+</ol>
+<p>Example configurations are shown below:</p>
+<p><em>object as a component</em></p>
+<pre><code class="lang-js">module.exports = {
+    // component as an object
+};</code></pre>
+<p><em>component as a factory function. Note the parameter names should match dependency names</em></p>
+<pre><code class="lang-js">module.exports = function (database, user, options) {
+    return {
+        // component as an object
+    };
+};</code></pre>
+<p><em>component as an array of dependencies and factory function. Note that parameter names can be anything here. Also, the
+user dependency is optional</em></p>
+<pre><code class="lang-js">module.exports = ['database', 'user?', 'options', 'unload', function (db, user, opt, unload) {
+    return {
+        // component as an object
+    };
+};</code></pre>
+<p><em>return value as a promise. Any of the above three declaration methods can return a promise instead of an object as
+shown below</em></p>
+<pre><code class="lang-js">module.exports = ['database', 'user', 'options', function (db, user, opt) {
+    return Q.Promise(function (resolve, reject) {
+        // some code
+        resolve({
+            // component as an object
+        });
+    });
+};</code></pre>
+<h3>Naming Modularized Components</h3>
+<p>If a component is a node module complete with a package.json file (it need not actually be in npm, it can be a simple
+folder in the code tree.), for base.resolver to register this module as a named component that is injectable, a
+<code>soul-component</code> entry must be added to the package.json file of the component.</p>
+<p>The package.json structure for the component can be as described:</p>
+<pre><code class="lang-js">// package.json
+{
+    ...
+    &quot;soul-component&quot;: &quot;privilege&quot;
+    ...
+}</code></pre>
+<h3>Naming Non-Modularized Components</h3>
+<p>Components that are not node modules can be named by setting the <code>soul-component</code> attribute in the returned exports
+object. Components that are JSON files can also use the same attribute.</p>
+<h3>Un-Named Components</h3>
+<p>A component might not have a name. If unnamed, it cannot be injected as a dependency.</p>
+<h3>Dependency Name Resolution</h3>
+<p>The dependency name resolution mechanism is used to map a string (which can be a dependency name in the array syntax of
+component definition or a parameter name in the function syntax of component definition, see
+<a href="#component-structure">Component Structure</a>) The resolution follows the below steps:</p>
+<h4>Modifiers</h4>
+<p>Modifiers are used to add logic to dependency injection. There are 3 kinds of modifiers. They are listed in their order
+of execution priority below:</p>
+<ul>
+<li><strong><code>#</code> (parameter modifier)</strong> will pass parameters to the component that can be used to construct the options object.
+ See <a href="#configuring-resolver">Configuring Resolver</a> for more details on parameter usage.</li>
+<li><strong><code>|</code> (OR modifier)</strong> will inject the first resolvable component</li>
+<li><strong><code>?</code> (optional modifier)</strong> will silently pass undefined if resolution fails</li>
+</ul>
+<blockquote>
+<p>Modifier usage examples:</p>
+<p><code>databaseMongo</code></p>
+<ul>
+<li>will resolve to databaseMongo if it can be resolved</li>
+<li>will throw an error if databaseMongo cannot be resolved</li>
+</ul>
+<p><code>databaseMongo|databaseSQL</code></p>
+<ul>
+<li>will resolve to databaseMongo if it can be resolved</li>
+<li>will resolve to databaseSQL is databaseMongo cannot be resolved</li>
+<li>will throw an error if none of them are resolved</li>
+</ul>
+<p><code>databaseMongo?</code></p>
+<ul>
+<li>will resolve to databaseMongo if it can be resolved</li>
+<li>will inject <code>undefined</code> if databaseMongo cannot be resolved</li>
+</ul>
+<p><code>databaseMongo|databaseSQL?</code></p>
+<ul>
+<li>will resolve to databaseMongo if it can be resolved</li>
+<li>will resolve to databaseSQL if databaseMongo cannot be resolved</li>
+<li>will inject <code>undefined</code> if none of them are resolved</li>
+</ul>
+<p><code>databaseMongo#localhost#9876</code></p>
+<ul>
+<li>will resolve to databaseMongo replacing <code>#1</code> in options object by <code>localhost</code> and <code>#2</code> in options object by <code>9876</code></li>
+<li>will throw an error if databaseMongo cannot be resolved</li>
+</ul>
+<p><code>databaseMongo#localhost#9876|databaseSQL#localhost#3200?</code></p>
+<ul>
+<li>will resolve to databaseMongo replacing <code>#1</code> in options object by <code>localhost</code> and <code>#2</code> in options object by <code>9876</code>
+if it can be resolved</li>
+<li>will resolve to databaseSQL  replacing <code>#1</code> in options object by <code>localhost</code> and <code>#2</code> in options object by <code>3200</code>
+if databaseMongo cannot be resolved</li>
+<li>will inject <code>undefined</code> if none of them are resolved</li>
+</ul>
+</blockquote>
+<h4>Name Resolution</h4>
+<p>The dependency names are resolved using the below steps:</p>
+<ol>
+<li><p>If the name matches a component name, the component is injected directly.</p>
+<blockquote>
+<p>eg. <code>database</code> will get resolved to a component with name <code>database</code> if it exists.</p>
+</blockquote>
+</li>
+<li><p>If <strong><code>[step 1]</code></strong> fails, the component name is transformed to camel-case, <code>-</code> and <code>.</code> separated, and a resolution
+is attempted for any one of the transformed names. There is no priority specified, so, If more than one resolution
+is found, the behavior is un-predictable. </p>
+<blockquote>
+<p>eg. <code>databaseMongoLocal</code> will try to resolve to <code>database-mongoLocal</code>, <code>databaseMongo-local</code>,
+<code>database-mongo-local</code>, <code>database-mongo.local</code>, <code>database.mongoLocal</code>... and all other combinations possible. If
+there are more than components defined with any of these names, the resolution is unpredictable.</p>
+</blockquote>
+</li>
+</ol>
+<h3>Explicit Dependencies</h3>
+<p>Apart from component dependencies, any component can access the below list of explicit dependencies in the same format
+as it accesses component dependencies:</p>
+<ol>
+<li><p><strong><code>options</code></strong> dependency is used to inject options passed to the component for its initialization. Options for
+components can be passed from the config object to the resolver (described below in the config object section)</p>
+</li>
+<li><p><strong><code>unload</code></strong> dependency is used to cleanup and garbage collect a component before it is unloaded. This dependency
+gets resolved as a function which takes a callback as an argument. When the component is unloaded, all callbacks
+registered with unload are called. The callbacks can either return an object or a promise. If a promise is
+returned, the component unload will not be complete unless the individual callbacks are resolved.</p>
+</li>
+</ol>
+<h2>Configuring Resolver</h2>
+<p>The base.resolver component can be configured using a JavaScript array. Every element in the array will correspond to a
+component configuration.</p>
+<ul>
+<li>If no options are to be passed on to the component, the path of the component as a string is enough.</li>
+<li><p>If options are to be passed, or if other configuration is required, then the component configuration should contain
+the following keys:</p>
+<ul>
+<li><strong><code>path</code></strong> &#8594; specifies the path of the component<ul>
+<li>if path does not start with a <code>.</code>, or does not contain <code>/</code> the component is assumed to be an npm module</li>
+<li>if path does not start with a ., and has a single /, the component is assumed to be a git repository</li>
+<li>in all other cases, the component is assumed to be located at the path specified in the local disk </li>
 </ul>
 </li>
-<li><strong><code>resolve</code></strong><code>(name)</code><ul>
-<li>gets the dependency by name</li>
+<li><strong><code>options</code></strong> &#8594; the options to be passed to instantiate the component.<ul>
+<li>The <a href="#modifiers">Parameter Modifier</a> can be used here using the <code>#[param-number]</code> format</li>
+<li>The <code>|</code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)</li>
+<li>If <code>#</code> or <code>|</code> are to be used as literals in option, they must be escaped by writing them twice. Eg. <code>##</code>
+will translate to a single <code>#</code></li>
 </ul>
 </li>
-<li><strong><code>run</code></strong><code>()</code><ul>
-<li>runs the Runnable components in the resolver</li>
+<li><strong><code>startup</code></strong> &#8594; is optional and is used to specify if a component is a starting component.</li>
 </ul>
+</li>
+</ul>
+<pre><code class="lang-js">[
+    // use an object when options are required
+    {
+        path: &quot;./application.rest&quot;,
+        startup: true,
+        options: {
+            port: 8080
+        }
+    }, {
+        packagePath: &quot;soul-infra/datastore.mongo&quot;,
+        options: {
+            // parameters can be injected inside the options using the #[param-number] format
+            // also the OR modifier | can be used to degrade to defaults. The below string will
+            // evaluate to:
+            //      the first parameter passed to get the component if it exists
+            //      123.456.789.100 is the first parameter is not there
+            host: &quot;#[1]|123.456.789.100&quot;
+        }
+    },
+
+    // if no options or flags are to be passed, only the path is enough
+    // if path does not start with a ., the component is assumed
+    // to be an npm module
+    &quot;base.specifiations&quot;
+
+    // if path does not start with a ., and has a /, the component
+    // is assumed to be a git repository
+    &quot;soul-infra/base.logger&quot;,
+
+    // if path starts with a ., it is assumed to be a local path
+    &quot;./filestore.disk&quot;,
+    &quot;../another-folder/another.component&quot;
+]</code></pre>
+<h2>The Resolver Functions</h2>
+<p><strong><code>base.resolver</code></strong> resolves the component dependencies and is responsible for starting any application built on top of
+them. This component has the below functions</p>
+<ol>
+<li><p><strong><code>config</code></strong><code>(configPath|configArray, [basePath])</code> &#8594; <code>Promise</code></p>
+<p>The config function configures the resolver. This function takes two parameter.</p>
+<ul>
+<li><strong><code>configPath|configArray</code></strong> If this parameter is a string, requiring the string path should return the config
+array. We try to require the <code>configPath</code> directly. If that fails, it is joined with the current working
+directory of the process for resolution. The config array itself can also be passed instead of passing a
+<code>configPath</code>.</li>
+<li><strong><code>basePath</code></strong> basePath is an optional parameter which provides the absolute path from where the components
+should be resolved. If <code>basePath</code> is not provided, it is resolved as follows:<ul>
+<li>if the first parameter is a <code>configPath</code> string, the <code>basePath</code> is assumed to be the <code>configPath</code></li>
+<li>if the first parameter is a not a <code>configPath</code> string, the <code>basePath</code> is assumed to be the current working
+directory for the process</li>
+</ul>
+</li>
+</ul>
+<p>This function returns a Promise that gets resolved with the resolver object when the configuration is done. This
+promise is rejected with the error if configuration fails.</p>
+</li>
+<li><p><strong><code>start</code></strong><code>()</code> &#8594; <code>Promise</code></p>
+<p>The start function runs all starting components in the configuration, injecting all other dependencies required.</p>
+<p>This function returns a Promise that gets resolved with the resolver object when the startup is executed. This
+promise is rejected with the error if start execution fails.</p>
+</li>
+<li><p><strong><code>restart</code></strong><code>()</code> &#8594; <code>Promise</code></p>
+<p>The restart function will re-configure and start all starting components in the configuration.
+If a <code>restart</code> is called before the previous <code>restart</code> is over, the previous <code>restart</code> will be interrupted.</p>
+<p>This function returns a Promise that gets resolved with the resolver object when the reload is complete. This
+promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
+never get resolved.</p>
 </li>
 </ol></article>
     </section>
