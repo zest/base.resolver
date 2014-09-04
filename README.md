@@ -7,6 +7,7 @@
 [![Coverage Status][coverage-status-image]][coverage-status-link]
 [![License][license-image]][license-link]
 
+
 # soul-infra / base.resolver
 
 > The `base.resolver` component provides inversion of control and dependency injection api for running of SOUL 
@@ -15,6 +16,7 @@
 > can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components can also 
 > just be a file that can be `require`d from node. (A javascript file or even a JSON file) 
 
+
 ## Component Structure
 
 For components to be compatible with the resolver, it should export a one of the following:
@@ -22,14 +24,20 @@ For components to be compatible with the resolver, it should export a one of the
  1. When a component exports a **function**, the function acts like a factory function for creation of the component.
     The function can either return the component itself, or a **Promise** object that gets resolved with the component
     once the component is finished loading. The arguments for the function are injected dynamically by the
-    **resolver**. For dependency injection to work, the argument name and the dependency name must be same.
+    **resolver**. For dependency injection to work, the argument names must resolve to a dependency name using the 
+    [dependency name resolution mechanism](#dependency-name-resolution).
+    
  2. When the component exports an **array with the last element of type function and other elements of type string**, 
     the angular style dependency injection mechanism is used. The last element of the array must always be a factory
-    function whereas, the other arguments are dependency name strings. The dependency name strings can be prepended
-    with a **`?`** specifying that an injection for that dependency is optional (meaning that, the component should
-    work fine even if this dependency is not registered). This factory function will be called with the parameters
-    injected for each of the dependency names in the same sequence.
- 3. When a component exports **anything other than the above mentioned structures**, the value itself is used to
+    function whereas, the other arguments must resolve to a dependency name using the
+    [dependency name resolution mechanism](#dependency-name-resolution). This factory function will be called with
+    the parameters injected for each of the dependency names in the same sequence. The function can either return the
+    component itself, or a **Promise** object that gets resolved with the component once the component is finished
+    loading.
+    
+ 3. When a component exports **a promise** the value that resolves it is used as the component.
+    
+ 4. When a component exports **anything other than the above mentioned structures**, the value itself is used to
     resolve the component.
 
 Example configurations are shown below:
@@ -51,7 +59,7 @@ _component as a factory function. Note the parameter names should match dependen
 _component as an array of dependencies and factory function. Note that parameter names can be anything here. Also, the
 user dependency is optional_
 
-    module.exports = ['database', 'user?', 'options', 'run', function (db, user, opt, run) {
+    module.exports = ['database', 'user?', 'options', 'unload', function (db, user, opt, unload) {
         return {
             // component as an object
         };
@@ -68,23 +76,9 @@ shown below_
             });
         });
     };
-
-
-## Explicit Dependencies
-
-Apart from component dependencies, any component can access the below list of explicit dependencies in the same format
-as it accesses component dependencies:
-
- 1. **`options`** dependency is used to inject options passed to the component for its initialization. Options for 
-    components can be passed from the config object to the resolver (described below in the config object section)
- 2. **`run`** dependency is used to make a component runnable. This dependency gets resolved as a function which takes
-    a callback as an argument. When the integration is run, all callbacks registered with run are called. The callbacks
-    can either return an object or a promise. If a promise is returned, the resolver run will not be resolved unless 
-    the individual callbacks are resolved. Also, asking for a run dependency automatically marks a component as 
-    starting component. 
  
 
-## Naming Modularized Components
+### Naming Modularized Components
 
 If a component is a node module complete with a package.json file (it need not actually be in npm, it can be a simple
 folder in the code tree.), for base.resolver to register this module as a named component that is injectable, a 
@@ -100,49 +94,159 @@ The package.json structure for the component can be as described:
     }
 
 
-## Naming Non-Modularized Components
+### Naming Non-Modularized Components
 
-Components that are not node modules can be named by setting the `soul-component` attribute in the returned component
+Components that are not node modules can be named by setting the `soul-component` attribute in the returned exports
 object. Components that are JSON files can also use the same attribute.
 
 
-## Un-Named Components
+### Un-Named Components
 
-If a component is not named, it cannot be injected as a dependency. It might be a good idea to not name components that
-cannot be injected (eg. starting components). Since components are lazily initialized, an un-named component will not
-be initialized unless it is a starting component.
+A component might not have a name. If unnamed, it cannot be injected as a dependency.
 
 
-## configuring **`base.resolver`**
+### Dependency Name Resolution
 
-The base.resolver component can be configured using a JavaScript array. The array structure is as shown: 
+The dependency name resolution mechanism is used to map a string (which can be a dependency name in the array syntax of
+component definition or a parameter name in the function syntax of component definition, see
+[Component Structure](#component-structure)) The resolution follows the below steps:
+
+
+#### Modifiers
+Modifiers are used to add logic to dependency injection. There are 3 kinds of modifiers. They are listed in their order
+of execution priority below:
+
+ - **`#` (parameter modifier)** will pass parameters to the component that can be used to construct the options object.
+    See [Configuring Resolver](#configuring-resolver) for more details on parameter usage.
+ - **`|` (OR modifier)** will inject the first resolvable component
+ - **`?` (optional modifier)** will silently pass undefined if resolution fails
+
+> Modifier usage examples:
+> 
+> `databaseMongo`
+> 
+> - will resolve to databaseMongo if it can be resolved
+> - will throw an error if databaseMongo cannot be resolved
+> 
+> `databaseMongo|databaseSQL`
+> 
+> - will resolve to databaseMongo if it can be resolved
+> - will resolve to databaseSQL is databaseMongo cannot be resolved
+> - will throw an error if none of them are resolved
+> 
+> `databaseMongo?`
+> 
+> - will resolve to databaseMongo if it can be resolved
+> - will inject `undefined` if databaseMongo cannot be resolved
+> 
+> `databaseMongo|databaseSQL?`
+> 
+> - will resolve to databaseMongo if it can be resolved
+> - will resolve to databaseSQL if databaseMongo cannot be resolved
+> - will inject `undefined` if none of them are resolved
+> 
+> `databaseMongo#localhost#9876`
+> 
+> - will resolve to databaseMongo replacing `#1` in options object by `localhost` and `#2` in options object by `9876`
+> - will throw an error if databaseMongo cannot be resolved
+> 
+> `databaseMongo#localhost#9876|databaseSQL#localhost#3200?`
+> 
+> - will resolve to databaseMongo replacing `#1` in options object by `localhost` and `#2` in options object by `9876`
+>   if it can be resolved
+> - will resolve to databaseSQL  replacing `#1` in options object by `localhost` and `#2` in options object by `3200`
+>   if databaseMongo cannot be resolved
+> - will inject `undefined` if none of them are resolved
+
+
+#### Name Resolution
+The dependency names are resolved using the below steps:
+
+ 1. If the name matches a component name, the component is injected directly.
+
+    > eg. `database` will get resolved to a component with name `database` if it exists.
+    
+ 2. If **`[step 1]`** fails, the component name is transformed to camel-case, `-` and `.` separated, and a resolution
+    is attempted for any one of the transformed names. There is no priority specified, so, If more than one resolution
+    is found, the behavior is un-predictable. 
+
+    > eg. `databaseMongoLocal` will try to resolve to `database-mongoLocal`, `databaseMongo-local`,
+    > `database-mongo-local`, `database-mongo!local`, `database.mongoLocal`... and all other combinations possible. If
+    > there are more than components defined with any of these names, the resolution is unpredictable.
+
+
+### Explicit Dependencies
+
+Apart from component dependencies, any component can access the below list of explicit dependencies in the same format
+as it accesses component dependencies:
+
+ 1. **`options`** dependency is used to inject options passed to the component for its initialization. Options for 
+    components can be passed from the config object to the resolver (described below in the config object section)
+    
+ 3. **`unload`** dependency is used to cleanup and garbage collect a component before it is unloaded. This dependency
+    gets resolved as a function which takes a callback as an argument. When the component is unloaded, all callbacks
+    registered with unload are called. The callbacks can either return an object or a promise. If a promise is 
+    returned, the component unload will not be complete unless the individual callbacks are resolved.
+
+
+## Configuring Resolver
+
+The base.resolver component can be configured using a JavaScript array. Every element in the array will correspond to a
+component configuration.
+
+ -  If no options are to be passed on to the component, the path of the component as a string is enough.
+ -  If options are to be passed, or if other configuration is required, then the component configuration should contain
+    the following keys:
+    
+     -  **`path`** &#8594; specifies the path of the component
+         -  if path does not start with a `.`, or does not contain `/` the component is assumed to be an npm module
+         -  if path does not start with a ., and has a single /, the component is assumed to be a git repository
+         -  in all other cases, the component is assumed to be located at the path specified in the local disk 
+     -  **`options`** &#8594; the options to be passed to instantiate the component.
+         -  The [Parameter Modifier](#modifiers) can be used here using the `#[param-number]` format
+         -  The `|` (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)
+         -  If `#` or `|` are to be used as literals in option, they must be escaped by writing them twice. Eg. `##`
+            will translate to a single `#`
+     -  **`startup`** &#8594; is optional and is used to specify if a component is a starting component.
+
 
     [
         // use an object when options are required
         {
-            path: "application.rest",
+            path: "./application.rest",
+            startup: true,
             options: {
                 port: 8080
             }
         }, {
-            packagePath: "datastore.mongo",
+            packagePath: "soul-infra/datastore.mongo",
             options: {
-                host: "123.456.789.100"
+                host: "#[1]|123.456.789.100"
             }
         },
-        // if no options are to be passed, only the path is enough
+        
+        // if no options or flags are to be passed, only the path is enough
         // if path does not start with a ., the component is assumed 
         // to be an npm module
         "base.specifiations"
+        
         // if path does not start with a ., and has a /, the component
         // is assumed to be a git repository
         "soul-infra/base.logger",
+        
         // if path starts with a ., it is assumed to be a local path
         "./filestore.disk",
-        "../another-folder/another.component"
+        "../another-folder/another.component",
+        
+        // multiple dependencies can be defined using the same component by 
+        // adding the !<<specific-name>> syntax. the dependency name will then
+        // be appended with !<<specific-name>> for resolution
+        "./filestore.disk!user-data",
+        "./filestore.disk!static-server-files"
     ]
 
-### the resolver functions
+
+## The Resolver Functions
 
 **`base.resolver`** resolves the component dependencies and is responsible for starting any application built on top of 
 them. This component has the below functions
@@ -155,19 +259,17 @@ them. This component has the below functions
     This function returns a Promise that gets resolved with the resolver object when the configuration is done. This 
     promise is rejected with the error if configuration fails.
 
- 2. **`run`**`()` &#8594; `Promise`
+ 2. **`start`**`()` &#8594; `Promise`
 
-    The run function runs all starting components in the configuration, injecting all other dependencies lazily.
+    The start function runs all starting components in the configuration, injecting all other dependencies required.
     
-    This function returns a Promise that gets resolved with the resolver object when the run is executed. This promise
-    is rejected with the error if run execution fails. If the registered run command do not resolve, this promise will
-    never get resolved.
+    This function returns a Promise that gets resolved with the resolver object when the startup is executed. This 
+    promise is rejected with the error if start execution fails.
 
- 3. **`reload`**`()` &#8594; `Promise`
+ 3. **`restart`**`()` &#8594; `Promise`
 
-    The reload function wil re-configure and runs all starting components in the configuration, starting from scratch.
-    Reload is synchronous and blocking in nature, if a reload is called before the previous reload is over, the 
-    previous reload will be interrupted.
+    The restart function will re-configure and start all starting components in the configuration.
+    If a `restart` is called before the previous `restart` is over, the previous `restart` will be interrupted.
     
     This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
     promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
