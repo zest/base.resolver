@@ -45,7 +45,6 @@
         "grunt-jsdoc": "*",
         "grunt-mocha-cov": "*",
         "chai": "*",
-        "mocha-term-cov-reporter": "*",
         "merge": "*"
     },
     "directories": {
