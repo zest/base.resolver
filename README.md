@@ -232,6 +232,11 @@ component configuration.
     }, {
         packagePath: "soul-infra/datastore.mongo",
         options: {
+            // parameters can be injected inside the options using the #[param-number] format
+            // also the OR modifier | can be used to degrade to defaults. The below string will 
+            // evaluate to:
+            //      the first parameter passed to get the component if it exists
+            //      123.456.789.100 is the first parameter is not there
             host: "#[1]|123.456.789.100"
         }
     },
@@ -247,13 +252,7 @@ component configuration.
     
     // if path starts with a ., it is assumed to be a local path
     "./filestore.disk",
-    "../another-folder/another.component",
-    
-    // multiple dependencies can be defined using the same component by 
-    // adding the !<<specific-name>> syntax. the dependency name will then
-    // be appended with !<<specific-name>> for resolution
-    "./filestore.disk!user-data",
-    "./filestore.disk!static-server-files"
+    "../another-folder/another.component"
 ]
 ```
 
@@ -263,11 +262,17 @@ component configuration.
 **`base.resolver`** resolves the component dependencies and is responsible for starting any application built on top of 
 them. This component has the below functions
 
- 1. **`config`**`(configPath|configObject)` &#8594; `Promise`
+ 1. **`config`**`(configPath|configObject, [basePath])` &#8594; `Promise`
 
-    The config function configures the resolver. This function takes one parameter. If the parameter is a string, 
-    requiring the string path should return the config array. Otherwise, the config array itself can be passed.
-    
+    The config function configures the resolver. This function takes two parameter.
+     -  **`configPath|configObject`** If this parameter is a string, requiring the string path should return the config
+        array. Otherwise, the config array itself can be passed.
+     -  **`basePath`** basePath is an optional parameter which provides the absolute path from where the components 
+        should be resolved. If `basePath` is not provided, it is resolved as follows:
+         -  if the first parameter is a `configPath` string, the `basePath` is assumed to be the `configPath`
+         -  if the first parameter is a not a `configPath` string, the `basePath` is assumed to be the current working
+            directory for the process
+
     This function returns a Promise that gets resolved with the resolver object when the configuration is done. This 
     promise is rejected with the error if configuration fails.
 
