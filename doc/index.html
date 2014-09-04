@@ -20,7 +20,7 @@
 		<div class="navbar-inner">
 			<a class="brand" href="index.html">soul-infra / base.script</a>
 			<ul class="nav">
-
+				
 			</ul>
 		</div>
 	</div>
@@ -67,10 +67,10 @@
 <a href="http://unlicense.org"><img src="http://img.shields.io/badge/license-UNLICENSE-brightgreen.svg?style=flat-square" alt="License"></a></p>
 <h1>soul-infra / base.resolver</h1>
 <blockquote>
-<p>The <code>base.resolver</code> component provides inversion of control and dependency injection api for running of SOUL
+<p>The <code>base.resolver</code> component provides inversion of control and dependency injection api for running of SOUL 
 infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components you
 want to load. Each component registers itself with resolver, so other components can use its functions. Components
-can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components can also
+can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components can also 
 just be a file that can be <code>require</code>d from node. (A javascript file or even a JSON file) </p>
 </blockquote>
 <h2>Component Structure</h2>
@@ -79,10 +79,10 @@ just be a file that can be <code>require</code>d from node. (A javascript file o
 <li><p>When a component exports a <strong>function</strong>, the function acts like a factory function for creation of the component.
 The function can either return the component itself, or a <strong>Promise</strong> object that gets resolved with the component
 once the component is finished loading. The arguments for the function are injected dynamically by the
-<strong>resolver</strong>. For dependency injection to work, the argument names must resolve to a dependency name using the
+<strong>resolver</strong>. For dependency injection to work, the argument names must resolve to a dependency name using the 
 <a href="#dependency-name-resolution">dependency name resolution mechanism</a>.</p>
 </li>
-<li><p>When the component exports an <strong>array with the last element of type function and other elements of type string</strong>,
+<li><p>When the component exports an <strong>array with the last element of type function and other elements of type string</strong>, 
 the angular style dependency injection mechanism is used. The last element of the array must always be a factory
 function whereas, the other arguments must resolve to a dependency name using the
 <a href="#dependency-name-resolution">dependency name resolution mechanism</a>. This factory function will be called with
@@ -114,7 +114,7 @@ user dependency is optional</em></p>
         // component as an object
     };
 };</code></pre>
-<p><em>return value as a promise. Any of the above three declaration methods can return a promise instead of an object as
+<p><em>return value as a promise. Any of the above three declaration methods can return a promise instead of an object as 
 shown below</em></p>
 <pre><code class="lang-js">module.exports = ['database', 'user', 'options', function (db, user, opt) {
     return Q.Promise(function (resolve, reject) {
@@ -126,7 +126,7 @@ shown below</em></p>
 };</code></pre>
 <h3>Naming Modularized Components</h3>
 <p>If a component is a node module complete with a package.json file (it need not actually be in npm, it can be a simple
-folder in the code tree.), for base.resolver to register this module as a named component that is injectable, a
+folder in the code tree.), for base.resolver to register this module as a named component that is injectable, a 
 <code>soul-component</code> entry must be added to the package.json file of the component.</p>
 <p>The package.json structure for the component can be as described:</p>
 <pre><code class="lang-js">// package.json
@@ -213,12 +213,12 @@ there are more than components defined with any of these names, the resolution i
 <p>Apart from component dependencies, any component can access the below list of explicit dependencies in the same format
 as it accesses component dependencies:</p>
 <ol>
-<li><p><strong><code>options</code></strong> dependency is used to inject options passed to the component for its initialization. Options for
+<li><p><strong><code>options</code></strong> dependency is used to inject options passed to the component for its initialization. Options for 
 components can be passed from the config object to the resolver (described below in the config object section)</p>
 </li>
 <li><p><strong><code>unload</code></strong> dependency is used to cleanup and garbage collect a component before it is unloaded. This dependency
 gets resolved as a function which takes a callback as an argument. When the component is unloaded, all callbacks
-registered with unload are called. The callbacks can either return an object or a promise. If a promise is
+registered with unload are called. The callbacks can either return an object or a promise. If a promise is 
 returned, the component unload will not be complete unless the individual callbacks are resolved.</p>
 </li>
 </ol>
@@ -259,7 +259,7 @@ will translate to a single <code>#</code></li>
         packagePath: &quot;soul-infra/datastore.mongo&quot;,
         options: {
             // parameters can be injected inside the options using the #[param-number] format
-            // also the OR modifier | can be used to degrade to defaults. The below string will
+            // also the OR modifier | can be used to degrade to defaults. The below string will 
             // evaluate to:
             //      the first parameter passed to get the component if it exists
             //      123.456.789.100 is the first parameter is not there
@@ -268,7 +268,7 @@ will translate to a single <code>#</code></li>
     },
 
     // if no options or flags are to be passed, only the path is enough
-    // if path does not start with a ., the component is assumed
+    // if path does not start with a ., the component is assumed 
     // to be an npm module
     &quot;base.specifiations&quot;
 
@@ -281,7 +281,7 @@ will translate to a single <code>#</code></li>
     &quot;../another-folder/another.component&quot;
 ]</code></pre>
 <h2>The Resolver Functions</h2>
-<p><strong><code>base.resolver</code></strong> resolves the component dependencies and is responsible for starting any application built on top of
+<p><strong><code>base.resolver</code></strong> resolves the component dependencies and is responsible for starting any application built on top of 
 them. This component has the below functions</p>
 <ol>
 <li><p><strong><code>config</code></strong><code>(configPath|configArray, [basePath])</code> &#8594; <code>Promise</code></p>
@@ -291,7 +291,7 @@ them. This component has the below functions</p>
 array. We try to require the <code>configPath</code> directly. If that fails, it is joined with the current working
 directory of the process for resolution. The config array itself can also be passed instead of passing a
 <code>configPath</code>.</li>
-<li><strong><code>basePath</code></strong> basePath is an optional parameter which provides the absolute path from where the components
+<li><strong><code>basePath</code></strong> basePath is an optional parameter which provides the absolute path from where the components 
 should be resolved. If <code>basePath</code> is not provided, it is resolved as follows:<ul>
 <li>if the first parameter is a <code>configPath</code> string, the <code>basePath</code> is assumed to be the <code>configPath</code></li>
 <li>if the first parameter is a not a <code>configPath</code> string, the <code>basePath</code> is assumed to be the current working
@@ -299,18 +299,24 @@ directory for the process</li>
 </ul>
 </li>
 </ul>
-<p>This function returns a Promise that gets resolved with the resolver object when the configuration is done. This
+<p>This function returns a Promise that gets resolved with the resolver object when the configuration is done. This 
 promise is rejected with the error if configuration fails.</p>
 </li>
 <li><p><strong><code>start</code></strong><code>()</code> &#8594; <code>Promise</code></p>
 <p>The start function runs all starting components in the configuration, injecting all other dependencies required.</p>
-<p>This function returns a Promise that gets resolved with the resolver object when the startup is executed. This
+<p>This function returns a Promise that gets resolved with the resolver object when the startup is executed. This 
 promise is rejected with the error if start execution fails.</p>
+</li>
+<li><p><strong><code>unload</code></strong><code>()</code> &#8594; <code>Promise</code></p>
+<p>The unload function will call all registered unload handlers and clear off the dependency tree..</p>
+<p>This function returns a Promise that gets resolved with the resolver object when the unload is complete. This 
+promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
+never get resolved.</p>
 </li>
 <li><p><strong><code>restart</code></strong><code>()</code> &#8594; <code>Promise</code></p>
 <p>The restart function will re-configure and start all starting components in the configuration.
 If a <code>restart</code> is called before the previous <code>restart</code> is over, the previous <code>restart</code> will be interrupted.</p>
-<p>This function returns a Promise that gets resolved with the resolver object when the reload is complete. This
+<p>This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
 promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
 never get resolved.</p>
 </li>

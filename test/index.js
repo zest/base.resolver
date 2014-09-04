@@ -12,20 +12,22 @@ describe('base.resolver', function () {
     it('should throw an error if configured with a non existant file', function () {
         var resolver = this.resolver;
         expect(function () {
-            resolver.config('./test/data/configs/non-existant-path');
+            resolver('./test/data/configs/non-existant-path');
         }).to.throw(Error);
     });
     // it should configure properly with an existing file
     it('should configure properly with an existing file', function () {
-        var resolver = this.resolver.config('./test/data/configs/configuration-empty-array');
-        expect(resolver).to.equal(this.resolver);
-        expect(this.resolver).to.have.keys(['config', 'start', 'restart']);
+        expect(this.resolver('./test/data/configs/configuration-empty-array')).to.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]);
     });
     // it should not configure properly with a non array
     it('should not configure properly with a non array', function () {
         var resolver = this.resolver;
         expect(function () {
-            resolver.config('./test/data/configs/configuration-object');
+            return resolver('./test/data/configs/configuration-object');
         }).to.throw(Error);
     });
 });

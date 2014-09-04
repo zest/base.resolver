@@ -260,39 +260,48 @@ component configuration.
 ## The Resolver Functions
 
 **`base.resolver`** resolves the component dependencies and is responsible for starting any application built on top of 
-them. This component has the below functions
+them. This component exports a function which returns a Resolver for a given configuration. The function parameters are
+described below:
 
- 1. **`config`**`(configPath|configArray, [basePath])` &#8594; `Promise`
+**`base.resolver`**`(configPath|configArray, [basePath])` &#8594; `Resolver`
 
-    The config function configures the resolver. This function takes two parameter.
-     -  **`configPath|configArray`** If this parameter is a string, requiring the string path should return the config
-        array. We try to require the `configPath` directly. If that fails, it is joined with the current working
-        directory of the process for resolution. The config array itself can also be passed instead of passing a
-        `configPath`.
-     -  **`basePath`** basePath is an optional parameter which provides the absolute path from where the components 
-        should be resolved. If `basePath` is not provided, it is resolved as follows:
-         -  if the first parameter is a `configPath` string, the `basePath` is assumed to be the `configPath`
-         -  if the first parameter is a not a `configPath` string, the `basePath` is assumed to be the current working
-            directory for the process
+The function configures the resolver. This function takes two parameter.
 
-    This function returns a Promise that gets resolved with the resolver object when the configuration is done. This 
-    promise is rejected with the error if configuration fails.
+ -  **`configPath|configArray`** If this parameter is a string, requiring the string path should return the config
+    array. We try to require the `configPath` directly. If that fails, it is joined with the current working
+    directory of the process for resolution. The config array itself can also be passed instead of passing a
+    `configPath`.
+ -  **`basePath`** basePath is an optional parameter which provides the absolute path from where the components 
+    should be resolved. If `basePath` is not provided, it is resolved as follows:
+     -  if the first parameter is a `configPath` string, the `basePath` is assumed to be the `configPath`
+     -  if the first parameter is a not a `configPath` string, the `basePath` is assumed to be the current working
+        directory for the process
 
- 2. **`start`**`()` &#8594; `Promise`
+This function returns a configured Resolver object. The returned resolver object has the below methods:
 
-    The start function runs all starting components in the configuration, injecting all other dependencies required.
+ 1. **`load`**`()` &#8594; `Promise`
+
+    The load function runs all starting components in the configuration, injecting all other dependencies required.
     
-    This function returns a Promise that gets resolved with the resolver object when the startup is executed. This 
-    promise is rejected with the error if start execution fails.
+    This function returns a Promise that gets resolved with the resolver object when the load is executed. This promise
+    is rejected with the error if load execution fails.
 
- 3. **`restart`**`()` &#8594; `Promise`
+ 2. **`unload`**`()` &#8594; `Promise`
 
-    The restart function will re-configure and start all starting components in the configuration.
-    If a `restart` is called before the previous `restart` is over, the previous `restart` will be interrupted.
+    The unload function will call all registered unload handlers and clear off the dependency tree..
+    
+    This function returns a Promise that gets resolved with the resolver object when the unload is complete. This 
+    promise is rejected with the error if unload fails.
+
+ 3. **`reload`**`()` &#8594; `Promise`
+
+    The reload function will re-configure and start all starting components in the configuration. If a `reload` is 
+    called before the previous `reload` is over, the previous `reload` will be interrupted.
     
     This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
     promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
     never get resolved.
+
 
 [dependencies-image]: http://img.shields.io/david/soul-infra/base.resolver.svg?style=flat-square
 [dependencies-link]: https://david-dm.org/soul-infra/base.resolver#info=dependencies&view=list
