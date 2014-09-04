@@ -65,25 +65,36 @@ _component as an array of dependencies and factory function. Note that parameter
 user dependency is optional_
 
 ```js
-module.exports = ['database', 'user?', 'options', 'unload', function (db, user, opt, unload) {
-    return {
-        // component as an object
-    };
-};
+module.exports = [
+    'database',
+    'user?',
+    'options',
+    'unload', 
+    function (db, user, opt, unload) {
+        return {
+            // component as an object
+        };
+    }
+];
 ```
 _return value as a promise. Any of the above three declaration methods can return a promise instead of an object as 
 shown below_
 
 
 ```js
-module.exports = ['database', 'user', 'options', function (db, user, opt) {
-    return Q.Promise(function (resolve, reject) {
-        // some code
-        resolve({
-            // component as an object
+module.exports = [
+    'database',
+    'user',
+    'options',
+    function (db, user, opt) {
+        return Q.Promise(function (resolve, reject) {
+            // some code
+            resolve({
+                // component as an object
+            });
         });
-    });
-};
+    }
+];
 ```
 
 
@@ -232,9 +243,9 @@ component configuration.
     }, {
         packagePath: "soul-infra/datastore.mongo",
         options: {
-            // parameters can be injected inside the options using the #[param-number] format
-            // also the OR modifier | can be used to degrade to defaults. The below string will 
-            // evaluate to:
+            // parameters can be injected inside the options using the #[param-number]
+            // format. The OR modifier | can also be used to degrade to defaults. The
+            // below string will evaluate to:
             //      the first parameter passed to get the component if it exists
             //      123.456.789.100 is the first parameter is not there
             host: "#[1]|123.456.789.100"
