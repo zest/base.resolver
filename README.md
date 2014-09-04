@@ -44,39 +44,48 @@ Example configurations are shown below:
 
 _object as a component_
 
-    module.exports = {
-        // component as an object
-    };
+```js
+module.exports = {
+    // component as an object
+};
+```
 
 _component as a factory function. Note the parameter names should match dependency names_
 
-    module.exports = function (database, user, options) {
-        return {
-            // component as an object
-        };
+
+```js
+module.exports = function (database, user, options) {
+    return {
+        // component as an object
     };
+};
+```
 
 _component as an array of dependencies and factory function. Note that parameter names can be anything here. Also, the
 user dependency is optional_
 
-    module.exports = ['database', 'user?', 'options', 'unload', function (db, user, opt, unload) {
-        return {
-            // component as an object
-        };
+```js
+module.exports = ['database', 'user?', 'options', 'unload', function (db, user, opt, unload) {
+    return {
+        // component as an object
     };
-
+};
+```
 _return value as a promise. Any of the above three declaration methods can return a promise instead of an object as 
 shown below_
 
-    module.exports = ['database', 'user', 'options', function (db, user, opt) {
-        return Q.Promise(function (resolve, reject) {
-            // some code
-            resolve({
-                // component as an object
-            });
+
+```js
+module.exports = ['database', 'user', 'options', function (db, user, opt) {
+    return Q.Promise(function (resolve, reject) {
+        // some code
+        resolve({
+            // component as an object
         });
-    };
- 
+    });
+};
+```
+
 
 ### Naming Modularized Components
 
@@ -86,12 +95,14 @@ folder in the code tree.), for base.resolver to register this module as a named 
 
 The package.json structure for the component can be as described:
 
-    // package.json
-    {
-        ...
-        "soul-component": "privilege"
-        ...
-    }
+```js
+// package.json
+{
+    ...
+    "soul-component": "privilege"
+    ...
+}
+```
 
 
 ### Naming Non-Modularized Components
@@ -171,7 +182,7 @@ The dependency names are resolved using the below steps:
     is found, the behavior is un-predictable. 
 
     > eg. `databaseMongoLocal` will try to resolve to `database-mongoLocal`, `databaseMongo-local`,
-    > `database-mongo-local`, `database-mongo!local`, `database.mongoLocal`... and all other combinations possible. If
+    > `database-mongo-local`, `database-mongo.local`, `database.mongoLocal`... and all other combinations possible. If
     > there are more than components defined with any of these names, the resolution is unpredictable.
 
 
@@ -209,41 +220,42 @@ component configuration.
             will translate to a single `#`
      -  **`startup`** &#8594; is optional and is used to specify if a component is a starting component.
 
-
-    [
-        // use an object when options are required
-        {
-            path: "./application.rest",
-            startup: true,
-            options: {
-                port: 8080
-            }
-        }, {
-            packagePath: "soul-infra/datastore.mongo",
-            options: {
-                host: "#[1]|123.456.789.100"
-            }
-        },
-        
-        // if no options or flags are to be passed, only the path is enough
-        // if path does not start with a ., the component is assumed 
-        // to be an npm module
-        "base.specifiations"
-        
-        // if path does not start with a ., and has a /, the component
-        // is assumed to be a git repository
-        "soul-infra/base.logger",
-        
-        // if path starts with a ., it is assumed to be a local path
-        "./filestore.disk",
-        "../another-folder/another.component",
-        
-        // multiple dependencies can be defined using the same component by 
-        // adding the !<<specific-name>> syntax. the dependency name will then
-        // be appended with !<<specific-name>> for resolution
-        "./filestore.disk!user-data",
-        "./filestore.disk!static-server-files"
-    ]
+```js
+[
+    // use an object when options are required
+    {
+        path: "./application.rest",
+        startup: true,
+        options: {
+            port: 8080
+        }
+    }, {
+        packagePath: "soul-infra/datastore.mongo",
+        options: {
+            host: "#[1]|123.456.789.100"
+        }
+    },
+    
+    // if no options or flags are to be passed, only the path is enough
+    // if path does not start with a ., the component is assumed 
+    // to be an npm module
+    "base.specifiations"
+    
+    // if path does not start with a ., and has a /, the component
+    // is assumed to be a git repository
+    "soul-infra/base.logger",
+    
+    // if path starts with a ., it is assumed to be a local path
+    "./filestore.disk",
+    "../another-folder/another.component",
+    
+    // multiple dependencies can be defined using the same component by 
+    // adding the !<<specific-name>> syntax. the dependency name will then
+    // be appended with !<<specific-name>> for resolution
+    "./filestore.disk!user-data",
+    "./filestore.disk!static-server-files"
+]
+```
 
 
 ## The Resolver Functions
