@@ -109,21 +109,32 @@ resolve the component.</p>
 };</code></pre>
 <p><em>component as an array of dependencies and factory function. Note that parameter names can be anything here. Also, the
 user dependency is optional</em></p>
-<pre><code class="lang-js">module.exports = ['database', 'user?', 'options', 'unload', function (db, user, opt, unload) {
-    return {
-        // component as an object
-    };
-};</code></pre>
+<pre><code class="lang-js">module.exports = [
+    'database',
+    'user?',
+    'options',
+    'unload',
+    function (db, user, opt, unload) {
+        return {
+            // component as an object
+        };
+    }
+];</code></pre>
 <p><em>return value as a promise. Any of the above three declaration methods can return a promise instead of an object as 
 shown below</em></p>
-<pre><code class="lang-js">module.exports = ['database', 'user', 'options', function (db, user, opt) {
-    return Q.Promise(function (resolve, reject) {
-        // some code
-        resolve({
-            // component as an object
+<pre><code class="lang-js">module.exports = [
+    'database',
+    'user',
+    'options',
+    function (db, user, opt) {
+        return Q.Promise(function (resolve, reject) {
+            // some code
+            resolve({
+                // component as an object
+            });
         });
-    });
-};</code></pre>
+    }
+];</code></pre>
 <h3>Naming Modularized Components</h3>
 <p>If a component is a node module complete with a package.json file (it need not actually be in npm, it can be a simple
 folder in the code tree.), for base.resolver to register this module as a named component that is injectable, a 
@@ -199,14 +210,16 @@ if databaseMongo cannot be resolved</li>
 <p>eg. <code>database</code> will get resolved to a component with name <code>database</code> if it exists.</p>
 </blockquote>
 </li>
-<li><p>If <strong><code>[step 1]</code></strong> fails, the component name is transformed to camel-case, <code>-</code> and <code>.</code> separated, and a resolution
-is attempted for any one of the transformed names. There is no priority specified, so, If more than one resolution
-is found, the behavior is un-predictable. </p>
+<li><p>If <strong><code>[step 1]</code></strong> fails, and factory function style declaration is used, the component name is transformed from
+camel-case to <code>-</code> and <code>.</code> separated, and a resolution is attempted for any one of the transformed names. There is
+no priority specified, so, If more than one resolution is found, the behavior is un-predictable. </p>
 <blockquote>
 <p>eg. <code>databaseMongoLocal</code> will try to resolve to <code>database-mongoLocal</code>, <code>databaseMongo-local</code>,
 <code>database-mongo-local</code>, <code>database-mongo.local</code>, <code>database.mongoLocal</code>... and all other combinations possible. If
 there are more than components defined with any of these names, the resolution is unpredictable.</p>
 </blockquote>
+</li>
+<li><p>For all other cases, the resolution fails.</p>
 </li>
 </ol>
 <h3>Explicit Dependencies</h3>
@@ -258,9 +271,9 @@ will translate to a single <code>#</code></li>
     }, {
         packagePath: &quot;soul-infra/datastore.mongo&quot;,
         options: {
-            // parameters can be injected inside the options using the #[param-number] format
-            // also the OR modifier | can be used to degrade to defaults. The below string will 
-            // evaluate to:
+            // parameters can be injected inside the options using the #[param-number]
+            // format. The OR modifier | can also be used to degrade to defaults. The
+            // below string will evaluate to:
             //      the first parameter passed to get the component if it exists
             //      123.456.789.100 is the first parameter is not there
             host: &quot;#[1]|123.456.789.100&quot;
@@ -282,10 +295,10 @@ will translate to a single <code>#</code></li>
 ]</code></pre>
 <h2>The Resolver Functions</h2>
 <p><strong><code>base.resolver</code></strong> resolves the component dependencies and is responsible for starting any application built on top of 
-them. This component has the below functions</p>
-<ol>
-<li><p><strong><code>config</code></strong><code>(configPath|configArray, [basePath])</code> &#8594; <code>Promise</code></p>
-<p>The config function configures the resolver. This function takes two parameter.</p>
+them. This component exports a function which returns a Resolver for a given configuration. The function parameters are
+described below:</p>
+<p><strong><code>base.resolver</code></strong><code>(configPath|configArray, [basePath])</code> &#8594; <code>Resolver</code></p>
+<p>The function configures the resolver. This function takes two parameter.</p>
 <ul>
 <li><strong><code>configPath|configArray</code></strong> If this parameter is a string, requiring the string path should return the config
 array. We try to require the <code>configPath</code> directly. If that fails, it is joined with the current working
@@ -299,23 +312,21 @@ directory for the process</li>
 </ul>
 </li>
 </ul>
-<p>This function returns a Promise that gets resolved with the resolver object when the configuration is done. This 
-promise is rejected with the error if configuration fails.</p>
-</li>
-<li><p><strong><code>start</code></strong><code>()</code> &#8594; <code>Promise</code></p>
-<p>The start function runs all starting components in the configuration, injecting all other dependencies required.</p>
-<p>This function returns a Promise that gets resolved with the resolver object when the startup is executed. This 
-promise is rejected with the error if start execution fails.</p>
+<p>This function returns a configured Resolver object. The returned resolver object has the below methods:</p>
+<ol>
+<li><p><strong><code>load</code></strong><code>()</code> &#8594; <code>Promise</code></p>
+<p>The load function runs all starting components in the configuration, injecting all other dependencies required.</p>
+<p>This function returns a Promise that gets resolved with the resolver object when the load is executed. This promise
+is rejected with the error if load execution fails.</p>
 </li>
 <li><p><strong><code>unload</code></strong><code>()</code> &#8594; <code>Promise</code></p>
 <p>The unload function will call all registered unload handlers and clear off the dependency tree..</p>
 <p>This function returns a Promise that gets resolved with the resolver object when the unload is complete. This 
-promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
-never get resolved.</p>
+promise is rejected with the error if unload fails.</p>
 </li>
-<li><p><strong><code>restart</code></strong><code>()</code> &#8594; <code>Promise</code></p>
-<p>The restart function will re-configure and start all starting components in the configuration.
-If a <code>restart</code> is called before the previous <code>restart</code> is over, the previous <code>restart</code> will be interrupted.</p>
+<li><p><strong><code>reload</code></strong><code>()</code> &#8594; <code>Promise</code></p>
+<p>The reload function will re-configure and start all starting components in the configuration. If a <code>reload</code> is
+called before the previous <code>reload</code> is over, the previous <code>reload</code> will be interrupted.</p>
 <p>This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
 promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
 never get resolved.</p>
