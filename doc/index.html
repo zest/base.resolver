@@ -113,7 +113,7 @@ user dependency is optional</em></p>
     'database',
     'user?',
     'options',
-    'unload',
+    'unload', 
     function (db, user, opt, unload) {
         return {
             // component as an object
@@ -210,7 +210,7 @@ if databaseMongo cannot be resolved</li>
 <p>eg. <code>database</code> will get resolved to a component with name <code>database</code> if it exists.</p>
 </blockquote>
 </li>
-<li><p>If <strong><code>[step 1]</code></strong> fails, and factory function style declaration is used, the component name is transformed from
+<li><p>If <strong><code>[step 1]</code></strong> fails, and factory function style declaration is used, the component name is transformed from 
 camel-case to <code>-</code> and <code>.</code> separated, and a resolution is attempted for any one of the transformed names. There is
 no priority specified, so, If more than one resolution is found, the behavior is un-predictable. </p>
 <blockquote>
@@ -252,8 +252,8 @@ the following keys:</p>
 <li><strong><code>options</code></strong> &#8594; the options to be passed to instantiate the component.<ul>
 <li>The <a href="#modifiers">Parameter Modifier</a> can be used here using the <code>#[param-number]</code> format</li>
 <li>The <code>|</code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)</li>
-<li>If <code>#</code> or <code>|</code> are to be used as literals in option, they must be escaped by writing them twice. Eg. <code>##</code>
-will translate to a single <code>#</code></li>
+<li>If <code>#</code>, <code>|</code> or <code>/</code> are to be used as literals in option, they must be escaped by a <code>/</code>. Eg. <code>/#</code> will 
+translate to a single <code>#</code></li>
 </ul>
 </li>
 <li><strong><code>startup</code></strong> &#8594; is optional and is used to specify if a component is a starting component.</li>
@@ -325,7 +325,7 @@ is rejected with the error if load execution fails.</p>
 promise is rejected with the error if unload fails.</p>
 </li>
 <li><p><strong><code>reload</code></strong><code>()</code> &#8594; <code>Promise</code></p>
-<p>The reload function will re-configure and start all starting components in the configuration. If a <code>reload</code> is
+<p>The reload function will re-configure and start all starting components in the configuration. If a <code>reload</code> is 
 called before the previous <code>reload</code> is over, the previous <code>reload</code> will be interrupted.</p>
 <p>This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
 promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will

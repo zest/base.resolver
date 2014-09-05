@@ -229,8 +229,8 @@ component configuration.
      -  **`options`** &#8594; the options to be passed to instantiate the component.
          -  The [Parameter Modifier](#modifiers) can be used here using the `#[param-number]` format
          -  The `|` (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)
-         -  If `#` or `|` are to be used as literals in option, they must be escaped by writing them twice. Eg. `##`
-            will translate to a single `#`
+         -  If `#`, `|` or `/` are to be used as literals in option, they must be escaped by a `/`. Eg. `/#` will 
+            translate to a single `#`
      -  **`startup`** &#8594; is optional and is used to specify if a component is a starting component.
 
 ```js
