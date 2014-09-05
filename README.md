@@ -195,7 +195,8 @@ The dependency names are resolved using the below steps:
     > eg. `databaseMongoLocal` will try to resolve to `database-mongoLocal`, `databaseMongo-local`,
     > `database-mongo-local`, `database-mongo.local`, `database.mongoLocal`... and all other combinations possible. If
     > there are more than components defined with any of these names, the resolution is unpredictable.
-
+    FIXME: Lets not do this for array style. Think how to denormalize for function style...
+    
 
 ### Explicit Dependencies
 
