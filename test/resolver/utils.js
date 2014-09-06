@@ -85,7 +85,7 @@ describe('base.resolver.utils', function () {
     });
     describe('#resolveExpression', function () {
         it('should return a non string primitive value as is', function () {
-            var spy = chai.spy(function (val) {
+            var spy = chai.spy(function () {
                 throw new Error();
             });
             return expect(
@@ -123,7 +123,7 @@ describe('base.resolver.utils', function () {
             );
         });
         it('should resolve the OPTIONAL(?) expressions', function () {
-            var spy = chai.spy(function (val) {
+            var spy = chai.spy(function () {
                 return undefined;
             });
             return expect(
@@ -136,7 +136,7 @@ describe('base.resolver.utils', function () {
             );
         });
         it('should throw an error if no value is found', function () {
-            var spy = chai.spy(function (val) {
+            var spy = chai.spy(function () {
                 return undefined;
             });
             return expect(
@@ -210,7 +210,7 @@ describe('base.resolver.utils', function () {
             return expect(
                 utils.resolveExpression('1|2|3|non/?numeric/?//string|ass|6', function (val) {
                     return Q.Promise(
-                        function (resolve, reject) {
+                        function (resolve) {
                             setTimeout(function () {
                                 resolve(spy(val));
                             }, 300);
@@ -235,17 +235,17 @@ describe('base.resolver.utils', function () {
                     return val;
                 }
                 return;
-            });
+            }), obj = {
+                alpha: "alpha",
+                beta: "u|beta|u",
+                gamma: [
+                    "u|gamma|u",
+                    "u|u|theta|u",
+                    "u|u|u?"
+                ]
+            };
             return expect(
-                utils.resolveExpression({
-                    alpha: "alpha",
-                    beta: "u|beta|u",
-                    gamma: [
-                        "u|gamma|u",
-                        "u|u|theta|u",
-                        "u|u|u?"
-                    ]
-                }, spy)
+                utils.resolveExpression(obj, spy)
             ).to.eventually.eql(
                 {
                     alpha: "alpha",
@@ -264,6 +264,15 @@ describe('base.resolver.utils', function () {
                     expect(spy).to.have.been.called.with('gamma');
                     expect(spy).to.have.been.called.with('theta');
                     expect(spy).to.have.been.called.with('u');
+                    expect(obj).to.eql({
+                        alpha: "alpha",
+                        beta: "u|beta|u",
+                        gamma: [
+                            "u|gamma|u",
+                            "u|u|theta|u",
+                            "u|u|u?"
+                        ]
+                    });
                 }
             );
         });
