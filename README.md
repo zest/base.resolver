@@ -227,7 +227,7 @@ component configuration.
          -  if path does not start with a ., and has a single /, the component is assumed to be a git repository
          -  in all other cases, the component is assumed to be located at the path specified in the local disk 
      -  **`options`** &#8594; the options to be passed to instantiate the component.
-         -  The [Parameter Modifier](#modifiers) can be used here using the `#[param-number]` format
+         -  The [Parameter Modifier](#modifiers) can be used here using the `{param-number}` format
          -  The `|` (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)
          -  If `#`, `|` or `/` are to be used as literals in option, they must be escaped by a `/`. Eg. `/#` will 
             translate to a single `#`
@@ -245,12 +245,12 @@ component configuration.
     }, {
         packagePath: "soul-infra/datastore.mongo",
         options: {
-            // parameters can be injected inside the options using the #[param-number]
+            // parameters can be injected inside the options using the {param-number}
             // format. The OR modifier | can also be used to degrade to defaults. The
             // below string will evaluate to:
             //      the first parameter passed to get the component if it exists
             //      123.456.789.100 is the first parameter is not there
-            host: "#[1]|123.456.789.100"
+            host: "{1}|123.456.789.100"
         }
     },
     
