@@ -211,12 +211,13 @@ if databaseMongo cannot be resolved</li>
 </blockquote>
 </li>
 <li><p>If <strong><code>[step 1]</code></strong> fails, and factory function style declaration is used, the component name is transformed from 
-camel-case to <code>-</code> and <code>.</code> separated, and a resolution is attempted for any one of the transformed names. There is
-no priority specified, so, If more than one resolution is found, the behavior is un-predictable. </p>
+camel-case to <code>-</code> and <code>.</code> separated, and a resolution is attempted for the transformed names in sequence. The first
+resolution is considered.</p>
 <blockquote>
-<p>eg. <code>databaseMongoLocal</code> will try to resolve to <code>database-mongoLocal</code>, <code>databaseMongo-local</code>,
-<code>database-mongo-local</code>, <code>database-mongo.local</code>, <code>database.mongoLocal</code>... and all other combinations possible. If
-there are more than components defined with any of these names, the resolution is unpredictable.</p>
+<p>eg. <code>databaseMongoLocal</code> will try to resolve to <code>databaseMongoLocal</code>. If there are no components with that name,
+<code>database-mongo-local</code> will be tried. If <code>database-mongo-local</code> is also not resolved, <code>database.mongo.local</code> will
+be tried. The first resolution will be taken as the value and if none of them resolves, the component will fail
+to resolve..</p>
 </blockquote>
 </li>
 <li><p>For all other cases, the resolution fails.</p>
@@ -250,7 +251,7 @@ the following keys:</p>
 </ul>
 </li>
 <li><strong><code>options</code></strong> &#8594; the options to be passed to instantiate the component.<ul>
-<li>The <a href="#modifiers">Parameter Modifier</a> can be used here using the <code>#[param-number]</code> format</li>
+<li>The <a href="#modifiers">Parameter Modifier</a> can be used here using the <code>{param-number}</code> format</li>
 <li>The <code>|</code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)</li>
 <li>If <code>#</code>, <code>|</code> or <code>/</code> are to be used as literals in option, they must be escaped by a <code>/</code>. Eg. <code>/#</code> will 
 translate to a single <code>#</code></li>
@@ -271,12 +272,12 @@ translate to a single <code>#</code></li>
     }, {
         packagePath: &quot;soul-infra/datastore.mongo&quot;,
         options: {
-            // parameters can be injected inside the options using the #[param-number]
+            // parameters can be injected inside the options using the {param-number}
             // format. The OR modifier | can also be used to degrade to defaults. The
             // below string will evaluate to:
             //      the first parameter passed to get the component if it exists
             //      123.456.789.100 is the first parameter is not there
-            host: &quot;#[1]|123.456.789.100&quot;
+            host: &quot;{1}|123.456.789.100&quot;
         }
     },
 

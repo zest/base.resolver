@@ -5,7 +5,6 @@
         "startup": true
     },
     "../independent-components/js-named-component",
-
     {
         "path": "../independent-components/js-unnamed-component",
         "startup": true

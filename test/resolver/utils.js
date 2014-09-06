@@ -49,6 +49,15 @@ describe('base.resolver.utils', function () {
                 ])
             ).to.eql(false);
             expect(
+                utils.isInjectorArray([
+                    'a',
+                    function () {
+                        return;
+                    },
+                    'b'
+                ])
+            ).to.eql(false);
+            expect(
                 utils.isInjectorArray({})
             ).to.eql(false);
             expect(
@@ -66,6 +75,19 @@ describe('base.resolver.utils', function () {
                 [
                     'x',
                     'y',
+                    'z'
+                ]
+            );
+        });
+        it('should respect the resolution sequence for camel cased names', function () {
+            expect(
+                utils.getDependencies(function (aliBabaChalis, aAAA, z) {
+                    return;
+                })
+            ).to.eql(
+                [
+                    'aliBabaChalis|ali-baba-chalis|ali.baba.chalis',
+                    'aAAA|a-a-a-a|a.a.a.a',
                     'z'
                 ]
             );

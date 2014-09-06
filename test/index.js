@@ -28,14 +28,31 @@ describe('base.resolver', function () {
     });
     // it should configure independent modules properly
     it('should configure independent modules properly', function () {
-        return expect(resolver('./test/data/configs/configuration-all')).to.eventually.have.keys([
+        var loggerSpy = chai.spy(function () {
+            return;
+        }), oldLogger;
+        return expect(resolver('./test/data/configs/configuration-nodep')).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]).then(function (resolver) {
+            oldLogger = console.log;
+            console.log = loggerSpy;
+            return resolver.load();
+        }).then(function () {
+            console.log = oldLogger;
+            expect(loggerSpy).to.have.been.called.exactly(1);
+            expect(loggerSpy).to.have.been.called.with('js-unnamed-component');
+        });
+    });
+    // it should configure dependant modules properly
+    it('should configure dependant modules properly', function () {
+        return expect(resolver('./test/data/configs/configuration-dependency')).to.eventually.have.keys([
             'load',
             'unload',
             'reload'
         ]).then(function (resolver) {
             return resolver.load();
-        }).then(function () {
-            return;
         });
     });
 });

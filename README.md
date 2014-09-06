@@ -189,12 +189,13 @@ The dependency names are resolved using the below steps:
     > eg. `database` will get resolved to a component with name `database` if it exists.
 
  2. If **`[step 1]`** fails, and factory function style declaration is used, the component name is transformed from 
-    camel-case to `-` and `.` separated, and a resolution is attempted for any one of the transformed names. There is
-    no priority specified, so, If more than one resolution is found, the behavior is un-predictable. 
+    camel-case to `-` and `.` separated, and a resolution is attempted for the transformed names in sequence. The first
+    resolution is considered.
 
-    > eg. `databaseMongoLocal` will try to resolve to `database-mongoLocal`, `databaseMongo-local`,
-    > `database-mongo-local`, `database-mongo.local`, `database.mongoLocal`... and all other combinations possible. If
-    > there are more than components defined with any of these names, the resolution is unpredictable.
+    > eg. `databaseMongoLocal` will try to resolve to `databaseMongoLocal`. If there are no components with that name,
+    > `database-mongo-local` will be tried. If `database-mongo-local` is also not resolved, `database.mongo.local` will
+    > be tried. The first resolution will be taken as the value and if none of them resolves, the component will fail
+    > to resolve..
 
  3. For all other cases, the resolution fails.
 
