@@ -1,0 +1,4 @@
+{
+    "main": "./index.js",
+    "soul-component": "module-named-component"
+}

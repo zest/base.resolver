@@ -6,6 +6,56 @@ var utils = require('../../lib/resolver/utils'),
 chai.use(require('chai-as-promised'));
 chai.use(require('chai-spies'));
 describe('base.resolver.utils', function () {
+    describe('#isInjectorArray', function () {
+        it('should be able to identify an injector array', function () {
+            expect(
+                utils.isInjectorArray([
+                    function () {
+                        return;
+                    }
+                ])
+            ).to.eql(true);
+            expect(
+                utils.isInjectorArray([
+                    'a',
+                    'b',
+                    function () {
+                        return;
+                    }
+                ])
+            ).to.eql(true);
+            expect(
+                utils.isInjectorArray([
+                    'a',
+                    'b'
+                ])
+            ).to.eql(false);
+            expect(
+                utils.isInjectorArray([
+                    'a',
+                    {},
+                    function () {
+                        return;
+                    }
+                ])
+            ).to.eql(false);
+            expect(
+                utils.isInjectorArray([
+                    'a',
+                    [],
+                    function () {
+                        return;
+                    }
+                ])
+            ).to.eql(false);
+            expect(
+                utils.isInjectorArray({})
+            ).to.eql(false);
+            expect(
+                utils.isInjectorArray(2)
+            ).to.eql(false);
+        });
+    });
     describe('#getParams', function () {
         it('should get params for a function', function () {
             expect(
@@ -34,6 +84,18 @@ describe('base.resolver.utils', function () {
         });
     });
     describe('#resolveExpression', function () {
+        it('should return a non string primitive value as is', function () {
+            var spy = chai.spy(function (val) {
+                throw new Error();
+            });
+            return expect(
+                utils.resolveExpression(2, spy)
+            ).to.eventually.eql(2).then(
+                function () {
+                    expect(spy).to.have.been.called.exactly(0);
+                }
+            );
+        });
         it('should resolve a single value', function () {
             var spy = chai.spy(function (val) {
                 return val;
@@ -47,7 +109,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
-        it('should resolve or (|) expressions', function () {
+        it('should resolve the OR(|) expressions', function () {
             var spy = chai.spy(function (val) {
                 return val;
             });
@@ -60,7 +122,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
-        it('should resolve optional (?) expressions', function () {
+        it('should resolve the OPTIONAL(?) expressions', function () {
             var spy = chai.spy(function (val) {
                 return undefined;
             });
@@ -167,6 +229,44 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        it('should parse objects recursively', function () {
+            var spy = chai.spy(function (val) {
+                if (val !== 'u') {
+                    return val;
+                }
+                return;
+            });
+            return expect(
+                utils.resolveExpression({
+                    alpha: "alpha",
+                    beta: "u|beta|u",
+                    gamma: [
+                        "u|gamma|u",
+                        "u|u|theta|u",
+                        "u|u|u?"
+                    ]
+                }, spy)
+            ).to.eventually.eql(
+                {
+                    alpha: "alpha",
+                    beta: "beta",
+                    gamma: [
+                        "gamma",
+                        "theta",
+                        undefined
+                    ]
+                }
+            ).then(
+                function () {
+                    expect(spy).to.have.been.called.exactly(11);
+                    expect(spy).to.have.been.called.with('alpha');
+                    expect(spy).to.have.been.called.with('beta');
+                    expect(spy).to.have.been.called.with('gamma');
+                    expect(spy).to.have.been.called.with('theta');
+                    expect(spy).to.have.been.called.with('u');
+                }
+            );
+        });
         it('should be able to handle rejections', function () {
             var spy = chai.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
@@ -216,7 +316,6 @@ describe('base.resolver.utils', function () {
                     expect(spy).to.have.been.called.with('non/?numeric?/string');
                     expect(spy).to.not.have.been.called.with('5');
                     expect(spy).to.not.have.been.called.with('6');
-                    // i love u
                 }
             );
         });
