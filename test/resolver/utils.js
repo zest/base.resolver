@@ -56,10 +56,10 @@ describe('base.resolver.utils', function () {
             ).to.eql(false);
         });
     });
-    describe('#getParams', function () {
+    describe('#getDependencies', function () {
         it('should get params for a function', function () {
             expect(
-                utils.getParams(function (x, y, z) {
+                utils.getDependencies(function (x, y, z) {
                     return (x + y + z);
                 })
             ).to.eql(
@@ -72,14 +72,14 @@ describe('base.resolver.utils', function () {
         });
         it('should return an empty array for a function with no params', function () {
             expect(
-                utils.getParams(function () {
+                utils.getDependencies(function () {
                     return;
                 })
             ).to.eql([]);
         });
         it('should throw an error if it is not passed a function', function () {
             expect(function () {
-                return utils.getParams({});
+                return utils.getDependencies({});
             }).to.throw(Error);
         });
     });
@@ -314,6 +314,34 @@ describe('base.resolver.utils', function () {
                     expect(spy).to.have.been.called.with('2');
                     expect(spy).to.have.been.called.with('3');
                     expect(spy).to.have.been.called.with('non/?numeric?/string');
+                    expect(spy).to.not.have.been.called.with('5');
+                    expect(spy).to.not.have.been.called.with('6');
+                }
+            );
+        });
+        it('should be able to integrate escapes properly', function () {
+            var spy = chai.spy(function () {
+                if (arguments.length === 1) {
+                    return undefined;
+                }
+                return Array.prototype.slice.call(arguments, 0);
+            });
+            return expect(
+                utils.resolveExpression('1|2|3/#|non///?numeric/?/#///#string#a#b#c/#d|5|6', spy)
+            ).to.eventually.eql(
+                [
+                    'non/?numeric?#/#string',
+                    'a',
+                    'b',
+                    'c#d'
+                ]
+            ).then(
+                function () {
+                    expect(spy).to.have.been.called.exactly(4);
+                    expect(spy).to.have.been.called.with('1');
+                    expect(spy).to.have.been.called.with('2');
+                    expect(spy).to.have.been.called.with('3#');
+                    expect(spy).to.have.been.called.with('non/?numeric?#/#string', 'a', 'b', 'c#d');
                     expect(spy).to.not.have.been.called.with('5');
                     expect(spy).to.not.have.been.called.with('6');
                 }
