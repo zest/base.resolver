@@ -44,7 +44,8 @@
         "grunt-jsdoc": "*",
         "grunt-mocha-cov": "*",
         "chai": "*",
-        "chai-spies": "*",
+        "sinon": "*",
+        "sinon-chai": "*",
         "chai-as-promised": "*",
         "merge": "*"
     },

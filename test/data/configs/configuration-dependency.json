@@ -2,12 +2,12 @@
     "../independent-components/json-named-component",
     {
         "path": "../independent-components/json-unnamed-component",
-        "startup": false
+        "startup": true
     },
     "../independent-components/js-named-component",
     {
         "path": "../independent-components/js-unnamed-component",
-        "startup": false
+        "startup": true
     },
     "../independent-components/module-named-component",
     "../independent-components/module-unnamed-component",

@@ -2,9 +2,10 @@
 var utils = require('../../lib/resolver/utils'),
     Q = require('q'),
     chai = require('chai'),
+    sinon = require('sinon'),
     expect = require('chai').expect;
 chai.use(require('chai-as-promised'));
-chai.use(require('chai-spies'));
+chai.use(require('sinon-chai'));
 describe('base.resolver.utils', function () {
     describe('#isInjectorArray', function () {
         it('should be able to identify an injector array', function () {
@@ -24,6 +25,8 @@ describe('base.resolver.utils', function () {
                     }
                 ])
             ).to.eql(true);
+        });
+        it('shoul be able to identify arrays that are not injectors', function () {
             expect(
                 utils.isInjectorArray([
                     'a',
@@ -57,6 +60,8 @@ describe('base.resolver.utils', function () {
                     'b'
                 ])
             ).to.eql(false);
+        });
+        it('should be able to identify objects as not injectors', function () {
             expect(
                 utils.isInjectorArray({})
             ).to.eql(false);
@@ -107,126 +112,126 @@ describe('base.resolver.utils', function () {
     });
     describe('#resolveExpression', function () {
         it('should return a non string primitive value as is', function () {
-            var spy = chai.spy(function () {
+            var spy = sinon.spy(function () {
                 throw new Error();
             });
             return expect(
                 utils.resolveExpression(2, spy)
             ).to.eventually.eql(2).then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(0);
+                    expect(spy).to.have.callCount(0);
                 }
             );
         });
         it('should resolve a single value', function () {
-            var spy = chai.spy(function (val) {
-                return val;
+            var spy = sinon.spy(function (value, params, expression) {
+                return expression;
             });
             return expect(
                 utils.resolveExpression('just a string', spy)
             ).to.eventually.equal('just a string').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(1);
-                    expect(spy).to.have.been.called.with('just a string');
+                    expect(spy).to.have.callCount(1);
+                    expect(spy).to.have.been.calledWith('just a string', [], 'just a string');
                 }
             );
         });
         it('should resolve the OR(|) expressions', function () {
-            var spy = chai.spy(function (val) {
-                return val;
+            var spy = sinon.spy(function (value, params, expression) {
+                return expression;
             });
             return expect(
                 utils.resolveExpression('string1|string2', spy)
             ).to.eventually.equal('string1').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(1);
-                    expect(spy).to.have.been.called.with('string1');
+                    expect(spy).to.have.callCount(1);
+                    expect(spy).to.have.been.calledWith('string1', [], 'string1');
                 }
             );
         });
         it('should resolve the OPTIONAL(?) expressions', function () {
-            var spy = chai.spy(function () {
+            var spy = sinon.spy(function (value, params, expression) {
                 return undefined;
             });
             return expect(
                 utils.resolveExpression('string1?', spy)
             ).to.eventually.equal(undefined).then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(1);
-                    expect(spy).to.have.been.called.with('string1');
+                    expect(spy).to.have.callCount(1);
+                    expect(spy).to.have.been.calledWith('string1');
                 }
             );
         });
         it('should throw an error if no value is found', function () {
-            var spy = chai.spy(function () {
+            var spy = sinon.spy(function () {
                 return undefined;
             });
             return expect(
                 utils.resolveExpression('string1', spy)
             ).to.eventually.be.rejectedWith(Error).then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(1);
-                    expect(spy).to.have.been.called.with('string1');
+                    expect(spy).to.have.callCount(1);
+                    expect(spy).to.have.been.calledWith('string1');
                 }
             );
         });
         it('should get values for compound expressions', function () {
-            var spy = chai.spy(function (val) {
+            var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
             });
             return expect(
                 utils.resolveExpression('1|2|3|non numeric string|5|6', spy)
             ).to.eventually.equal('non numeric string').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(4);
-                    expect(spy).to.have.been.called.with('1');
-                    expect(spy).to.have.been.called.with('2');
-                    expect(spy).to.have.been.called.with('3');
-                    expect(spy).to.have.been.called.with('non numeric string');
-                    expect(spy).to.not.have.been.called.with('5');
-                    expect(spy).to.not.have.been.called.with('6');
+                    expect(spy).to.have.callCount(4);
+                    expect(spy).to.have.been.calledWith('1');
+                    expect(spy).to.have.been.calledWith('2');
+                    expect(spy).to.have.been.calledWith('3');
+                    expect(spy).to.have.been.calledWith('non numeric string');
+                    expect(spy).to.not.have.been.calledWith('5');
+                    expect(spy).to.not.have.been.calledWith('6');
                 }
             );
         });
         it('should escape strings with | properly', function () {
-            var spy = chai.spy(function (val) {
+            var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
             });
             return expect(
                 utils.resolveExpression('1|2|3|non/|numeric/|string|5|6', spy)
             ).to.eventually.equal('non|numeric|string').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(4);
-                    expect(spy).to.have.been.called.with('1');
-                    expect(spy).to.have.been.called.with('2');
-                    expect(spy).to.have.been.called.with('3');
-                    expect(spy).to.have.been.called.with('non|numeric|string');
-                    expect(spy).to.not.have.been.called.with('5');
-                    expect(spy).to.not.have.been.called.with('6');
+                    expect(spy).to.have.callCount(4);
+                    expect(spy).to.have.been.calledWith('1');
+                    expect(spy).to.have.been.calledWith('2');
+                    expect(spy).to.have.been.calledWith('3');
+                    expect(spy).to.have.been.calledWith('non|numeric|string');
+                    expect(spy).to.not.have.been.calledWith('5');
+                    expect(spy).to.not.have.been.calledWith('6');
                 }
             );
         });
         it('should escape strings with ? properly', function () {
-            var spy = chai.spy(function (val) {
+            var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
             });
             return expect(
                 utils.resolveExpression('1|2|3|non/?numeric/?//string|5|6', spy)
             ).to.eventually.equal('non?numeric?/string').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(4);
-                    expect(spy).to.have.been.called.with('1');
-                    expect(spy).to.have.been.called.with('2');
-                    expect(spy).to.have.been.called.with('3');
-                    expect(spy).to.have.been.called.with('non?numeric?/string');
-                    expect(spy).to.not.have.been.called.with('5');
-                    expect(spy).to.not.have.been.called.with('6');
+                    expect(spy).to.have.callCount(4);
+                    expect(spy).to.have.been.calledWith('1');
+                    expect(spy).to.have.been.calledWith('2');
+                    expect(spy).to.have.been.calledWith('3');
+                    expect(spy).to.have.been.calledWith('non?numeric?/string');
+                    expect(spy).to.not.have.been.calledWith('5');
+                    expect(spy).to.not.have.been.calledWith('6');
                     // i love u
                 }
             );
         });
         it('should work on promises', function () {
-            var spy = chai.spy(function (val) {
+            var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
             });
             return expect(
@@ -241,18 +246,18 @@ describe('base.resolver.utils', function () {
                 })
             ).to.eventually.equal('non?numeric?/string').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(4);
-                    expect(spy).to.have.been.called.with('1');
-                    expect(spy).to.have.been.called.with('2');
-                    expect(spy).to.have.been.called.with('3');
-                    expect(spy).to.have.been.called.with('non?numeric?/string');
-                    expect(spy).to.not.have.been.called.with('ass');
-                    expect(spy).to.not.have.been.called.with('6');
+                    expect(spy).to.have.callCount(4);
+                    expect(spy).to.have.been.calledWith('1');
+                    expect(spy).to.have.been.calledWith('2');
+                    expect(spy).to.have.been.calledWith('3');
+                    expect(spy).to.have.been.calledWith('non?numeric?/string');
+                    expect(spy).to.not.have.been.calledWith('ass');
+                    expect(spy).to.not.have.been.calledWith('6');
                 }
             );
         });
         it('should parse objects recursively', function () {
-            var spy = chai.spy(function (val) {
+            var spy = sinon.spy(function (val) {
                 if (val !== 'u') {
                     return val;
                 }
@@ -280,12 +285,12 @@ describe('base.resolver.utils', function () {
                 }
             ).then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(11);
-                    expect(spy).to.have.been.called.with('alpha');
-                    expect(spy).to.have.been.called.with('beta');
-                    expect(spy).to.have.been.called.with('gamma');
-                    expect(spy).to.have.been.called.with('theta');
-                    expect(spy).to.have.been.called.with('u');
+                    expect(spy).to.have.callCount(11);
+                    expect(spy).to.have.been.calledWith('alpha');
+                    expect(spy).to.have.been.calledWith('beta');
+                    expect(spy).to.have.been.calledWith('gamma');
+                    expect(spy).to.have.been.calledWith('theta');
+                    expect(spy).to.have.been.calledWith('u');
                     expect(obj).to.eql({
                         alpha: "alpha",
                         beta: "u|beta|u",
@@ -299,7 +304,7 @@ describe('base.resolver.utils', function () {
             );
         });
         it('should be able to handle rejections', function () {
-            var spy = chai.spy(function (val) {
+            var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
             });
             return expect(
@@ -319,18 +324,18 @@ describe('base.resolver.utils', function () {
                 })
             ).to.eventually.equal('non?numeric?/string').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(4);
-                    expect(spy).to.have.been.called.with('1');
-                    expect(spy).to.have.been.called.with('2');
-                    expect(spy).to.have.been.called.with('3');
-                    expect(spy).to.have.been.called.with('non?numeric?/string');
-                    expect(spy).to.not.have.been.called.with('ass');
-                    expect(spy).to.not.have.been.called.with('6');
+                    expect(spy).to.have.callCount(4);
+                    expect(spy).to.have.been.calledWith('1');
+                    expect(spy).to.have.been.calledWith('2');
+                    expect(spy).to.have.been.calledWith('3');
+                    expect(spy).to.have.been.calledWith('non?numeric?/string');
+                    expect(spy).to.not.have.been.calledWith('ass');
+                    expect(spy).to.not.have.been.calledWith('6');
                 }
             );
         });
         it('should be able to handle errors gracefully', function () {
-            var spy = chai.spy(function (val) {
+            var spy = sinon.spy(function (val) {
                 if (isNaN(parseInt(val, 10))) {
                     return val;
                 }
@@ -340,41 +345,44 @@ describe('base.resolver.utils', function () {
                 utils.resolveExpression('1|2|3|non///?numeric/?//string|5|6', spy)
             ).to.eventually.equal('non/?numeric?/string').then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(4);
-                    expect(spy).to.have.been.called.with('1');
-                    expect(spy).to.have.been.called.with('2');
-                    expect(spy).to.have.been.called.with('3');
-                    expect(spy).to.have.been.called.with('non/?numeric?/string');
-                    expect(spy).to.not.have.been.called.with('5');
-                    expect(spy).to.not.have.been.called.with('6');
+                    expect(spy).to.have.callCount(4);
+                    expect(spy).to.have.been.calledWith('1');
+                    expect(spy).to.have.been.calledWith('2');
+                    expect(spy).to.have.been.calledWith('3');
+                    expect(spy).to.have.been.calledWith('non/?numeric?/string');
+                    expect(spy).to.not.have.been.calledWith('5');
+                    expect(spy).to.not.have.been.calledWith('6');
                 }
             );
         });
         it('should be able to integrate escapes properly', function () {
-            var spy = chai.spy(function () {
-                if (arguments.length === 1) {
+            var spy = sinon.spy(function (value, params) {
+                if (params.length === 0) {
                     return undefined;
                 }
-                return Array.prototype.slice.call(arguments, 0);
+                return params;
             });
             return expect(
                 utils.resolveExpression('1|2|3/#|non///?numeric/?/#///#string#a#b#c/#d|5|6', spy)
             ).to.eventually.eql(
                 [
-                    'non/?numeric?#/#string',
                     'a',
                     'b',
                     'c#d'
                 ]
             ).then(
                 function () {
-                    expect(spy).to.have.been.called.exactly(4);
-                    expect(spy).to.have.been.called.with('1');
-                    expect(spy).to.have.been.called.with('2');
-                    expect(spy).to.have.been.called.with('3#');
-                    expect(spy).to.have.been.called.with('non/?numeric?#/#string', 'a', 'b', 'c#d');
-                    expect(spy).to.not.have.been.called.with('5');
-                    expect(spy).to.not.have.been.called.with('6');
+                    expect(spy).to.have.callCount(4);
+                    expect(spy).to.have.been.calledWith('1', [], '1');
+                    expect(spy).to.have.been.calledWith('2', [], '2');
+                    expect(spy).to.have.been.calledWith('3#', [], '3/#');
+                    expect(spy).to.have.been.calledWith(
+                        'non/?numeric?#/#string',
+                        ['a', 'b', 'c#d'],
+                        'non///?numeric/?/#///#string#a#b#c/#d'
+                    );
+                    expect(spy).to.not.have.been.calledWith('5');
+                    expect(spy).to.not.have.been.calledWith('6');
                 }
             );
         });

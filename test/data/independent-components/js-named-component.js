@@ -1,6 +1,7 @@
 "use strict";
 module.exports = function () {
-    console.log('i am js-named-component');
+    process.LOG('js-named-component.load');
+    process.LOG(Array.prototype.slice.call(arguments));
     return 'js-named-component';
 };
 module.exports['soul-component'] = 'js-named-component';
