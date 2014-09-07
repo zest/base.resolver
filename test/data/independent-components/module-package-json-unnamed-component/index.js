@@ -5,11 +5,11 @@ module.exports = [
     'module-named-component',
     'module-package-json-named-component',
     function (json, js, module, packageModule) {
-        console.dir(json);
-        console.dir(js);
-        console.dir(module);
-        console.dir(packageModule);
-        console.log('here');
+        process.LOG(json);
+        process.LOG(js);
+        process.LOG(module);
+        process.LOG(packageModule);
+        process.LOG('here');
         return 'module-package-json-unnamed-component';
     }
 ];

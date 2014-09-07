@@ -1,5 +1,5 @@
 "use strict";
 module.exports = function () {
-    console.log('js-unnamed-component');
+    process.LOG('js-unnamed-component');
     return 'js-unnamed-component';
 };

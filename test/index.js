@@ -29,30 +29,35 @@ describe('base.resolver', function () {
     // it should configure independent modules properly
     it('should configure independent modules properly', function () {
         var loggerSpy = chai.spy(function () {
-            return;
-        }), oldLogger;
+            console.log.apply(console, arguments);
+        });
         return expect(resolver('./test/data/configs/configuration-nodep')).to.eventually.have.keys([
             'load',
             'unload',
             'reload'
         ]).then(function (resolver) {
-            oldLogger = console.log;
-            console.log = loggerSpy;
+            process.LOG = loggerSpy;
             return resolver.load();
         }).then(function () {
-            console.log = oldLogger;
             expect(loggerSpy).to.have.been.called.exactly(1);
             expect(loggerSpy).to.have.been.called.with('js-unnamed-component');
         });
     });
-    // it should configure dependant modules properly
-    it('should configure dependant modules properly', function () {
+    // it should configure dependent modules properly
+    it('should configure dependent modules properly', function () {
+        var loggerSpy = chai.spy(function () {
+            console.log.apply(console, arguments);
+        });
         return expect(resolver('./test/data/configs/configuration-dependency')).to.eventually.have.keys([
             'load',
             'unload',
             'reload'
         ]).then(function (resolver) {
+            process.LOG = loggerSpy;
             return resolver.load();
+        }).then(function () {
+            expect(loggerSpy).to.have.been.called.exactly(1);
+            expect(loggerSpy).to.have.been.called.with('js-unnamed-component');
         });
     });
 });
