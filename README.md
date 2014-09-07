@@ -174,9 +174,9 @@ of execution priority below:
 > 
 > `databaseMongo#localhost#9876|databaseSQL#localhost#3200?`
 > 
-> - will resolve to databaseMongo replacing `#1` in options object by `localhost` and `#2` in options object by `9876`
+> - will resolve to databaseMongo replacing `{1}` in options object by `localhost` and `{2}` in options object by `9876`
 >   if it can be resolved
-> - will resolve to databaseSQL  replacing `#1` in options object by `localhost` and `#2` in options object by `3200`
+> - will resolve to databaseSQL  replacing `{1}` in options object by `localhost` and `{2}` in options object by `3200`
 >   if databaseMongo cannot be resolved
 > - will inject `undefined` if none of them are resolved
 
@@ -195,7 +195,7 @@ The dependency names are resolved using the below steps:
     > eg. `databaseMongoLocal` will try to resolve to `databaseMongoLocal`. If there are no components with that name,
     > `database-mongo-local` will be tried. If `database-mongo-local` is also not resolved, `database.mongo.local` will
     > be tried. The first resolution will be taken as the value and if none of them resolves, the component will fail
-    > to resolve..
+    > to resolve.
 
  3. For all other cases, the resolution fails.
 
@@ -233,6 +233,13 @@ component configuration.
          -  If `#`, `|` or `/` are to be used as literals in option, they must be escaped by a `/`. Eg. `/#` will 
             translate to a single `#`
      -  **`startup`** &#8594; is optional and is used to specify if a component is a starting component.
+     -  **`native`** &#8594; is optional and is used to mark a component as native nodejs module.
+         -  Native modules are nodejs modules that are not compliant to the SOUL component structure
+         -  When a component is marked as native, no dependency will be injected in it.
+         -  A native component can be injected into another component by its module name (as specified in 
+            `package.json` file.
+         -  If no `package.json` file is found, or if no name is there in `package.json`, the native component will be
+            named as the last part of the path in configuration excluding extension.
 
 ```js
 [
@@ -243,6 +250,9 @@ component configuration.
         options: {
             port: 8080
         }
+    }, {
+        path: "q",
+        native: true
     }, {
         packagePath: "soul-infra/datastore.mongo",
         options: {
@@ -302,7 +312,7 @@ This function returns a configured Resolver object. The returned resolver object
 
  2. **`unload`**`()` &#8594; `Promise`
 
-    The unload function will call all registered unload handlers and clear off the dependency tree..
+    The unload function will call all registered unload handlers and clear off the dependency tree.
     
     This function returns a Promise that gets resolved with the resolver object when the unload is complete. This 
     promise is rejected with the error if unload fails.
@@ -313,8 +323,7 @@ This function returns a configured Resolver object. The returned resolver object
     called before the previous `reload` is over, the previous `reload` will be interrupted.
     
     This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
-    promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
-    never get resolved.
+    promise is rejected with the error if reload fails.
 
 
 [dependencies-image]: http://img.shields.io/david/soul-infra/base.resolver.svg?style=flat-square

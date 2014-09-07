@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>soul-infra / base.script Source: index.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.spacelab.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">soul-infra / base.script</a>
+			<ul class="nav">
+
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+
+						<li>
+							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
+						</li>
+
+
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+
+						<li>
+							<a href="module-base-resolver.html">base-resolver</a>
+						</li>
+
+						<li>
+							<a href="configurations.html">base-resolver/configurations</a>
+						</li>
+
+						<li>
+							<a href="resolution-provider.html">base-resolver/resolution-provider</a>
+						</li>
+
+						<li>
+							<a href="unloader.html">base-resolver/unloader</a>
+						</li>
+
+						<li>
+							<a href="utils.html">base-resolver/utils</a>
+						</li>
+
+
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+
+			<div class="span12">
+
+				<div id="main">
+
+
+
+		<h1 class="page-title">Source: index.js</h1>
+
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript ">'use strict';
+/**
+ * @fileOverview The base.resolver component provides inversion of control and dependency injection api for running of
+ * SOUL infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components
+ * you want to load. Each component registers itself with resolver, so other components can use its functions.
+ * Components can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components
+ * can also just be a file that can be required from node. (A javascript file or even a JSON file)
+ * @module base-resolver
+ * @requires base-resolver/configurations
+ * @requires base-resolver/resolution-provider
+ * @requires base-resolver/unloader
+ * @requires base-resolver/utils
+ * @requires q
+ */
+var Q = require('q'),
+    path = require('path'),
+    logger = require('base.logger')('RESOLVER'),
+    resolverFactory = function (configPathOrArray, basePath) {
+        // array of configurations
+        var configArray,
+        // base directory relative to which modules should be resolved
+            baseDir,
+        // resolver that has load, reload and unload functions
+            resolver,
+        // configurations is initialized here and sent to resolution-provider
+            configurations = require('./resolver/configurations')(),
+            resolutionProvider = require('./resolver/resolution-provider')(configurations),
+            /**
+             * @description The load function runs all starting components in the configuration, injecting all other
+             * dependencies required.
+             * @returns {q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the load is
+             * executed. This promise is rejected with the error if load execution fails.
+             * @memberof module:base-resolver~Resolver
+             */
+            load = function () {
+                var startupDependencies = configurations.startupDependencies();
+                logger.info(startupDependencies.length, 'startup components found. Loading then now.');
+                return Q.allSettled(
+                    startupDependencies.map(function (dependencyExpression) {
+                        return resolutionProvider.resolve(dependencyExpression);
+                    })
+                ).then(
+                    function () {
+                        logger.info('all components loaded successfully!');
+                        return resolver;
+                    },
+                    function (error) {
+                        logger.error('error loading startup components!', error);
+                        throw error;
+                    }
+                );
+            },
+            /**
+             * @description The unload function will call all registered unload handlers and clear off the dependency
+             * tree
+             * @returns {q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the unload is
+             * executed. This promise is rejected with the error if unload execution fails.
+             * @memberof module:base-resolver~Resolver
+             */
+            unload = function () {
+                logger.info('unloading components.');
+                return resolver.unload().then(
+                    function () {
+                        logger.info('successfully unloaded all components!');
+                        return resolver;
+                    },
+                    function (error) {
+                        logger.error('error unloading components!', error);
+                        throw error;
+                    }
+                );
+            };
+        /**
+         * The resolver object that is used to start or restart SOUL integration by taking care of inversion of control
+         * and dependency injection.
+         * @namespace module:base-resolver~Resolver
+         */
+        resolver = {
+            load: load,
+            unload: unload,
+            /**
+             * The reload function will re-configure and start all starting components in the
+             * configuration. If a reload is called before the previous reload is over, the previous reload will be
+             * interrupted.
+             * @returns {q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the reload is
+             * executed. This promise is rejected with the error if reload execution fails.
+             * @memberof module:base-resolver~Resolver
+             */
+            reload: function () {
+                logger.log('reloading components.');
+                return unload().then(load);
+            }
+        };
+        logger.info('initializing resolver with configurations.');
+        if (basePath) {
+            baseDir = path.resolve(basePath);
+        }
+        if (typeof configPathOrArray === 'string') {
+            try {
+                configArray = require(configPathOrArray);
+                if (!baseDir) {
+                    baseDir = path.resolve(path.dirname(configPathOrArray));
+                }
+            } catch (e) {
+                if (e.code !== 'MODULE_NOT_FOUND') {
+                    throw e;
+                }
+                configPathOrArray = path.join(process.cwd(), configPathOrArray);
+                configArray = require(configPathOrArray);
+                if (!baseDir) {
+                    baseDir = path.dirname(configPathOrArray);
+                }
+            }
+        }
+        if (!(configArray instanceof Array)) {
+            throw new Error('Resolver can only be configured with an array. Check your configuration');
+        }
+        if (!baseDir) {
+            /*jslint nomen: true */
+            baseDir = __dirname;
+            /*jslint nomen: false */
+        }
+        return configurations.setup(configArray, baseDir).then(
+            function () {
+                logger.info('initialization successful.');
+                return resolver;
+            },
+            function (error) {
+                logger.error('error initializing resolver!', error);
+                throw error;
+            }
+        );
+    };
+/**
+ * This function configures the resolver. This function takes two parameters and creates a configuration object that is
+ * used to load the starting modules.
+ * @param {string|Array.&lt;module:base-resolver~Configuration|string>} configPathOrArray - If this parameter is a string,
+ * requiring the string path should return the config array. We try to require the &lt;code>configPath&lt;/code> directly. If
+ * that fails, it is joined with the current working directory of the process for resolution. The config array itself
+ * can also be passed instead of passing a &lt;code>configPath&lt;/code>. if config array element is a string, it is assumed
+ * to be the path of the {@link module:base-resolver~Configuration } object, with all other properties defaulted.
+ * @param {string} [basePath] -  basePath is an optional parameter which provides the absolute path from where the
+ * components should be resolved. If &lt;code>basePath&lt;/code> is not provided, it is resolved as follows:
+ * &lt;ul>&lt;li>if the first parameter is a &lt;code>configPath&lt;/code> string, the &lt;code>basePath&lt;/code> is assumed to be the
+ * &lt;code>configPath&lt;/code>&lt;/li>
+ * &lt;li>if the first parameter is a not a &lt;code>configPath&lt;/code> string, the &lt;code>basePath&lt;/code> is assumed to be the
+ * current working directory for the process&lt;/li>&lt;/ul>
+ * @returns {q}  a Promise that gets resolved with {@link module:base-resolver~Resolver} when the resolver is set up.
+ * This promise is rejected with the error if the resolver set-up fails.
+ */
+module.exports = function (configPathOrArray, basePath) {
+    try {
+        return resolverFactory(configPathOrArray, basePath);
+    } catch (error) {
+        logger.error('error initializing resolver!', error);
+        return Q.Promise(function (resolve, reject) {
+            reject(error);
+        });
+    }
+};
+// documenting the Configuration object
+/**
+ * An array of Configuration object is passed to configure resolver
+ * @typedef {object} module:base-resolver~Configuration
+ * @property {string} path - specifies the path of the component
+ * &lt;ul>&lt;li>if path does not start with a &lt;code>.&lt;/code>, or does not contain &lt;code>/&lt;/code> the component is assumed to
+ * be an npm module&lt;/li>
+ * &lt;li>if path does not start with a &lt;code>.&lt;/code>, and has a single &lt;code>/&lt;/code>, the component is assumed to be a
+ * git repository&lt;/li>
+ * &lt;li>in all other cases, the component is assumed to be located at the path specified in the local disk.&lt;/li>&lt;/ul>
+ * @property {*} [options] - the options to be passed to instantiate the component.
+ * &lt;ul>&lt;li>The Parameter Modifier can be used here using the &lt;code>{param-number}&lt;/code> format&lt;/li>
+ * &lt;li>The &lt;code>|&lt;/code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example
+ * below)&lt;/li>
+ * &lt;li>If &lt;code>#&lt;/code>, &lt;code>|&lt;/code> or &lt;code>/&lt;/code> are to be used as literals in option, they must be escaped
+ * by a &lt;code>/&lt;/code>. Eg. &lt;code>/#&lt;/code> will translate to a single &lt;code>#&lt;/code>&lt;/li>&lt;/ul>
+ * @property {boolean} [startup] - startup is optional and is used to specify if a component is a starting component.
+ * @property {boolean} [native] - is optional and is used to mark a component as native nodejs module.
+ * &lt;ul>&lt;li>Native modules are nodejs modules that are not compliant to the SOUL component structure&lt;/li>
+ * &lt;li>When a component is marked as native, no dependency will be injected in it&lt;/li>
+ * &lt;li>A native component can be injected into another component by its module name (as specified in
+ * &lt;code>package.json&lt;/code> file&lt;/li>
+ * &lt;li>If no &lt;code>package.json&lt;/code> file is found, or if no name is there in &lt;code>package.json&lt;/code>, the native
+ * component will be named as the last part of the path in configuration excluding extension.&lt;/li>&lt;/ul>
+ */
+
+</pre>
+	</article>
+</section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+
+					<hr/>
+					<br />
+
+
+		<span class="copyright">
+		<div style='text-align:left;border-color:#626262;background-color:#262626;color:#fff;padding:20px;'>This is free and unencumbered software released into the public domain.<br/>Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.<br/>In jurisdictions that recognize copyright laws, the author or authors of this software dedicate any and all copyright interest in the software to the public domain.<br/>We make this dedication for the benefit of the public at large and to the detriment of our heirs and successors.<br/>We intend this dedication to be an overt act of relinquishment in perpetuity of all present and future rights to this software under copyright law.<br/><br/>THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.<br/><br/>For more information, please refer to <a href='http://unlicense.org'>UNLICENSE</a></div>
+		</span>
+					<br />
+
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
+		on September, 2014 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : false,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+
+
+
+	<!--Google Analytics-->
+
+
+</body>
+</html>

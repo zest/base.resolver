@@ -21,6 +21,50 @@
 			<a class="brand" href="index.html">soul-infra / base.script</a>
 			<ul class="nav">
 				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+
+						<li>
+							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
+						</li>
+
+
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+
+						<li>
+							<a href="module-base-resolver.html">base-resolver</a>
+						</li>
+
+						<li>
+							<a href="configurations.html">base-resolver/configurations</a>
+						</li>
+
+						<li>
+							<a href="resolution-provider.html">base-resolver/resolution-provider</a>
+						</li>
+
+						<li>
+							<a href="unloader.html">base-resolver/unloader</a>
+						</li>
+
+						<li>
+							<a href="utils.html">base-resolver/utils</a>
+						</li>
+
+
+					</ul>
+				</li>
+
 			</ul>
 		</div>
 	</div>
@@ -195,9 +239,9 @@ of execution priority below:</p>
 </ul>
 <p><code>databaseMongo#localhost#9876|databaseSQL#localhost#3200?</code></p>
 <ul>
-<li>will resolve to databaseMongo replacing <code>#1</code> in options object by <code>localhost</code> and <code>#2</code> in options object by <code>9876</code>
+<li>will resolve to databaseMongo replacing <code>{1}</code> in options object by <code>localhost</code> and <code>{2}</code> in options object by <code>9876</code>
 if it can be resolved</li>
-<li>will resolve to databaseSQL  replacing <code>#1</code> in options object by <code>localhost</code> and <code>#2</code> in options object by <code>3200</code>
+<li>will resolve to databaseSQL  replacing <code>{1}</code> in options object by <code>localhost</code> and <code>{2}</code> in options object by <code>3200</code>
 if databaseMongo cannot be resolved</li>
 <li>will inject <code>undefined</code> if none of them are resolved</li>
 </ul>
@@ -217,7 +261,7 @@ resolution is considered.</p>
 <p>eg. <code>databaseMongoLocal</code> will try to resolve to <code>databaseMongoLocal</code>. If there are no components with that name,
 <code>database-mongo-local</code> will be tried. If <code>database-mongo-local</code> is also not resolved, <code>database.mongo.local</code> will
 be tried. The first resolution will be taken as the value and if none of them resolves, the component will fail
-to resolve..</p>
+to resolve.</p>
 </blockquote>
 </li>
 <li><p>For all other cases, the resolution fails.</p>
@@ -258,6 +302,15 @@ translate to a single <code>#</code></li>
 </ul>
 </li>
 <li><strong><code>startup</code></strong> &#8594; is optional and is used to specify if a component is a starting component.</li>
+<li><strong><code>native</code></strong> &#8594; is optional and is used to mark a component as native nodejs module.<ul>
+<li>Native modules are nodejs modules that are not compliant to the SOUL component structure</li>
+<li>When a component is marked as native, no dependency will be injected in it.</li>
+<li>A native component can be injected into another component by its module name (as specified in
+<code>package.json</code> file.</li>
+<li>If no <code>package.json</code> file is found, or if no name is there in <code>package.json</code>, the native component will be
+named as the last part of the path in configuration excluding extension.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -269,6 +322,9 @@ translate to a single <code>#</code></li>
         options: {
             port: 8080
         }
+    }, {
+        path: &quot;q&quot;,
+        native: true
     }, {
         packagePath: &quot;soul-infra/datastore.mongo&quot;,
         options: {
@@ -321,7 +377,7 @@ directory for the process</li>
 is rejected with the error if load execution fails.</p>
 </li>
 <li><p><strong><code>unload</code></strong><code>()</code> &#8594; <code>Promise</code></p>
-<p>The unload function will call all registered unload handlers and clear off the dependency tree..</p>
+<p>The unload function will call all registered unload handlers and clear off the dependency tree.</p>
 <p>This function returns a Promise that gets resolved with the resolver object when the unload is complete. This 
 promise is rejected with the error if unload fails.</p>
 </li>
@@ -329,8 +385,7 @@ promise is rejected with the error if unload fails.</p>
 <p>The reload function will re-configure and start all starting components in the configuration. If a <code>reload</code> is 
 called before the previous <code>reload</code> is over, the previous <code>reload</code> will be interrupted.</p>
 <p>This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
-promise is rejected with the error if reload fails. If the registered run command do not resolve, this promise will
-never get resolved.</p>
+promise is rejected with the error if reload fails.</p>
 </li>
 </ol></article>
     </section>

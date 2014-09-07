@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>soul-infra / base.script Namespace: Resolver</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.spacelab.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">soul-infra / base.script</a>
+			<ul class="nav">
+
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+
+						<li>
+							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
+						</li>
+
+
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+
+						<li>
+							<a href="module-base-resolver.html">base-resolver</a>
+						</li>
+
+						<li>
+							<a href="configurations.html">base-resolver/configurations</a>
+						</li>
+
+						<li>
+							<a href="resolution-provider.html">base-resolver/resolution-provider</a>
+						</li>
+
+						<li>
+							<a href="unloader.html">base-resolver/unloader</a>
+						</li>
+
+						<li>
+							<a href="utils.html">base-resolver/utils</a>
+						</li>
+
+
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+
+		<div class="span8">
+
+				<div id="main">
+
+
+
+	<h1 class="page-title">Namespace: Resolver</h1>
+<section>
+
+<header>
+    <h2>
+        <span class="ancestors"><a href="module-base-resolver.html">base-resolver</a>~</span>
+
+    Resolver
+    </h2>
+
+</header>
+
+<article>
+    <div class="container-overview">
+
+
+
+
+            <div class="description">The resolver object that is used to start or restart SOUL integration by taking care of inversion of control
+and dependency injection.</div>
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="index.js.html">index.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+
+<dt>
+    <h4 class="name" id="load"><span class="type-signature">&lt;static> </span>load<span class="signature">()</span><span class="type-signature"> &rarr; {q}</span></h4>
+
+
+</dt>
+<dd>
+
+
+    <div class="description">
+        The load function runs all starting components in the configuration, injecting all other
+dependencies required.
+    </div>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="index.js.html">index.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Returns:</h5>
+
+
+<div class="param-desc">
+    a Promise that gets resolved with <a href="module-base-resolver-Resolver.html">module:base-resolver~Resolver</a> when the load is
+executed. This promise is rejected with the error if load execution fails.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+
+<span class="param-type">q</span>
+
+
+	</dd>
+</dl>
+
+
+
+
+
+</dd>
+
+
+
+<dt>
+    <h4 class="name" id="reload"><span class="type-signature">&lt;static> </span>reload<span class="signature">()</span><span class="type-signature"> &rarr; {q}</span></h4>
+
+
+</dt>
+<dd>
+
+
+    <div class="description">
+        The reload function will re-configure and start all starting components in the
+configuration. If a reload is called before the previous reload is over, the previous reload will be
+interrupted.
+    </div>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="index.js.html">index.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Returns:</h5>
+
+
+<div class="param-desc">
+    a Promise that gets resolved with <a href="module-base-resolver-Resolver.html">module:base-resolver~Resolver</a> when the reload is
+executed. This promise is rejected with the error if reload execution fails.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+
+<span class="param-type">q</span>
+
+
+	</dd>
+</dl>
+
+
+
+
+
+</dd>
+
+
+
+<dt>
+    <h4 class="name" id="unload"><span class="type-signature">&lt;static> </span>unload<span class="signature">()</span><span class="type-signature"> &rarr; {q}</span></h4>
+
+
+</dt>
+<dd>
+
+
+    <div class="description">
+        The unload function will call all registered unload handlers and clear off the dependency
+tree
+    </div>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="index.js.html">index.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Returns:</h5>
+
+
+<div class="param-desc">
+    a Promise that gets resolved with <a href="module-base-resolver-Resolver.html">module:base-resolver~Resolver</a> when the unload is
+executed. This promise is rejected with the error if unload execution fails.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+
+<span class="param-type">q</span>
+
+
+	</dd>
+</dl>
+
+
+
+
+
+</dd>
+
+        </dl>
+
+
+
+
+
+</article>
+
+</section>
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+
+					<hr/>
+					<br />
+
+
+		<span class="copyright">
+		<div style='text-align:left;border-color:#626262;background-color:#262626;color:#fff;padding:20px;'>This is free and unencumbered software released into the public domain.<br/>Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.<br/>In jurisdictions that recognize copyright laws, the author or authors of this software dedicate any and all copyright interest in the software to the public domain.<br/>We make this dedication for the benefit of the public at large and to the detriment of our heirs and successors.<br/>We intend this dedication to be an overt act of relinquishment in perpetuity of all present and future rights to this software under copyright law.<br/><br/>THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.<br/><br/>For more information, please refer to <a href='http://unlicense.org'>UNLICENSE</a></div>
+		</span>
+					<br />
+
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
+		on September, 2014 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+
+			<div class="span3">
+				<div id="toc"></div>
+			</div>
+
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : false,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+
+
+
+	<!--Google Analytics-->
+
+
+</body>
+</html>
