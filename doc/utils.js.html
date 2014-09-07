@@ -28,6 +28,18 @@
 					<ul class="dropdown-menu ">
 
 						<li>
+							<a href="configurations-ConfigurationManager.html">base-resolver/configurations~ConfigurationManager</a>
+						</li>
+
+						<li>
+							<a href="resolution-provider-ResolutionProvider.html">base-resolver/resolution-provider~ResolutionProvider</a>
+						</li>
+
+						<li>
+							<a href="unloader-Unloader.html">base-resolver/unloader~Unloader</a>
+						</li>
+
+						<li>
 							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
 						</li>
 
@@ -91,17 +103,49 @@
  * @requires q
  */
 var Q = require('q');
+/**
+ * Extracts arguments from a function and makes a list of dependencies. The function parameter is transformed from
+ * camel-case to &lt;code>-&lt;/code> and &lt;code>.&lt;/code> separated, and an expression is created which evaluates them in
+ * sequence, cascading, till a match is found.&lt;br/>
+ * eg. &lt;code>databaseMongoLocal&lt;/code> as a parameter dependency will try to resolve to
+ * &lt;code>databaseMongoLocal&lt;/code>. If there are no components with that name, &lt;code>database-mongo-local&lt;/code> will
+ * be tried. If &lt;code>database-mongo-local&lt;/code> is also not resolved, &lt;code>database.mongo.local&lt;/code> will be
+ * tried. The first resolution will be taken as the value and if none of them resolves, the component will fail to
+ * resolve. Below are some example usages&lt;/br>
+ * &lt;pre>
+ * utils.getDependencies(function (x, y, z) {
+ *      ...
+ * });
+ * // this will return ['x', 'y', 'z']
+ *
+ * utils.getDependencies(function (dataStore, userProvider) {
+ *      ...
+ * });
+ * // This should return
+ * [
+ *      'dataStore|data-store|data.store',
+ *      'userProvider|user-provider|user.provider'
+ * ]
+ * &lt;/pre>
+ * @param {callback} callback - the function to be inspected
+ * @returns {Array.&lt;string>} an array of dependency expressions in the same sequence as the parameters
+ */
 exports.getDependencies = function (callback) {
+    // only accept functions as argument
     if (!(typeof callback === 'function')) {
         throw new Error('only functions can have params!');
     }
     /*jslint regexp: true */
+    // first trim off any comments form the string representation of the function
     var args = callback.toString().replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, '').
+    // then split out the parameters in a ocmma separated string
         match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m)[1];
     /*jslint regexp: false */
+    // if there are no parameters, return an empty array
     if (args.length === 0) {
         return [];
     }
+    // if there are parameters, make an expression for each of them and return the array of expressions
     return args.split(/,/).map(function (dependency) {
         var splits = dependency.match(/[A-Z]?[a-z0-9]*/g).map(
             function (match) {
@@ -114,7 +158,19 @@ exports.getDependencies = function (callback) {
         return dependency + '|' + splits.join('-') + '|' + splits.join('.');
     });
 };
-exports.resolveExpression = function (expression, resolverFunction) {
+/**
+ * Resolves any expression with modifiers. Modifiers are used to add logic to dependency injection. There are 3 kinds
+ * of modifiers. They are listed in their order of execution priority below:&lt;br/>
+ * &lt;ul>&lt;li>&lt;b># (parameter modifier)&lt;/b> will pass parameters to the component that can be used to construct the
+ * options object.&lt;/li>
+ * &lt;li>&lt;b>| (OR modifier)&lt;/b> will inject the first resolvable component&lt;/li>
+ * &lt;li>&lt;b>? (optional modifier)&lt;/b> will silently pass undefined if resolution fails&lt;/li>&lt;/ul>
+ * @param {string} expression - the expression to evaluate
+ * @param {callback} resolverFunction - the resolver function to be called.
+ * @returns {q} a promise that resolves to the evaluated value of the expression
+ */
+ // FIXME: detail the usage
+ exports.resolveExpression = function (expression, resolverFunction) {
     var optional,
         expressions,
         deferred,
@@ -190,6 +246,14 @@ exports.resolveExpression = function (expression, resolverFunction) {
     );
     return promise;
 };
+/**
+ * This function checks if an array is an injector array or not. An injector array is a valid form of SOUL component
+ * representation which is an array with the last element of type function and other elements of type string.
+ * The strings in the array is mapped to components and are injected as parameters to the function in the same
+ * sequence.
+ * @param {*} obj - any object
+ * @returns {boolean} true if the object is an injector array. false otherwise.
+ */
 exports.isInjectorArray = function (obj) {
     return (Object.prototype.toString.call(obj) === '[object Array]')
         && (typeof obj[obj.length - 1] === 'function')

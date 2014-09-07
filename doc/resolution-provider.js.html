@@ -28,6 +28,18 @@
 					<ul class="dropdown-menu ">
 
 						<li>
+							<a href="configurations-ConfigurationManager.html">base-resolver/configurations~ConfigurationManager</a>
+						</li>
+
+						<li>
+							<a href="resolution-provider-ResolutionProvider.html">base-resolver/resolution-provider~ResolutionProvider</a>
+						</li>
+
+						<li>
+							<a href="unloader-Unloader.html">base-resolver/unloader~Unloader</a>
+						</li>
+
+						<li>
 							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
 						</li>
 
@@ -94,9 +106,22 @@
 var Q = require('q'),
     utils = require('./utils'),
     logger = require('base.logger')('RESOLVER/resolution-provider');
+/**
+ * Resolution provider is used to resolve modules by their names. This module takes
+ * {module:base-resolver/configurations~ConfigurationManager} as input.
+ * @returns {module:base-resolver/resolution-provider~ResolutionProvider} the resolver with one resolve method
+ */
 module.exports = function (configurations) {
+    // components map is used to cache components.
     var componentsMap = {},
+        // unloader is used to inject unload dependency
         unloader = require('./unloader')(),
+        /**
+         * This function resolves an expression and returns a promise that resolves to the corresponding component
+         * @param {string} dependencyExpression - the expression to resolve
+         * @return {q} a promise that resolves to the corresponding component
+         * @memberof module:base-resolver/resolution-provider~ResolutionProvider
+         */
         resolve = function (dependencyExpression) {
             logger.log('trying to resolve:', dependencyExpression);
             return utils.resolveExpression(dependencyExpression,
@@ -132,11 +157,14 @@ module.exports = function (configurations) {
                     return componentsMap[cacheKey];
                 });
         };
+    /**
+     * Resolver is returned by {@link module:base-resolver/resolution-provider}
+     * @namespace module:base-resolver/resolution-provider~ResolutionProvider
+     */
     return {
         resolve: resolve
     };
-};
-</pre>
+};</pre>
 	</article>
 </section>
 

@@ -28,6 +28,18 @@
 					<ul class="dropdown-menu ">
 
 						<li>
+							<a href="configurations-ConfigurationManager.html">base-resolver/configurations~ConfigurationManager</a>
+						</li>
+
+						<li>
+							<a href="resolution-provider-ResolutionProvider.html">base-resolver/resolution-provider~ResolutionProvider</a>
+						</li>
+
+						<li>
+							<a href="unloader-Unloader.html">base-resolver/unloader~Unloader</a>
+						</li>
+
+						<li>
 							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
 						</li>
 
@@ -161,6 +173,504 @@ and validations</div>
 
 
 
+
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+
+<dt>
+    <h4 class="name" id="getDependencies"><span class="type-signature">&lt;static> </span>getDependencies<span class="signature">(callback)</span><span class="type-signature"> &rarr; {Array.&lt;string>}</span></h4>
+
+
+</dt>
+<dd>
+
+
+    <div class="description">
+        Extracts arguments from a function and makes a list of dependencies. The function parameter is transformed from
+camel-case to <code>-</code> and <code>.</code> separated, and an expression is created which evaluates them in
+sequence, cascading, till a match is found.<br/>
+eg. <code>databaseMongoLocal</code> as a parameter dependency will try to resolve to
+<code>databaseMongoLocal</code>. If there are no components with that name, <code>database-mongo-local</code> will
+be tried. If <code>database-mongo-local</code> is also not resolved, <code>database.mongo.local</code> will be
+tried. The first resolution will be taken as the value and if none of them resolves, the component will fail to
+resolve. Below are some example usages</br>
+<pre>
+utils.getDependencies(function (x, y, z) {
+     ...
+});
+// this will return ['x', 'y', 'z']
+
+utils.getDependencies(function (dataStore, userProvider) {
+     ...
+});
+// This should return
+[
+     'dataStore|data-store|data.store',
+     'userProvider|user-provider|user.provider'
+]
+</pre>
+    </div>
+
+
+
+
+
+
+
+        <h5>Parameters:</h5>
+
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+
+		<th>Name</th>
+
+
+		<th>Type</th>
+
+
+
+
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+
+
+        <tr>
+
+                <td class="name"><code>callback</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">callback</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">the function to be inspected</td>
+        </tr>
+
+
+	</tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="utils.js.html">resolver/utils.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Returns:</h5>
+
+
+<div class="param-desc">
+    an array of dependency expressions in the same sequence as the parameters
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+
+<span class="param-type">Array.&lt;string></span>
+
+
+	</dd>
+</dl>
+
+
+
+
+
+</dd>
+
+
+
+<dt>
+    <h4 class="name" id="isInjectorArray"><span class="type-signature">&lt;static> </span>isInjectorArray<span class="signature">(obj)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+
+</dt>
+<dd>
+
+
+    <div class="description">
+        This function checks if an array is an injector array or not. An injector array is a valid form of SOUL component
+representation which is an array with the last element of type function and other elements of type string.
+The strings in the array is mapped to components and are injected as parameters to the function in the same
+sequence.
+    </div>
+
+
+
+
+
+
+
+        <h5>Parameters:</h5>
+
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+
+		<th>Name</th>
+
+
+		<th>Type</th>
+
+
+
+
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+
+
+        <tr>
+
+                <td class="name"><code>obj</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">*</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">any object</td>
+        </tr>
+
+
+	</tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="utils.js.html">resolver/utils.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Returns:</h5>
+
+
+<div class="param-desc">
+    true if the object is an injector array. false otherwise.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+
+
+
+</dd>
+
+
+
+<dt>
+    <h4 class="name" id="resolveExpression"><span class="type-signature">&lt;static> </span>resolveExpression<span class="signature">(expression, resolverFunction)</span><span class="type-signature"> &rarr; {q}</span></h4>
+
+
+</dt>
+<dd>
+
+
+    <div class="description">
+        Resolves any expression with modifiers. Modifiers are used to add logic to dependency injection. There are 3 kinds
+of modifiers. They are listed in their order of execution priority below:<br/>
+<ul><li><b># (parameter modifier)</b> will pass parameters to the component that can be used to construct the
+options object.</li>
+<li><b>| (OR modifier)</b> will inject the first resolvable component</li>
+<li><b>? (optional modifier)</b> will silently pass undefined if resolution fails</li></ul>
+    </div>
+
+
+
+
+
+
+
+        <h5>Parameters:</h5>
+
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+
+		<th>Name</th>
+
+
+		<th>Type</th>
+
+
+
+
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+
+
+        <tr>
+
+                <td class="name"><code>expression</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">string</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">the expression to evaluate</td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>resolverFunction</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">callback</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">the resolver function to be called.</td>
+        </tr>
+
+
+	</tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="utils.js.html">resolver/utils.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Returns:</h5>
+
+
+<div class="param-desc">
+    a promise that resolves to the evaluated value of the expression
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+
+<span class="param-type">q</span>
+
+
+	</dd>
+</dl>
+
+
+
+
+
+</dd>
+
+        </dl>
 
 
 

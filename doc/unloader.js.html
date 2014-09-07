@@ -28,6 +28,18 @@
 					<ul class="dropdown-menu ">
 
 						<li>
+							<a href="configurations-ConfigurationManager.html">base-resolver/configurations~ConfigurationManager</a>
+						</li>
+
+						<li>
+							<a href="resolution-provider-ResolutionProvider.html">base-resolver/resolution-provider~ResolutionProvider</a>
+						</li>
+
+						<li>
+							<a href="unloader-Unloader.html">base-resolver/unloader~Unloader</a>
+						</li>
+
+						<li>
 							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
 						</li>
 
@@ -92,13 +104,32 @@
  */
 var Q = require('q'),
     logger = require('base.logger')('RESOLVER/unloader');
+/**
+ * This function creates a new Unloader and returns it.
+ * @returns {module:base-resolver/unloader~Unloader} the resolver with one resolve method
+ */
 module.exports = function () {
     var unloaders = [];
+    /**
+     * Unloader is returned by {@link module:base-resolver/unloader}
+     * @namespace module:base-resolver/unloader~Unloader
+     */
     return {
+        /**
+         * This function is used to register a callback function to the unloader. We inject this function as a
+         * dependency when unloader is requested by a component.
+         * @param {callback} callback - the function to execute when resolver is unloaded.
+         * @memberof module:base-resolver/unloader~Unloader
+         */
         register: function (callback) {
             logger.log('registering unloader');
             unloaders.push(callback);
         },
+        /**
+         * This function is called when the resolver is unloaded.
+         * @return {q} a promise that resolves when all callbacks registeres are executed.
+         * @memberof module:base-resolver/unloader~Unloader
+         */
         unload: function () {
             logger.log('executing unloaders...');
             var retVal = Q.Promise(function (resolve) {
