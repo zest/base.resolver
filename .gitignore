@@ -29,3 +29,4 @@ node_modules
 
 # build output directory
 .out
+test/data/configs/package.json

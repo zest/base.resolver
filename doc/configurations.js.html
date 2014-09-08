@@ -186,7 +186,7 @@ module.exports = function () {
                                 logger.log(data);
                             });
                             npmInstall.stderr.on('data', function (data) {
-                                logger.log(data);
+                                logger.warn(data);
                             });
                             npmInstall.on('close', function (code) {
                                 if (code === 0) {
