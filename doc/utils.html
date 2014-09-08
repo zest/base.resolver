@@ -194,22 +194,7 @@ eg. <code>databaseMongoLocal</code> as a parameter dependency will try to resolv
 <code>databaseMongoLocal</code>. If there are no components with that name, <code>database-mongo-local</code> will
 be tried. If <code>database-mongo-local</code> is also not resolved, <code>database.mongo.local</code> will be
 tried. The first resolution will be taken as the value and if none of them resolves, the component will fail to
-resolve. Below are some example usages</br>
-<pre>
-utils.getDependencies(function (x, y, z) {
-     ...
-});
-// this will return ['x', 'y', 'z']
-
-utils.getDependencies(function (dataStore, userProvider) {
-     ...
-});
-// This should return
-[
-     'dataStore|data-store|data.store',
-     'userProvider|user-provider|user.provider'
-]
-</pre>
+resolve.
     </div>
 
 
@@ -340,6 +325,24 @@ utils.getDependencies(function (dataStore, userProvider) {
 </dl>
 
 
+
+
+
+        <h5>Examples</h5>
+
+    <pre class="sunlight-highlight-javascript">utils.getDependencies(function (x, y, z) {
+     ...
+});
+&#x2F;&#x2F; this will return [&#x27;x&#x27;, &#x27;y&#x27;, &#x27;z&#x27;]</pre>
+
+    <pre class="sunlight-highlight-javascript">utils.getDependencies(function (dataStore, userProvider) {
+     ...
+});
+&#x2F;&#x2F; This should return
+[
+     &#x27;dataStore|data-store|data.store&#x27;,
+     &#x27;userProvider|user-provider|user.provider&#x27;
+]</pre>
 
 
 
@@ -512,6 +515,8 @@ of modifiers. They are listed in their order of execution priority below:<br/>
 options object.</li>
 <li><b>| (OR modifier)</b> will inject the first resolvable component</li>
 <li><b>? (optional modifier)</b> will silently pass undefined if resolution fails</li></ul>
+If the expression is a primitive non string type, it will be returned as-is. All strings will be considered as
+expressions and resolved. For objects or arrays, resolution will happen recursively.
     </div>
 
 
@@ -574,7 +579,7 @@ options object.</li>
             <td class="type">
 
 
-<span class="param-type">callback</span>
+<span class="param-type"><a href="utils.html#ResolverCallback">module:base-resolver/utils~ResolverCallback</a></span>
 
 
 
@@ -668,11 +673,226 @@ options object.</li>
 
 
 
+        <h5>Examples</h5>
+
+    <pre class="sunlight-highlight-javascript">utils.resolveExpression(&#x27;a|b#c|d&#x27;, function (expression, params, expressionWithParams) {
+         ...
+}
+&#x2F;&#x2F; the ResolverCallback will be called with these arguments
+&#x2F;&#x2F; first call
+ a, [], a
+&#x2F;&#x2F; second call
+ b, [c], b#c
+&#x2F;&#x2F; third call
+ d, [], d
+&#x2F;&#x2F; if any of the calls return a non undefined value or do not throw an Error, the next call will not happen
+&#x2F;&#x2F; if none of the callbacks return a defined value, the promise returned will reject with error</pre>
+
+    <pre class="sunlight-highlight-javascript">utils.resolveExpression(&#x27;a|b#c&#x2F;#c1#c2|d?&#x27;, function (expression, params, expressionWithParams) {
+         ...
+}
+&#x2F;&#x2F; the ResolverCallback will be called with these arguments
+&#x2F;&#x2F; first call
+ a, [], a
+&#x2F;&#x2F; second call
+ b, [c#c1, c2], b#c&#x2F;#c1#c2
+&#x2F;&#x2F; third call
+ d, [], d
+&#x2F;&#x2F; #, |, ? and &#x2F; can be escaped with a &#x2F; as shown in the second call
+&#x2F;&#x2F; if any of the calls return a non undefined value or do not throw an Error, the next call will not happen
+&#x2F;&#x2F; if none of the callbacks return a defined value, the promise returned will still resolve with undefined
+&#x2F;&#x2F; because theoptional flag (?) is specified</pre>
+
+
+
 </dd>
 
         </dl>
 
 
+
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+
+<dt>
+    <h4 class="name" id="ResolverCallback"><span class="type-signature"></span>ResolverCallback<span class="signature">(expression, params, expressionWithParams)</span><span class="type-signature"></span></h4>
+
+
+</dt>
+<dd>
+
+
+    <div class="description">
+        The ResolverCallback is used in <a href="utils.html#resolveExpression"> resolveExpression</a> function as
+a parameter. This callback is called for every part of the expression to get its value. The values are then
+consolidated and a result is obtained.
+    </div>
+
+
+
+
+
+
+
+        <h5>Parameters:</h5>
+
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+
+		<th>Name</th>
+
+
+		<th>Type</th>
+
+
+
+
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+
+
+        <tr>
+
+                <td class="name"><code>expression</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">string</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">the actual expression on which the resolver is to be called</td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>params</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">the list of parameters to be sent to the configurations object</td>
+        </tr>
+
+
+
+        <tr>
+
+                <td class="name"><code>expressionWithParams</code></td>
+
+
+            <td class="type">
+
+
+<span class="param-type">string</span>
+
+
+
+            </td>
+
+
+
+
+
+            <td class="description last">the original expression. This can be used for caching results.</td>
+        </tr>
+
+
+	</tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="utils.js.html">resolver/utils.js</a>
+			</li>
+		</ul>
+	</dd>
+
+
+
+
+
+	<dt class="tag-see">See:</dt>
+	<dd class="tag-see">
+		<ul>
+			<li><a href="utils.html#resolveExpression">module:base-resolver/utils.resolveExpression</a></li>
+			</ul>
+	</dd>
+
+
+
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</dd>
+
+            </dl>
 
 
 
