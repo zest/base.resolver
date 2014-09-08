@@ -246,14 +246,7 @@ var Q = require('q'),
  * This promise is rejected with the error if the resolver set-up fails.
  */
 module.exports = function (configPathOrArray, basePath) {
-    try {
-        return resolverFactory(configPathOrArray, basePath);
-    } catch (error) {
-        logger.error('error initializing resolver!', error);
-        return Q.Promise(function (resolve, reject) {
-            reject(error);
-        });
-    }
+    return Q.fcall(resolverFactory, configPathOrArray, basePath);
 };
 // documenting the Configuration object
 /**

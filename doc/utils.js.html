@@ -102,7 +102,7 @@
  * @module base-resolver/utils
  * @requires q
  */
-var Q = require('q');
+var q = require('q');
 /**
  * Extracts arguments from a function and makes a list of dependencies. The function parameter is transformed from
  * camel-case to &lt;code>-&lt;/code> and &lt;code>.&lt;/code> separated, and an expression is created which evaluates them in
@@ -131,7 +131,7 @@ var Q = require('q');
  */
 exports.getDependencies = function (callback) {
     // only accept functions as argument
-    if (!(typeof callback === 'function')) {
+    if (typeof callback !== 'function') {
         throw new Error('only functions can have params!');
     }
     /*jslint regexp: true */
@@ -208,14 +208,12 @@ exports.resolveExpression = function (expression, resolverFunction) {
     if (typeof expression !== 'string') {
         if (typeof expression !== 'object') {
             // if the expression is not a string or an object, we resolve it with its value
-            return Q.Promise(function (resolve) {
-                resolve(expression);
-            });
+            return q(expression);
         }
         // if the expression is not a string and an object, every key has to be resolved recursively
         // make sure you do not modify the original object
         retVal = new expression.constructor();
-        return Q.allSettled(
+        return q.allSettled(
             Object.keys(expression).map(function (key) {
                 return exports.resolveExpression(expression[key], resolverFunction).then(function (value) {
                     retVal[key] = value;
@@ -229,7 +227,7 @@ exports.resolveExpression = function (expression, resolverFunction) {
         );
     }
     // for strings, do the following
-    deferred = Q.defer();
+    deferred = q.defer();
     promise = deferred.promise;
     // check if the parameter is opitonal
     optional = /\?$/.test(expression);
@@ -243,19 +241,15 @@ exports.resolveExpression = function (expression, resolverFunction) {
     /*jslint regexp: false */
     // try resolving the expressions one by one, breaking at first successful resolution
     getNextPromise = function () {
-        return Q.promise(function (resolve) {
-            /*jslint regexp: true */
-            // split the expression to get the parameters
-            var thisExpressionWithParams = expressions.shift(),
-                thisParams = thisExpressionWithParams.match(/(\/.|[^#])+/g).map(function (value) {
-                    return value.replace(/\/([\/\|\?#]{1})/g, '$1');
-                }),
-                thisExpression = thisParams.shift(),
-                // call the resolverFunction
-                resolution = resolverFunction.call({}, thisExpression, thisParams, thisExpressionWithParams);
-            /*jslint regexp: false */
-            resolve(resolution);
-        }).then(
+        /*jslint regexp: true */
+        // split the expression to get the parameters
+        var thisExpressionWithParams = expressions.shift(),
+            thisParams = thisExpressionWithParams.match(/(\/.|[^#])+/g).map(function (value) {
+                return value.replace(/\/([\/\|\?#]{1})/g, '$1');
+            }),
+            thisExpression = thisParams.shift();
+        /*jslint regexp: false */
+        return q.fcall(resolverFunction, thisExpression, thisParams, thisExpressionWithParams).then(
             function (value) {
                 // if resolution returned a value, skip further resolutions and return
                 if (value) {
@@ -322,7 +316,8 @@ exports.isInjectorArray = function (obj) {
  * @param {Array.&lt;string>} params - the list of parameters to be sent to the configurations object
  * @param {string} expressionWithParams - the original expression. This can be used for caching results.
  * @see module:base-resolver/utils.resolveExpression
- */</pre>
+ */
+</pre>
 	</article>
 </section>
 
