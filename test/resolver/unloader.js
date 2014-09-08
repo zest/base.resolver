@@ -50,4 +50,28 @@ describe('base.resolver (unloader)', function () {
             expect(loggerSpy.getCall(5)).to.have.been.calledWith('unload-component1async.unload.end');
         });
     });
+    it('should be able to unload components even if there is an error', function () {
+        var loggerSpy = sinon.spy(function (arg) {
+            if (arg.indexOf('.unload') !== -1) {
+                throw new Error();
+            }
+        });
+        return expect(resolver('./test/data/configs/configuration-unload')).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]).then(function (resolver) {
+            process.LOG = loggerSpy;
+            return resolver.load();
+        }).then(function (resolver) {
+            expect(loggerSpy).to.have.callCount(2);
+            expect(loggerSpy.getCall(0)).to.have.been.calledWith('unload-component1.load');
+            expect(loggerSpy.getCall(1)).to.have.been.calledWith('unload-component2.load');
+            return resolver.unload();
+        }).then(function (resolver) {
+            expect(loggerSpy).to.have.callCount(4);
+            expect(loggerSpy.getCall(2)).to.have.been.calledWith('unload-component2.unload');
+            expect(loggerSpy.getCall(3)).to.have.been.calledWith('unload-component1.unload');
+        });
+    });
 });

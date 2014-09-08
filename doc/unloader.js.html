@@ -132,13 +132,24 @@ module.exports = function () {
          */
         unload: function () {
             logger.log('executing unloaders...');
-            var retVal = q(true);
+            var retVal = q(true),
+                eatError = function (unloaderFn) {
+                    return function (error) {
+                        logger.error('error while unloading...');
+                        logger.error(error);
+                        return unloaderFn();
+                    };
+                },
+                unloaderFn;
             while (unloaders.length) {
-                retVal = retVal.then(unloaders.pop());
+                unloaderFn = unloaders.pop();
+                retVal = retVal.then(unloaderFn, eatError(unloaderFn));
             }
             return retVal.then(function () {
                 logger.log('All registered unloaders executed successfully.');
-            });
+            }, eatError(function () {
+                return;
+            }));
         }
     };
 };

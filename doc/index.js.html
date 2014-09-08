@@ -153,8 +153,8 @@ var Q = require('q'),
             /**
              * @description The unload function will call all registered unload handlers and clear off the dependency
              * tree
-             * @returns {q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the unload is
-             * executed. This promise is rejected with the error if unload execution fails.
+             * @returns {q} a Promise that gets resolved when the unload is executed. This promise is rejected with the
+             * error if unload execution fails.
              * @memberof module:base-resolver~Resolver
              */
             unload = function () {
@@ -162,11 +162,6 @@ var Q = require('q'),
                 return unloader.unload().then(
                     function () {
                         logger.info('successfully unloaded all components!');
-                        return resolver;
-                    },
-                    function (error) {
-                        logger.error('error unloading components!', error);
-                        throw error;
                     }
                 );
             };
