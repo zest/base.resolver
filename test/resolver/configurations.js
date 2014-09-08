@@ -30,9 +30,24 @@ describe('base.resolver (configuration)', function () {
             'reload'
         ]);
     });
+    // it should configure properly absolute file paths
+    it('should configure properly absolute file paths', function () {
+        /*jslint nomen: true */
+        var baseDir = __dirname;
+        /*jslint nomen: false */
+        return expect(resolver(baseDir + '/../data/configs/configuration-empty-array')).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]);
+    });
     // it should not configure properly with a non array
     it('should not configure properly with a non array', function () {
         return expect(resolver('./test/data/configs/configuration-object')).to.eventually.be.rejectedWith(Error);
+    });
+    // it should not configure properly with an invalid file
+    it('should not configure properly with an invalid file', function () {
+        return expect(resolver('./test/data/configs/configuration-invalid.txt')).to.eventually.be.rejectedWith(Error);
     });
     // it should configure independent modules properly
     it('should configure independent modules properly', function () {
@@ -141,6 +156,63 @@ describe('base.resolver (configuration)', function () {
                 }
             ],
             dirName + '/../data/configs'
+        )).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]).then(function (resolver) {
+            process.LOG = loggerSpy;
+            return resolver.load();
+        }).then(function () {
+            expect(loggerSpy).to.have.callCount(10);
+            // js-unnamed-component load
+            expect(loggerSpy).to.have.been.calledWith('js-unnamed-component.load');
+            expect(loggerSpy).to.have.been.calledWith([]);
+            // module-package-json-unnamed-component load
+            expect(loggerSpy).to.have.been.calledWith('module-package-json-unnamed-component.load');
+            expect(loggerSpy).to.have.been.calledWith([
+                {
+                    'soul-component': 'json-named-component',
+                    name: 'json-named-component'
+                },
+                'js-named-component',
+                'module-named-component',
+                'module-package-json-named-component'
+            ]);
+            // module-package-json-unnamed-component dependencies
+            expect(loggerSpy).to.have.been.calledWith('js-named-component.load');
+            expect(loggerSpy).to.have.been.calledWith([]);
+            expect(loggerSpy).to.have.been.calledWith('module-named-component.load');
+            expect(loggerSpy).to.have.been.calledWith([]);
+            expect(loggerSpy).to.have.been.calledWith('module-package-json-named-component.load');
+            expect(loggerSpy).to.have.been.calledWith([]);
+        });
+    });
+    it('should be able to default the baseDir to the resolver lib', function () {
+        /*jslint nomen: true */
+        var loggerSpy = sinon.spy(),
+            dirName = __dirname;
+        /*jslint nomen: false */
+        return expect(resolver(
+            [
+                '../test/data/independent-components/json-named-component',
+                {
+                    path: '../test/data/independent-components/json-unnamed-component',
+                    startup: true
+                },
+                '../test/data/independent-components/js-named-component',
+                {
+                    path: '../test/data/independent-components/js-unnamed-component',
+                    startup: true
+                },
+                dirName + '/../data/independent-components/module-named-component',
+                '../test/data/independent-components/module-unnamed-component',
+                '../test/data/independent-components/module-package-json-named-component',
+                {
+                    path: dirName + '/../data/independent-components/module-package-json-unnamed-component',
+                    startup: true
+                }
+            ]
         )).to.eventually.have.keys([
             'load',
             'unload',
