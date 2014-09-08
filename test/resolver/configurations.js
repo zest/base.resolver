@@ -79,7 +79,22 @@ describe('base.resolver', function () {
         });
     });
     // it should configure dependent modules properly
-    it('should configure npm modules and repositories properly', function () {
+    it('should configure npm modules and repositories properly without package.json', function () {
+        var loggerSpy = sinon.spy();
+        return expect(resolver('./test/data/configs/configuration-native')).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]).then(function (resolver) {
+            process.LOG = loggerSpy;
+            return resolver.load();
+        }).then(function () {
+            expect(loggerSpy).to.have.callCount(2);
+            expect(loggerSpy).to.have.been.calledWith('js-component-using-native.load');
+        });
+    });
+    // it should configure dependent modules properly
+    it('should configure npm modules and repositories properly with package.json', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-native')).to.eventually.have.keys([
             'load',

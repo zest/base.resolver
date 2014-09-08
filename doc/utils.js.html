@@ -307,6 +307,15 @@ exports.isInjectorArray = function (obj) {
             return true;
         }());
 };
+
+/**
+ * This function clones and creates a new copy of the object.
+ * @param {*} obj - any object
+ * @returns {*} cloned object
+ */
+exports.clone = function (obj) {
+    return JSON.parse(JSON.stringify(obj));
+};
 /**
  * The ResolverCallback is used in {@link module:base-resolver/utils.resolveExpression| resolveExpression} function as
  * a parameter. This callback is called for every part of the expression to get its value. The values are then
