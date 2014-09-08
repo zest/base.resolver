@@ -1,0 +1,7 @@
+[
+    "../independent-components/unload-component1",
+    {
+        "path": "../independent-components/unload-component2",
+        "startup": true
+    }
+]

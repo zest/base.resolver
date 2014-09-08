@@ -102,7 +102,7 @@
  * @module base-resolver/unloader
  * @requires q
  */
-var Q = require('q'),
+var q = require('q'),
     logger = require('base.logger')('RESOLVER/unloader');
 /**
  * This function creates a new Unloader and returns it.
@@ -132,14 +132,9 @@ module.exports = function () {
          */
         unload: function () {
             logger.log('executing unloaders...');
-            var retVal = Q.Promise(function (resolve) {
-                    return resolve();
-                }),
-                callSeq = function () {
-                    return unloaders.pop().call();
-                };
+            var retVal = q(true);
             while (unloaders.length) {
-                retVal = retVal.then(callSeq);
+                retVal = retVal.then(unloaders.pop());
             }
             return retVal.then(function () {
                 logger.log('All registered unloaders executed successfully.');

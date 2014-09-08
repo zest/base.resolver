@@ -121,7 +121,10 @@ var Q = require('q'),
             resolver,
         // configurations is initialized here and sent to resolution-provider
             configurations = require('./resolver/configurations')(),
-            resolutionProvider = require('./resolver/resolution-provider')(configurations),
+        // unloader is used to inject unload dependency
+            unloader = require('./resolver/unloader')(),
+            resolutionProvider = require('./resolver/resolution-provider')(configurations, unloader),
+
             /**
              * @description The load function runs all starting components in the configuration, injecting all other
              * dependencies required.
@@ -132,7 +135,7 @@ var Q = require('q'),
             load = function () {
                 var startupDependencies = configurations.startupDependencies();
                 logger.info(startupDependencies.length, 'startup components found. Loading them now.');
-                return Q.allSettled(
+                return Q.all(
                     startupDependencies.map(function (dependencyExpression) {
                         return resolutionProvider.resolve(dependencyExpression);
                     })
@@ -156,7 +159,7 @@ var Q = require('q'),
              */
             unload = function () {
                 logger.info('unloading components.');
-                return resolver.unload().then(
+                return unloader.unload().then(
                     function () {
                         logger.info('successfully unloaded all components!');
                         return resolver;

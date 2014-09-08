@@ -111,11 +111,9 @@ var Q = require('q'),
  * {module:base-resolver/configurations~ConfigurationManager} as input.
  * @returns {module:base-resolver/resolution-provider~ResolutionProvider} the resolver with one resolve method
  */
-module.exports = function (configurations) {
+module.exports = function (configurations, unloader) {
     // components map is used to cache components.
     var componentsMap = {},
-        // unloader is used to inject unload dependency
-        unloader = require('./unloader')(),
         /**
          * This function resolves an expression and returns a promise that resolves to the corresponding component
          * @param {string} dependencyExpression - the expression to resolve

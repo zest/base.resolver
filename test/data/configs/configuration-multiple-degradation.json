@@ -1,0 +1,23 @@
+[
+    "../independent-components/json-named-component",
+    {
+        "path": "../independent-components/json-unnamed-component",
+        "startup": true
+    },
+    "../independent-components/js-named-component",
+    {
+        "path": "../independent-components/js-unnamed-component",
+        "startup": true
+    },
+    {
+        "path": "../independent-components/multiple-module-degradation",
+        "startup": true
+    },
+    "../independent-components/module-named-component",
+    "../independent-components/module-unnamed-component",
+    "../independent-components/module-package-json-named-component",
+    {
+        "path": "../independent-components/module-package-json-unnamed-component",
+        "startup": true
+    }
+]

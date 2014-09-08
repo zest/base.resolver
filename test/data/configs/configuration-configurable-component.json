@@ -1,0 +1,18 @@
+[
+    {
+        "path": "../independent-components/configurable-component",
+        "options" : {
+            "variable1":"{1}|hello",
+            "variable2":"{2}|{1}"
+        }
+    }, {
+        "path": "../independent-components/configuration-user1",
+        "startup": true
+    }, {
+        "path": "../independent-components/configuration-user2",
+        "startup": true
+    }, {
+        "path": "../independent-components/configuration-user3",
+        "startup": true
+    }
+]
