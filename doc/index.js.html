@@ -114,7 +114,7 @@ var Q = require('q'),
     logger = require('base.logger')('RESOLVER'),
     resolverFactory = function (configPathOrArray, basePath) {
         // array of configurations
-        var configArray,
+        var configArray = configPathOrArray,
         // base directory relative to which modules should be resolved
             baseDir,
         // resolver that has load, reload and unload functions
@@ -217,6 +217,7 @@ var Q = require('q'),
             baseDir = __dirname;
             /*jslint nomen: false */
         }
+        logger.log(baseDir, configArray);
         return configurations.setup(configArray, baseDir).then(
             function () {
                 logger.info('initialization successful.');

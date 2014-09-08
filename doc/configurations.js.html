@@ -141,7 +141,7 @@ module.exports = function () {
                 // create a clone of the config array for use. Since, the configuration is not read but required. There
                 // will otherwise be only one global copy which anyone could change
                 configArray = utils.clone(configArray);
-                return Q.allSettled(configArray.map(function (config) {
+                return Q.all(configArray.map(function (config) {
                     // normalize the configuration so that all of them follow the same syntax
                     if (typeof config === 'string') {
                         config = {
@@ -251,15 +251,19 @@ module.exports = function () {
                         return stat(config.path);
                     }).then(function (stat) {
                         if (stat.isDirectory()) {
-                            // if the path is a directory, try to find the package.json file in the directory
-                            var packageDetails = require(path.join(config.path, 'package.json'));
-                            // if soul-component is present in package.json, use it
-                            if (packageDetails['soul-component']) {
-                                return packageDetails['soul-component'];
-                            }
-                            // if the component is native, use the name specified in package.json
-                            if (config.native && packageDetails.name) {
-                                return packageDetails.name;
+                            try {
+                                // if the path is a directory, try to find the package.json file in the directory
+                                var packageDetails = require(path.join(config.path, 'package.json'));
+                                // if soul-component is present in package.json, use it
+                                if (packageDetails['soul-component']) {
+                                    return packageDetails['soul-component'];
+                                }
+                                // if the component is native, use the name specified in package.json
+                                if (config.native && packageDetails.name) {
+                                    return packageDetails.name;
+                                }
+                            } catch (ignore) {
+                                // do nothing here
                             }
                         }
                         // an error will come if the component is a file and it is included without an extension
