@@ -150,6 +150,7 @@ module.exports = function (configurations) {
                             }
                         )).then(
                             function (args) {
+                                logger.log('resolved:', dependencyExpression);
                                 return factoryFunction.apply({}, args);
                             }
                         );

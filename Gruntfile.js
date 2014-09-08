@@ -10,7 +10,8 @@ module.exports = function (grunt) {
             ],
             test: [
                 '<%= pkg.directories.test %>/**/*.js',
-                '<%= pkg.directories.test %>/**/*.json'
+                '<%= pkg.directories.test %>/**/*.json',
+                '!**/node_modules/**'
             ],
             build: [
                 'Gruntfile.js',
@@ -84,7 +85,10 @@ module.exports = function (grunt) {
                 ui: 'bdd',
                 // "slow" test threshold in milliseconds [75].
                 slow: 10,
-                files: '<%= pkg.directories.test %>/**/*.js'
+                files: [
+                    '<%= pkg.directories.test %>/**/*.js',
+                    '!**/node_modules/**'
+                ]
             },
             // default test option
             test: {

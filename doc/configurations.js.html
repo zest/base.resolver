@@ -108,7 +108,8 @@ var Q = require('q'),
     path = require('path'),
     fs = require('fs'),
     utils = require('./utils'),
-    stat = Q.nbind(fs.stat, fs),
+    stat = Q.denodeify(fs.stat),
+    writeFile = Q.denodeify(fs.writeFile),
     logger = require('base.logger')('RESOLVER/configurations');
 /**
  * Creates a ConfigurationManager and returns it
@@ -164,22 +165,44 @@ module.exports = function () {
                         // if path does not start with a ., or contains only one / the component is assumed to be an
                         // npm module or git repo which can be fetched using npm install
                         logger.log('fetching component using npm install:', config.path);
-                        npmInstall = require('child_process').spawn('npm', ['install', config.path], {
-                            cwd: baseDir
-                        });
-                        npmInstall.stdout.on('data', function (data) {
-                            logger.log(data);
-                        });
-                        npmInstall.on('close', function (code) {
-                            if (code === 0) {
-                                logger.log('installed', config.path, '...');
-                                config.path = path.join(baseDir, 'node_modules', config.path.split(/\//).pop());
-                                logger.log('\t at', config.path);
-                                resolve(config.path);
-                            } else {
-                                logger.error('npm install exited with code', code);
-                                reject(new Error('npm install exited with code ' + code));
+                        logger.log('installing at path:', baseDir);
+                        // first check if there is a package.json file in the baseDir
+                        Q.Promise(function (resolve) {
+                            fs.exists(path.join(baseDir, 'package.json'), resolve);
+                        }).then(function (exists) {
+                            if (exists) {
+                                return true;
                             }
+                            // if the file is not there, we create it
+                            return writeFile(path.join(baseDir, 'package.json'), JSON.stringify({
+                                name: 'integration-' + parseInt(Math.random() * 9999999999, 10)
+                            }));
+                        }).then(function () {
+                            // once the package.json file is ensured, install the dependencies
+                            npmInstall = require('child_process').exec('npm install ' + config.path, {
+                                cwd: baseDir
+                            });
+                            npmInstall.stdout.on('data', function (data) {
+                                logger.log(data);
+                            });
+                            npmInstall.stderr.on('data', function (data) {
+                                logger.log(data);
+                            });
+                            npmInstall.on('close', function (code) {
+                                if (code === 0) {
+                                    logger.log('installed', config.path, '...');
+                                    config.path = path.join(baseDir, 'node_modules', config.path.split(/\//).pop());
+                                    logger.log('\t at', config.path);
+                                    resolve(config.path);
+                                } else {
+                                    logger.error('npm install exited with code', code);
+                                    reject(new Error('npm install exited with code ' + code));
+                                }
+                            });
+                            npmInstall.on('error', function (err) {
+                                logger.error('npm install failed with error:', err);
+                                reject(err);
+                            });
                         });
                     }).then(function () {
                         // then we normalize the factory function

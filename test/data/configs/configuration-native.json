@@ -1,0 +1,12 @@
+[
+    {
+        "path": "soul-infra/base.logger",
+        "native": true
+    }, {
+        "path": "q",
+        "native": true
+    }, {
+        "path": "../independent-components/js-component-using-native",
+        "startup": true
+    }
+]

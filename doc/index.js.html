@@ -131,7 +131,7 @@ var Q = require('q'),
              */
             load = function () {
                 var startupDependencies = configurations.startupDependencies();
-                logger.info(startupDependencies.length, 'startup components found. Loading then now.');
+                logger.info(startupDependencies.length, 'startup components found. Loading them now.');
                 return Q.allSettled(
                     startupDependencies.map(function (dependencyExpression) {
                         return resolutionProvider.resolve(dependencyExpression);

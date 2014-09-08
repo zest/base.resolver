@@ -193,6 +193,20 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        it('should throw an error if no value is found for compound expressions', function () {
+            var spy = sinon.spy(function () {
+                throw new Error();
+            });
+            return expect(
+                utils.resolveExpression('string1|string2', spy)
+            ).to.eventually.be.rejectedWith(Error).then(
+                function () {
+                    expect(spy).to.have.callCount(2);
+                    expect(spy).to.have.been.calledWith('string1');
+                    expect(spy).to.have.been.calledWith('string2');
+                }
+            );
+        });
         it('should escape strings with | properly', function () {
             var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);

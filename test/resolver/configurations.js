@@ -1,6 +1,5 @@
 'use strict';
-var resolver = require('../lib'),
-    Q = require('q'),
+var resolver = require('../../lib'),
     chai = require('chai'),
     sinon = require('sinon'),
     expect = require('chai').expect;
@@ -77,6 +76,21 @@ describe('base.resolver', function () {
             expect(loggerSpy).to.have.been.calledWith([]);
             expect(loggerSpy).to.have.been.calledWith('module-package-json-named-component.load');
             expect(loggerSpy).to.have.been.calledWith([]);
+        });
+    });
+    // it should configure dependent modules properly
+    it('should configure npm modules and repositories properly', function () {
+        var loggerSpy = sinon.spy();
+        return expect(resolver('./test/data/configs/configuration-native')).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]).then(function (resolver) {
+            process.LOG = loggerSpy;
+            return resolver.load();
+        }).then(function () {
+            expect(loggerSpy).to.have.callCount(2);
+            expect(loggerSpy).to.have.been.calledWith('js-component-using-native.load');
         });
     });
 });
