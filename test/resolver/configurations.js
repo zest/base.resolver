@@ -1,4 +1,6 @@
 'use strict';
+// silence the logger
+require('base.logger').configure([]);
 var resolver = require('../../lib'),
     chai = require('chai'),
     sinon = require('sinon'),

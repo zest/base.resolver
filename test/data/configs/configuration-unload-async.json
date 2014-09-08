@@ -1,0 +1,11 @@
+[
+    {
+        "path": "q",
+        "native": true
+    },
+    "../independent-components/unload-component1async",
+    {
+        "path": "../independent-components/unload-component2async",
+        "startup": true
+    }
+]

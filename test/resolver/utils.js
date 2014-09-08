@@ -1,4 +1,6 @@
 'use strict';
+// silence the logger
+require('base.logger').configure([]);
 var utils = require('../../lib/resolver/utils'),
     Q = require('q'),
     chai = require('chai'),
@@ -26,7 +28,7 @@ describe('base.resolver.utils', function () {
                 ])
             ).to.eql(true);
         });
-        it('shoul be able to identify arrays that are not injectors', function () {
+        it('should be able to identify arrays that are not injectors', function () {
             expect(
                 utils.isInjectorArray([
                     'a',
