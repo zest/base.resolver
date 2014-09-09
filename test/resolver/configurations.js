@@ -2,7 +2,7 @@
 // silence the logger
 require('base.logger').configure([]);
 var resolver = require('../../lib'),
-    fs = require('fs-extra'),
+    fs = require('fs'),
     chai = require('chai'),
     sinon = require('sinon'),
     expect = require('chai').expect;
@@ -14,8 +14,9 @@ describe('base.resolver (configuration)', function () {
         /*jslint nomen: true */
         var baseDir = __dirname;
         /*jslint nomen: false */
-        fs.unlink(baseDir + './../data/configs/package.json', function () {
+        fs.unlink(baseDir + './../data/configs/package.json', function (err) {
             // even if the delete fails, the tests should complete
+            console.log(err);
             done();
         });
     });
