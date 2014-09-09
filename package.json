@@ -47,6 +47,7 @@
         "sinon": "*",
         "sinon-chai": "*",
         "chai-as-promised": "*",
+        "fs-extra": "*",
         "merge": "*"
     },
     "directories": {

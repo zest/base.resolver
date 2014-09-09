@@ -2,6 +2,7 @@
 // silence the logger
 require('base.logger').configure([]);
 var resolver = require('../../lib'),
+    fs = require('fs-extra'),
     chai = require('chai'),
     sinon = require('sinon'),
     expect = require('chai').expect;
@@ -9,13 +10,14 @@ chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver (configuration)', function () {
     after(function (done) {
-        console.log('after called');
         /*jslint nomen: true */
         var baseDir = __dirname;
         /*jslint nomen: false */
-        require('fs').unlink(baseDir + './../data/configs/package.json', function () {
-            // even if the delete fails, the tests should complete
-            done();
+        fs.unlink(baseDir + './../data/configs/package.json', function () {
+            fs.remove(baseDir + './../data/configs/node_modules', function () {
+                // even if the delete fails, the tests should complete
+                done();
+            });
         });
     });
     // it should return a module
