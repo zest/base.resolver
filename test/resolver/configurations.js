@@ -14,9 +14,8 @@ describe('base.resolver (configuration)', function () {
         /*jslint nomen: true */
         var baseDir = __dirname;
         /*jslint nomen: false */
-        fs.unlink(baseDir + './../data/configs/package.json', function (err) {
+        fs.unlink(baseDir + '/../data/configs/package.json', function () {
             // even if the delete fails, the tests should complete
-            console.log(err);
             done();
         });
     });

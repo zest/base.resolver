@@ -20,74 +20,74 @@
 		<div class="navbar-inner">
 			<a class="brand" href="index.html">soul-infra / base.script</a>
 			<ul class="nav">
-
+				
 				<li class="dropdown">
 					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
 						class="caret"></b></a>
 
 					<ul class="dropdown-menu ">
-
+						
 						<li>
 							<a href="configurations-ConfigurationManager.html">base-resolver/configurations~ConfigurationManager</a>
 						</li>
-
+						
 						<li>
 							<a href="resolution-provider-ResolutionProvider.html">base-resolver/resolution-provider~ResolutionProvider</a>
 						</li>
-
+						
 						<li>
 							<a href="unloader-Unloader.html">base-resolver/unloader~Unloader</a>
 						</li>
-
+						
 						<li>
 							<a href="module-base-resolver-Resolver.html">base-resolver~Resolver</a>
 						</li>
-
+						
 
 					</ul>
 				</li>
-
+				
 				<li class="dropdown">
 					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
 						class="caret"></b></a>
 
 					<ul class="dropdown-menu ">
-
+						
 						<li>
 							<a href="module-base-resolver.html">base-resolver</a>
 						</li>
-
+						
 						<li>
 							<a href="configurations.html">base-resolver/configurations</a>
 						</li>
-
+						
 						<li>
 							<a href="resolution-provider.html">base-resolver/resolution-provider</a>
 						</li>
-
+						
 						<li>
 							<a href="unloader.html">base-resolver/unloader</a>
 						</li>
-
+						
 						<li>
 							<a href="utils.html">base-resolver/utils</a>
 						</li>
-
+						
 
 					</ul>
 				</li>
-
+				
 			</ul>
 		</div>
 	</div>
 
 	<div class="row-fluid">
 
-
+		
 		<div class="span8">
-
+			
 				<div id="main">
-
+					
 
 
 	<h1 class="page-title">Module: base-resolver</h1>
@@ -97,85 +97,85 @@
     <h2>
     base-resolver
     </h2>
-
+    
 </header>
 
 <article>
     <div class="container-overview">
-
-
+    
+        
 <dt>
     <h4 class="name" id="module:base-resolver"><span class="type-signature"></span>require("base-resolver")<span class="signature">(configPathOrArray, <span class="optional">basePath</span>)</span><span class="type-signature"> &rarr; {q}</span></h4>
-
-
+    
+    
 </dt>
 <dd>
-
-
+    
+    
     <div class="description">
         This function configures the resolver. This function takes two parameters and creates a configuration object that is
 used to load the starting modules.
     </div>
+    
 
-
-
-
-
-
-
+    
+    
+    
+    
+    
         <h5>Parameters:</h5>
-
+        
 
 <table class="params table table-striped">
     <thead>
 	<tr>
-
+		
 		<th>Name</th>
-
+		
 
 		<th>Type</th>
 
-
+		
 		<th>Argument</th>
+		
 
-
-
+		
 
 		<th class="last">Description</th>
 	</tr>
 	</thead>
 
 	<tbody>
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>configPathOrArray</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">string</span>
 |
 
 <span class="param-type">Array.&lt;(<a href="module-base-resolver.html#Configuration">module:base-resolver~Configuration</a>|string)></span>
 
 
-
+            
             </td>
 
-
+            
                 <td class="attributes">
+                
 
+                
 
-
-
-
+                
                 </td>
+            
 
-
-
+            
 
             <td class="description last">If this parameter is a string,
 requiring the string path should return the config array. We try to require the <code>configPath</code> directly. If
@@ -184,35 +184,35 @@ can also be passed instead of passing a <code>configPath</code>. if config array
 to be the path of the <a href="module-base-resolver.html#Configuration">module:base-resolver~Configuration</a> object, with all other properties defaulted.</td>
         </tr>
 
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>basePath</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">string</span>
 
 
-
+            
             </td>
 
-
+            
                 <td class="attributes">
-
+                
                     &lt;optional><br>
+                
 
+                
 
-
-
-
+                
                 </td>
+            
 
-
-
+            
 
             <td class="description last">basePath is an optional parameter which provides the absolute path from where the
 components should be resolved. If <code>basePath</code> is not provided, it is resolved as follows:
@@ -222,35 +222,35 @@ components should be resolved. If <code>basePath</code> is not provided, it is r
 current working directory for the process</li></ul></td>
         </tr>
 
-
+	
 	</tbody>
 </table>
 
-
-
-
+    
+    
+    
 <dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source">
 		<ul class="dummy">
@@ -259,28 +259,28 @@ current working directory for the process</li></ul></td>
 			</li>
 		</ul>
 	</dd>
+	
 
+	
 
+	
 
-
-
-
-
+	
 </dl>
 
+    
+    
 
+    
 
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
     <h5>Returns:</h5>
-
-
+    
+            
 <div class="param-desc">
     a Promise that gets resolved with <a href="module-base-resolver-Resolver.html">module:base-resolver~Resolver</a> when the resolver is set up.
 This promise is rejected with the error if the resolver set-up fails.
@@ -293,7 +293,7 @@ This promise is rejected with the error if the resolver set-up fails.
 		Type
 	</dt>
 	<dd>
-
+		
 <span class="param-type">q</span>
 
 
@@ -301,45 +301,45 @@ This promise is rejected with the error if the resolver set-up fails.
 </dl>
 
 
-
-
-
+        
+    
+    
 </dd>
 
+    
 
-
-
-
+    
+        
             <div class="description">The base.resolver component provides inversion of control and dependency injection api for running of
 SOUL infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components
 you want to load. Each component registers itself with resolver, so other components can use its functions.
 Components can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components
 can also just be a file that can be required from node. (A javascript file or even a JSON file)</div>
+        
 
-
-
+        
 <dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source">
 		<ul class="dummy">
@@ -348,87 +348,87 @@ can also just be a file that can be required from node. (A javascript file or ev
 			</li>
 		</ul>
 	</dd>
+	
 
+	
 
+	
 
-
-
-
-
+	
 </dl>
 
 
-
-
+        
+    
     </div>
 
+    
 
+    
 
-
-
-
+    
         <h3 class="subsection-title">Requires</h3>
 
         <ul>
             <li><a href="configurations.html">module:base-resolver/configurations</a></li>
-
+        
             <li><a href="resolution-provider.html">module:base-resolver/resolution-provider</a></li>
-
+        
             <li><a href="unloader.html">module:base-resolver/unloader</a></li>
-
+        
             <li><a href="utils.html">module:base-resolver/utils</a></li>
-
+        
             <li>module:q</li>
         </ul>
+    
 
+    
 
-
-
-
+    
         <h3 class="subsection-title">Namespaces</h3>
 
         <dl>
             <dt><a href="namespaces.html#module:base-resolver~Resolver"><a href="module-base-resolver-Resolver.html">Resolver</a></a></dt>
             <dd></dd>
         </dl>
+    
 
+    
 
+    
 
-
-
-
-
+    
         <h3 class="subsection-title">Type Definitions</h3>
 
         <dl>
-
+                
 <dt class="name" id="Configuration">
     <h4>Configuration</h4>
 
-
+    
 </dt>
 <dd>
-
+    
     <div class="description">
         An array of Configuration object is passed to configure resolver
     </div>
+    
 
-
-
+    
         <h5>Type:</h5>
         <ul>
             <li>
-
+                
 <span class="param-type">object</span>
 
 
             </li>
         </ul>
+    
 
-
-
+    
 <dl class="details">
-
+	
 
 	<h5 class="subsection-title">Properties:</h5>
 
@@ -437,48 +437,48 @@ can also just be a file that can be required from node. (A javascript file or ev
 <table class="props table table-striped">
     <thead>
 	<tr>
-
+		
 		<th>Name</th>
-
+		
 
 		<th>Type</th>
 
-
+		
 		<th>Argument</th>
+		
 
-
-
+		
 
 		<th class="last">Description</th>
 	</tr>
 	</thead>
 
 	<tbody>
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>path</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">string</span>
 
 
-
+            
             </td>
 
-
+            
                 <td class="attributes">
+                
 
-
-
+                
                 </td>
+            
 
-
-
+            
 
             <td class="description last">specifies the path of the component
 <ul><li>if path does not start with a <code>.</code>, or does not contain <code>/</code> the component is assumed to
@@ -488,33 +488,33 @@ git repository</li>
 <li>in all other cases, the component is assumed to be located at the path specified in the local disk.</li></ul></td>
         </tr>
 
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>options</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">*</span>
 
 
-
+            
             </td>
 
-
+            
                 <td class="attributes">
-
+                
                     &lt;optional><br>
+                
 
-
-
+                
                 </td>
+            
 
-
-
+            
 
             <td class="description last">the options to be passed to instantiate the component.
 <ul><li>The Parameter Modifier can be used here using the <code>{param-number}</code> format</li>
@@ -524,64 +524,64 @@ below)</li>
 by a <code>/</code>. Eg. <code>/#</code> will translate to a single <code>#</code></li></ul></td>
         </tr>
 
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>startup</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">boolean</span>
 
 
-
+            
             </td>
 
-
+            
                 <td class="attributes">
-
+                
                     &lt;optional><br>
+                
 
-
-
+                
                 </td>
+            
 
-
-
+            
 
             <td class="description last">startup is optional and is used to specify if a component is a starting component.</td>
         </tr>
 
-
+	
 
         <tr>
-
+            
                 <td class="name"><code>native</code></td>
-
+            
 
             <td class="type">
-
-
+            
+                
 <span class="param-type">boolean</span>
 
 
-
+            
             </td>
 
-
+            
                 <td class="attributes">
-
+                
                     &lt;optional><br>
+                
 
-
-
+                
                 </td>
+            
 
-
-
+            
 
             <td class="description last">is optional and is used to mark a component as native nodejs module.
 <ul><li>Native modules are nodejs modules that are not compliant to the SOUL component structure</li>
@@ -592,32 +592,32 @@ by a <code>/</code>. Eg. <code>/#</code> will translate to a single <code>#</cod
 component will be named as the last part of the path in configuration excluding extension.</li></ul></td>
         </tr>
 
-
+	
 	</tbody>
 </table>
 </dl>
 
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source">
 		<ul class="dummy">
@@ -626,23 +626,23 @@ component will be named as the last part of the path in configuration excluding 
 			</li>
 		</ul>
 	</dd>
+	
 
+	
 
+	
 
-
-
-
-
+	
 </dl>
 
 
-
+    
 </dd>
 
             </dl>
+    
 
-
-
+    
 </article>
 
 </section>
@@ -654,16 +654,16 @@ component will be named as the last part of the path in configuration excluding 
 
 				<div class="clearfix"></div>
 				<footer>
-
+					
 					<hr/>
 					<br />
-
-
+					
+					
 		<span class="copyright">
 		<div style='text-align:left;border-color:#626262;background-color:#262626;color:#fff;padding:20px;'>This is free and unencumbered software released into the public domain.<br/>Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.<br/>In jurisdictions that recognize copyright laws, the author or authors of this software dedicate any and all copyright interest in the software to the public domain.<br/>We make this dedication for the benefit of the public at large and to the detriment of our heirs and successors.<br/>We intend this dedication to be an overt act of relinquishment in perpetuity of all present and future rights to this software under copyright law.<br/><br/>THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.<br/><br/>For more information, please refer to <a href='http://unlicense.org'>UNLICENSE</a></div>
 		</span>
 					<br />
-
+					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
 		on September, 2014 using the <a
@@ -672,11 +672,11 @@ component will be named as the last part of the path in configuration excluding 
 				</footer>
 			</div>
 
-
+			
 			<div class="span3">
 				<div id="toc"></div>
 			</div>
-
+			
 			<br clear="both">
 		</div>
 
@@ -743,11 +743,11 @@ component will be named as the last part of the path in configuration excluding 
 
 
 	<!--Navigation and Symbol Display-->
-
+	
 
 
 	<!--Google Analytics-->
-
+	
 
 </body>
 </html>
