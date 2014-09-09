@@ -9,17 +9,17 @@ var resolver = require('../../lib'),
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver (configuration)', function () {
-    before(function (done) {
-        /*jslint nomen: true */
-        var baseDir = __dirname;
-        /*jslint nomen: false */
-        fs.unlink(baseDir + './../data/configs/package.json', function () {
-            fs.remove(baseDir + './../data/configs/node_modules', function () {
-                // even if the delete fails, the tests should complete
-                done();
-            });
-        });
-    });
+//    before(function (done) {
+//        /*jslint nomen: true */
+//        var baseDir = __dirname;
+//        /*jslint nomen: false */
+//        fs.unlink(baseDir + './../data/configs/package.json', function () {
+//            fs.remove(baseDir + './../data/configs/node_modules', function () {
+//                // even if the delete fails, the tests should complete
+//                done();
+//            });
+//        });
+//    });
     // it should return a module
     it('should return a module', function () {
         expect(resolver).not.to.equal(undefined);
@@ -32,6 +32,11 @@ describe('base.resolver (configuration)', function () {
     // it should reject configurations which have invalid component paths
     it('should reject configurations which have invalid component paths', function () {
         return expect(resolver('./test/data/configs/configuration-invalid-path')).
+            to.eventually.be.rejectedWith(Error);
+    });
+    // it should reject configurations which have invalid component paths
+    it('should reject configurations which have invalid JSON', function () {
+        return expect(resolver('../test/data/configs/configuration-invalid-component')).
             to.eventually.be.rejectedWith(Error);
     });
     // it should configure properly with an existing file

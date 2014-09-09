@@ -200,10 +200,11 @@ var Q = require('q'),
                 if (!baseDir) {
                     baseDir = path.resolve(path.dirname(configPathOrArray));
                 }
-            } catch (e) {
-                if (e.code !== 'MODULE_NOT_FOUND') {
-                    // not covered by tests
-                    throw e;
+            } catch (error) {
+                if (error.code !== 'MODULE_NOT_FOUND') {
+                    logger.error('cannot parse configuration file.');
+                    logger.error(error);
+                    throw error;
                 }
                 configPathOrArray = path.join(process.cwd(), configPathOrArray);
                 configArray = require(configPathOrArray);
