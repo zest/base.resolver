@@ -33,22 +33,22 @@
     ],
     "dependencies": {
         "base.logger": "soul-infra/base.logger",
-        "q": "*"
+        "q": "1.0.1"
     },
     "devDependencies": {
-        "grunt": "*",
-        "grunt-contrib-clean": "*",
-        "grunt-contrib-watch": "*",
-        "grunt-contrib-jshint": "*",
-        "ink-docstrap": "*",
-        "grunt-jsdoc": "*",
-        "grunt-mocha-cov": "*",
-        "mocha-term-cov-reporter": "*",
-        "chai": "*",
-        "sinon": "*",
-        "sinon-chai": "*",
-        "chai-as-promised": "*",
-        "merge": "*"
+        "grunt": "0.4.5",
+        "grunt-contrib-clean": "0.6.0",
+        "grunt-contrib-watch": "0.6.1",
+        "grunt-contrib-jshint": "0.10.0",
+        "ink-docstrap": "0.4.12",
+        "grunt-jsdoc": "0.5.7",
+        "grunt-mocha-cov": "0.3.0",
+        "mocha-term-cov-reporter": "0.2.0",
+        "chai": "1.9.1",
+        "sinon": "1.10.3",
+        "sinon-chai": "2.5.0",
+        "chai-as-promised": "4.1.1",
+        "merge": "1.2.0"
     },
     "directories": {
         "lib": "lib",
