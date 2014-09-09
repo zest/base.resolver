@@ -13,7 +13,10 @@ describe('base.resolver (configuration)', function () {
         /*jslint nomen: true */
         var baseDir = __dirname;
         /*jslint nomen: false */
-        require('fs').unlink(baseDir + './../data/configs/package.json', done);
+        require('fs').unlink(baseDir + './../data/configs/package.json', function () {
+            // even if the delete fails, the tests should complete
+            done();
+        });
     });
     // it should return a module
     it('should return a module', function () {
