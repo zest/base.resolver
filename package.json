@@ -43,6 +43,7 @@
         "ink-docstrap": "*",
         "grunt-jsdoc": "*",
         "grunt-mocha-cov": "*",
+        "mocha-term-cov-reporter": "*",
         "chai": "*",
         "sinon": "*",
         "sinon-chai": "*",

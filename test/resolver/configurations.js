@@ -9,17 +9,16 @@ var resolver = require('../../lib'),
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver (configuration)', function () {
-//    before(function (done) {
-//        /*jslint nomen: true */
-//        var baseDir = __dirname;
-//        /*jslint nomen: false */
-//        fs.unlink(baseDir + './../data/configs/package.json', function () {
-//            fs.remove(baseDir + './../data/configs/node_modules', function () {
-//                // even if the delete fails, the tests should complete
-//                done();
-//            });
-//        });
-//    });
+    // delete the package.json file (if created in previous tests) before the test starts
+    before(function (done) {
+        /*jslint nomen: true */
+        var baseDir = __dirname;
+        /*jslint nomen: false */
+        fs.unlink(baseDir + './../data/configs/package.json', function () {
+            // even if the delete fails, the tests should complete
+            done();
+        });
+    });
     // it should return a module
     it('should return a module', function () {
         expect(resolver).not.to.equal(undefined);
@@ -113,7 +112,7 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.been.calledWith([]);
         });
     });
-    // it should configure dependent modules properly
+    // it should configure npm modules and repositories properly without package.json
     it('should configure npm modules and repositories properly without package.json', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-native')).to.eventually.have.keys([
@@ -128,6 +127,7 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.been.calledWith('js-component-using-native.load');
         });
     });
+    // it should honour different ways of naming a component
     it('should honour different ways of naming a component ', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-componentname-test')).to.eventually.have.keys([
@@ -147,10 +147,11 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy.getCall(4)).to.have.been.calledWith('component-name-testall.load');
         });
     });
+    // it should throw an error if a native non npm module or repositories is specified
     it('should throw an error if a native non npm module or repositories is specified', function () {
         return expect(resolver('./test/data/configs/configuration-native-error')).to.eventually.be.rejectedWith(Error);
     });
-    // it should configure dependent modules properly
+    // it should configure npm modules and repositories properly with package.json
     it('should configure npm modules and repositories properly with package.json', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-native')).to.eventually.have.keys([
@@ -165,6 +166,7 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.been.calledWith('js-component-using-native.load');
         });
     });
+    // it should be able to take absolute paths as module paths
     it('should be able to take absolute paths as module paths', function () {
         /*jslint nomen: true */
         var loggerSpy = sinon.spy(),
@@ -223,6 +225,7 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.been.calledWith([]);
         });
     });
+    // it should be able to default the baseDir to the resolver lib
     it('should be able to default the baseDir to the resolver lib', function () {
         /*jslint nomen: true */
         var loggerSpy = sinon.spy(),

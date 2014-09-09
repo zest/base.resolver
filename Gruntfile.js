@@ -96,6 +96,12 @@ module.exports = function (grunt) {
                     reporter: 'spec'
                 }
             },
+            coverageTerm: {
+                options: {
+                    reporter: 'mocha-term-cov-reporter',
+                    coverage: true
+                }
+            },
             // for sending coverage report to coveralls
             coverage: {
                 options: {
@@ -245,7 +251,8 @@ module.exports = function (grunt) {
         'jslint:lib',
         'jslint:test',
         'jslint:build',
-        'mochacov:test'
+        'mochacov:test',
+        'mochacov:coverageTerm'
     ]);
     // document script
     grunt.registerTask('document', [
@@ -257,11 +264,13 @@ module.exports = function (grunt) {
     grunt.registerTask('lib-queue', [
         'jslint:lib',
         'mochacov:test',
+        'mochacov:coverageTerm',
         'document'
     ]);
     grunt.registerTask('test-queue', [
         'jslint:test',
-        'mochacov:test'
+        'mochacov:test',
+        'mochacov:coverageTerm'
     ]);
     grunt.registerTask('build-queue', [
         'jslint:build'

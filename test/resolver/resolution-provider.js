@@ -8,6 +8,7 @@ var resolver = require('../../lib'),
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver (resolution-provider)', function () {
+    // it should resolve modules only once
     it('should resolve modules only once', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-multiple-injection')).to.eventually.have.keys([
@@ -48,6 +49,7 @@ describe('base.resolver (resolution-provider)', function () {
             ]);
         });
     });
+    // it should try degrading to an existing module wherever possible
     it('should try degrading to an existing module wherever possible', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-multiple-degradation')).to.eventually.have.keys([
@@ -89,6 +91,7 @@ describe('base.resolver (resolution-provider)', function () {
             ]);
         });
     });
+    // it should throw an error when a module without any replacement doesn't exist
     it('should throw an error when a module without any replacement doesn\'t exist', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-multiple-impossible')).to.eventually.have.keys([
@@ -100,6 +103,7 @@ describe('base.resolver (resolution-provider)', function () {
             return expect(resolver.load()).to.eventually.be.rejectedWith(Error);
         });
     });
+    // it should resolve just enough times for same component with parameterized configurations
     it('should resolve just enough times for same component with parameterized configurations', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-configurable-component')).to.eventually.have.keys([
@@ -126,6 +130,7 @@ describe('base.resolver (resolution-provider)', function () {
             expect(loggerSpy).to.have.been.calledWith('configuration-user3.load');
         });
     });
+    // it should throw an error if all required parameters are not passed
     it('should throw an error if all required parameters are not passed', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-configurable-invalid')).to.eventually.have.keys([

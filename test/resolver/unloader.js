@@ -8,6 +8,7 @@ var resolver = require('../../lib'),
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver (unloader)', function () {
+    // it should be able to unload components in the proper sequence
     it('should be able to unload components in the proper sequence', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-unload')).to.eventually.have.keys([
@@ -28,6 +29,7 @@ describe('base.resolver (unloader)', function () {
             expect(loggerSpy.getCall(3)).to.have.been.calledWith('unload-component1.unload');
         });
     });
+    // it should be able to unload asynchronous components in the proper sequence
     it('should be able to unload asynchronous components in the proper sequence', function () {
         var loggerSpy = sinon.spy();
         return expect(resolver('./test/data/configs/configuration-unload-async')).to.eventually.have.keys([
@@ -50,6 +52,7 @@ describe('base.resolver (unloader)', function () {
             expect(loggerSpy.getCall(5)).to.have.been.calledWith('unload-component1async.unload.end');
         });
     });
+    // it should be able to unload components even if there is an error
     it('should be able to unload components even if there is an error', function () {
         var loggerSpy = sinon.spy(function (arg) {
             if (arg.indexOf('.unload') !== -1) {

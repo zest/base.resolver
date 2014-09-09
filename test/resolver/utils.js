@@ -10,6 +10,7 @@ chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver.utils', function () {
     describe('#isInjectorArray', function () {
+        // it should be able to identify an injector array
         it('should be able to identify an injector array', function () {
             expect(
                 utils.isInjectorArray([
@@ -28,6 +29,7 @@ describe('base.resolver.utils', function () {
                 ])
             ).to.eql(true);
         });
+        // it should be able to identify arrays that are not injectors
         it('should be able to identify arrays that are not injectors', function () {
             expect(
                 utils.isInjectorArray([
@@ -63,6 +65,7 @@ describe('base.resolver.utils', function () {
                 ])
             ).to.eql(false);
         });
+        // it should be able to identify objects as not injectors
         it('should be able to identify objects as not injectors', function () {
             expect(
                 utils.isInjectorArray({})
@@ -73,6 +76,7 @@ describe('base.resolver.utils', function () {
         });
     });
     describe('#getDependencies', function () {
+        // it should get params for a function
         it('should get params for a function', function () {
             expect(
                 utils.getDependencies(function (x, y, z) {
@@ -86,6 +90,7 @@ describe('base.resolver.utils', function () {
                 ]
             );
         });
+        // it should respect the resolution sequence for camel cased names
         it('should respect the resolution sequence for camel cased names', function () {
             expect(
                 utils.getDependencies(function (aliBabaChalis, aAAA, z) {
@@ -99,6 +104,7 @@ describe('base.resolver.utils', function () {
                 ]
             );
         });
+        // it should return an empty array for a function with no params
         it('should return an empty array for a function with no params', function () {
             expect(
                 utils.getDependencies(function () {
@@ -106,6 +112,7 @@ describe('base.resolver.utils', function () {
                 })
             ).to.eql([]);
         });
+        // it should throw an error if it is not passed a function
         it('should throw an error if it is not passed a function', function () {
             expect(function () {
                 return utils.getDependencies({});
@@ -113,6 +120,7 @@ describe('base.resolver.utils', function () {
         });
     });
     describe('#resolveExpression', function () {
+        // it should return a non string primitive value as is
         it('should return a non string primitive value as is', function () {
             var spy = sinon.spy(function () {
                 throw new Error();
@@ -125,6 +133,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should resolve a single value
         it('should resolve a single value', function () {
             var spy = sinon.spy(function (value, params, expression) {
                 return expression;
@@ -138,6 +147,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should resolve the OR(|) expressions
         it('should resolve the OR(|) expressions', function () {
             var spy = sinon.spy(function (value, params, expression) {
                 return expression;
@@ -151,6 +161,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should resolve the OPTIONAL(?) expressions
         it('should resolve the OPTIONAL(?) expressions', function () {
             var spy = sinon.spy(function (value, params, expression) {
                 return undefined;
@@ -164,6 +175,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should throw an error if no value is found
         it('should throw an error if no value is found', function () {
             var spy = sinon.spy(function () {
                 return undefined;
@@ -177,6 +189,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should get values for compound expressions
         it('should get values for compound expressions', function () {
             var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
@@ -195,6 +208,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should throw an error if no value is found for compound expressions
         it('should throw an error if no value is found for compound expressions', function () {
             var spy = sinon.spy(function () {
                 throw new Error();
@@ -209,6 +223,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should escape strings with | properly
         it('should escape strings with | properly', function () {
             var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
@@ -227,6 +242,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should escape strings with ? properly
         it('should escape strings with ? properly', function () {
             var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
@@ -246,6 +262,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should work on promises
         it('should work on promises', function () {
             var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
@@ -272,6 +289,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should parse objects recursively
         it('should parse objects recursively', function () {
             var spy = sinon.spy(function (val) {
                 if (val !== 'u') {
@@ -319,6 +337,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should be able to handle rejections
         it('should be able to handle rejections', function () {
             var spy = sinon.spy(function (val) {
                 return (isNaN(parseInt(val, 10)) ? val : undefined);
@@ -350,6 +369,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should be able to handle errors gracefully
         it('should be able to handle errors gracefully', function () {
             var spy = sinon.spy(function (val) {
                 if (isNaN(parseInt(val, 10))) {
@@ -371,6 +391,7 @@ describe('base.resolver.utils', function () {
                 }
             );
         });
+        // it should be able to integrate escapes properly
         it('should be able to integrate escapes properly', function () {
             var spy = sinon.spy(function (value, params) {
                 if (params.length === 0) {
