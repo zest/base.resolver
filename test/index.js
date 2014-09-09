@@ -30,7 +30,7 @@ describe('base.resolver', function () {
             expect(loggerSpy.getCall(4)).to.have.been.calledWith('unload-component1.load');
             expect(loggerSpy.getCall(5)).to.have.been.calledWith('unload-component2.load');
             return resolver.reload();
-        }).then(function (resolver) {
+        }).then(function () {
             expect(loggerSpy).to.have.callCount(10);
             expect(loggerSpy.getCall(6)).to.have.been.calledWith('unload-component2.unload');
             expect(loggerSpy.getCall(7)).to.have.been.calledWith('unload-component1.unload');
@@ -62,7 +62,7 @@ describe('base.resolver', function () {
             expect(loggerSpy.getCall(6)).to.have.been.calledWith('unload-component1async.load');
             expect(loggerSpy.getCall(7)).to.have.been.calledWith('unload-component2async.load');
             return resolver.reload();
-        }).then(function (resolver) {
+        }).then(function () {
             expect(loggerSpy).to.have.callCount(14);
             expect(loggerSpy.getCall(8)).to.have.been.calledWith('unload-component2async.unload.start');
             expect(loggerSpy.getCall(9)).to.have.been.calledWith('unload-component2async.unload.end');

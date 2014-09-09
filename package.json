@@ -39,7 +39,7 @@
         "grunt": "*",
         "grunt-contrib-clean": "*",
         "grunt-contrib-watch": "*",
-        "grunt-jslint": "*",
+        "grunt-contrib-jshint": "*",
         "ink-docstrap": "*",
         "grunt-jsdoc": "*",
         "grunt-mocha-cov": "*",

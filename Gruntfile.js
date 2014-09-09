@@ -1,4 +1,4 @@
-// merge is for merging jslint options
+// merge is for merging jshint options
 var merge = require('merge');
 module.exports = function (grunt) {
     'use strict';
@@ -34,30 +34,33 @@ module.exports = function (grunt) {
             'before',
             'after'
         ],
-    // jslint default options
-        jslintOptions = {
-            passfail: false,
-            ass: false,
-            bitwise: false,
-            closure: false,
-            'continue': false,
-            debug: false,
-            eqeq: false,
-            evil: false,
-            forin: false,
-            newcap: false,
-            nomen: false,
-            plusplus: false,
-            regexp: false,
-            unparam: true,
-            sloppy: false,
-            stupid: false,
-            sub: false,
-            todo: false,
-            vars: false,
-            white: false,
-            indent: 4,
-            maxlen: 120
+    // js-hint default options
+        jshintOptions = {
+            maxerr: 1000, // {int} Maximum error before stopping
+            // Enforcing
+            bitwise: true, // true: Prohibit bitwise operators (&, |, ^, etc.)
+            camelcase: true, // true: Identifiers must be in camelCase
+            curly: true, // true: Require {} for every new block or scope
+            eqeqeq: true, // true: Require triple equals (===) for comparison
+            forin: true, // true: Require filtering for..in loops with obj.hasOwnProperty()
+            immed: true, // true: Require immediate invocations to be wrapped in parens e.g. `(function () { } ());`
+            indent: 4, // {int} Number of spaces to use for indentation
+            latedef: true, // true: Require variables/functions to be defined before being used
+            newcap: true, // true: Require capitalization of all constructor functions e.g. `new F()`
+            noarg: true, // true: Prohibit use of `arguments.caller` and `arguments.callee`
+            noempty: true, // true: Prohibit use of empty blocks
+            nonew: true, // true: Prohibit use of constructors for side-effects (without assignment)
+            plusplus: true, // true: Prohibit use of `++` & `--`
+            quotmark: true, // Quotation mark consistency:
+            undef: true, // true: Require all non-global variables to be declared (prevents global leaks)
+            unused: true, // true: Require all defined variables be used
+            strict: true, // true: Requires all functions run in ES5 Strict Mode
+            maxparams: false, // {int} Max number of formal params allowed per function
+            maxdepth: false, // {int} Max depth of nested blocks (within functions)
+            maxstatements: false, // {int} Max number statements per function
+            maxcomplexity: false, // {int} Max cyclomatic complexity per function
+            maxlen: 120, // {int} Max number of characters per line
+            node: true // Node.js
         };
     // load the required npm tasks
     // ...for cleaning the output directories
@@ -65,7 +68,7 @@ module.exports = function (grunt) {
     // ...for watching for file changes
     grunt.loadNpmTasks('grunt-contrib-watch');
     // ...for code quality
-    grunt.loadNpmTasks('grunt-jslint');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     // ...for generating jsdoc documentation
     grunt.loadNpmTasks('grunt-jsdoc');
     // ...for running node mocha tests and code coverage reports
@@ -143,53 +146,24 @@ module.exports = function (grunt) {
 
             }
         },
-        // jslint configuration
-        jslint: {
+        // js-hint configuration
+        jshint: {
             // validation for all server javascript files
             lib: {
                 src: files.lib,
-                directives: merge({
-                    node: true
-                }, jslintOptions),
-                options: {
-                    // only display errors when set to true
-                    errorsOnly: false,
-                    // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
-                    edition: 'latest',
-                    // defaults to true
-                    failOnError: false
-                }
+                options: jshintOptions
             },
             // validation for all server javascript specifications
             test: {
                 src: files.test,
-                directives: merge({
-                    node: true,
+                options: merge({
                     predef: mochaGlobals
-                }, jslintOptions),
-                options: {
-                    // only display errors when set to true
-                    errorsOnly: false,
-                    // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
-                    edition: 'latest',
-                    // defaults to true
-                    failOnError: false
-                }
+                }, jshintOptions)
             },
             // validation for all server javascript specifications
             build: {
                 src: files.build,
-                directives: merge({
-                    node: true
-                }, jslintOptions),
-                options: {
-                    // only display errors when set to true
-                    errorsOnly: false,
-                    // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
-                    edition: 'latest',
-                    // defaults to true
-                    failOnError: false
-                }
+                options: jshintOptions
             }
         },
         // jsdoc configuration
@@ -204,8 +178,8 @@ module.exports = function (grunt) {
             }
         },
         exec: {
-            coverage: 'cat "<%= pkg.directories.out %>/coverage/reports/lcov/lcov.info" '
-                + '| "./node_modules/coveralls/bin/coveralls.js"'
+            coverage: 'cat "<%= pkg.directories.out %>/coverage/reports/lcov/lcov.info" ' +
+                '| "./node_modules/coveralls/bin/coveralls.js"'
         }
     });
     // for faster builds we make sure that only the changed files are validated
@@ -215,19 +189,19 @@ module.exports = function (grunt) {
         grunt.event.on('watch', function (action, filepath, target) {
             if (action !== 'deleted' && /\.(js(on)?)$/i.test(filepath)) {
                 var config = [],
-                    jslintSrc = 'jslint.' + target + '.src';
+                    jshintSrc = 'jshint.' + target + '.src';
                 if (watchTimeouts[target]) {
                     // if there is an ongoing watch event, append the new files
                     // in the file list
                     clearTimeout(watchTimeouts[target]);
-                    config = grunt.config(jslintSrc);
+                    config = grunt.config(jshintSrc);
                 } else {
                     // in case of a new watch, create a new file list
-                    grunt.config(jslintSrc, config);
+                    grunt.config(jshintSrc, config);
                 }
-                // pass the file for jslint validation only if it is a javascript or a json file
+                // pass the file for jshint validation only if it is a javascript or a json file
                 config.push(filepath);
-                grunt.config(jslintSrc, config);
+                grunt.config(jshintSrc, config);
                 watchTimeouts[target] = setTimeout(function () {
                     watchTimeouts[target] = undefined;
                 }, 1000);
@@ -248,9 +222,9 @@ module.exports = function (grunt) {
     ]);
     // test script
     grunt.registerTask('test', [
-        'jslint:lib',
-        'jslint:test',
-        'jslint:build',
+        'jshint:lib',
+        'jshint:test',
+        'jshint:build',
         'mochacov:test',
         'mochacov:coverageTerm'
     ]);
@@ -262,18 +236,18 @@ module.exports = function (grunt) {
     // observe scripts
     // tasks to run when files change
     grunt.registerTask('lib-queue', [
-        'jslint:lib',
+        'jshint:lib',
         'mochacov:test',
         'mochacov:coverageTerm',
         'document'
     ]);
     grunt.registerTask('test-queue', [
-        'jslint:test',
+        'jshint:test',
         'mochacov:test',
         'mochacov:coverageTerm'
     ]);
     grunt.registerTask('build-queue', [
-        'jslint:build'
+        'jshint:build'
     ]);
     grunt.registerTask('observe', [
         'init',

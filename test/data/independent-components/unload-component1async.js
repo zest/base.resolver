@@ -7,7 +7,7 @@ module.exports = ['q', 'unload', function (q, unload) {
             setTimeout(function () {
                 process.LOG('unload-component1async.unload.end');
                 resolve();
-            }, 200);
+            }, 100);
         });
     });
 

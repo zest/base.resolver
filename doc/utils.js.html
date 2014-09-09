@@ -249,7 +249,9 @@ exports.resolveExpression = function (expression, resolverFunction) {
             }),
             thisExpression = thisParams.shift();
         /*jslint regexp: false */
-        return q.fcall(resolverFunction, thisExpression, thisParams, thisExpressionWithParams).then(
+        return q.Promise(function (resolve) {
+            resolve(resolverFunction(thisExpression, thisParams, thisExpressionWithParams));
+        }).then(
             function (value) {
                 // if resolution returned a value, skip further resolutions and return
                 if (value) {
@@ -296,9 +298,9 @@ exports.resolveExpression = function (expression, resolverFunction) {
  * @returns {boolean} true if the object is an injector array. false otherwise.
  */
 exports.isInjectorArray = function (obj) {
-    return (Object.prototype.toString.call(obj) === '[object Array]')
-        && (typeof obj[obj.length - 1] === 'function')
-        && (function () {
+    return (Object.prototype.toString.call(obj) === '[object Array]') &&
+        (typeof obj[obj.length - 1] === 'function') &&
+        (function () {
             var i, j;
             for (i = 0, j = obj.length - 1; i &lt; j; i = i + 1) {
                 if (typeof obj[i] !== 'string') {

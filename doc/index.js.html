@@ -109,7 +109,7 @@
  * @requires base-resolver/utils
  * @requires q
  */
-var Q = require('q'),
+var q = require('q'),
     path = require('path'),
     logger = require('base.logger')('RESOLVER'),
     resolverFactory = function (configPathOrArray, basePath) {
@@ -135,7 +135,7 @@ var Q = require('q'),
             load = function () {
                 var startupDependencies = configurations.startupDependencies();
                 logger.info(startupDependencies.length, 'startup components found. Loading them now.');
-                return Q.all(
+                return q.all(
                     startupDependencies.map(function (dependencyExpression) {
                         return resolutionProvider.resolve(dependencyExpression);
                     })
@@ -251,7 +251,9 @@ var Q = require('q'),
  * This promise is rejected with the error if the resolver set-up fails.
  */
 module.exports = function (configPathOrArray, basePath) {
-    return Q.fcall(resolverFactory, configPathOrArray, basePath);
+    return q.Promise(function (resolve) {
+        resolve(resolverFactory(configPathOrArray, basePath));
+    });
 };
 // documenting the Configuration object
 /**

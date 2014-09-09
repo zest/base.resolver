@@ -94,7 +94,7 @@ describe('base.resolver.utils', function () {
         it('should respect the resolution sequence for camel cased names', function () {
             expect(
                 utils.getDependencies(function (aliBabaChalis, aAAA, z) {
-                    return;
+                    return (aliBabaChalis + aAAA + z);
                 })
             ).to.eql(
                 [
@@ -163,9 +163,7 @@ describe('base.resolver.utils', function () {
         });
         // it should resolve the OPTIONAL(?) expressions
         it('should resolve the OPTIONAL(?) expressions', function () {
-            var spy = sinon.spy(function (value, params, expression) {
-                return undefined;
-            });
+            var spy = sinon.spy();
             return expect(
                 utils.resolveExpression('string1?', spy)
             ).to.eventually.equal(undefined).then(
@@ -297,23 +295,23 @@ describe('base.resolver.utils', function () {
                 }
                 return;
             }), obj = {
-                alpha: "alpha",
-                beta: "u|beta|u",
+                alpha: 'alpha',
+                beta: 'u|beta|u',
                 gamma: [
-                    "u|gamma|u",
-                    "u|u|theta|u",
-                    "u|u|u?"
+                    'u|gamma|u',
+                    'u|u|theta|u',
+                    'u|u|u?'
                 ]
             };
             return expect(
                 utils.resolveExpression(obj, spy)
             ).to.eventually.eql(
                 {
-                    alpha: "alpha",
-                    beta: "beta",
+                    alpha: 'alpha',
+                    beta: 'beta',
                     gamma: [
-                        "gamma",
-                        "theta",
+                        'gamma',
+                        'theta',
                         undefined
                     ]
                 }
@@ -326,12 +324,12 @@ describe('base.resolver.utils', function () {
                     expect(spy).to.have.been.calledWith('theta');
                     expect(spy).to.have.been.calledWith('u');
                     expect(obj).to.eql({
-                        alpha: "alpha",
-                        beta: "u|beta|u",
+                        alpha: 'alpha',
+                        beta: 'u|beta|u',
                         gamma: [
-                            "u|gamma|u",
-                            "u|u|theta|u",
-                            "u|u|u?"
+                            'u|gamma|u',
+                            'u|u|theta|u',
+                            'u|u|u?'
                         ]
                     });
                 }
