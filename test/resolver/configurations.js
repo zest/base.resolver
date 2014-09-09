@@ -8,6 +8,13 @@ var resolver = require('../../lib'),
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver (configuration)', function () {
+    after(function (done) {
+        console.log('after called');
+        /*jslint nomen: true */
+        var baseDir = __dirname;
+        /*jslint nomen: false */
+        require('fs').unlink(baseDir + './../data/configs/package.json', done);
+    });
     // it should return a module
     it('should return a module', function () {
         expect(resolver).not.to.equal(undefined);
@@ -44,10 +51,6 @@ describe('base.resolver (configuration)', function () {
     // it should not configure properly with a non array
     it('should not configure properly with a non array', function () {
         return expect(resolver('./test/data/configs/configuration-object')).to.eventually.be.rejectedWith(Error);
-    });
-    // it should not configure properly with an invalid file
-    it('should not configure properly with an invalid file', function () {
-        return expect(resolver('./test/data/configs/configuration-invalid.txt')).to.eventually.be.rejectedWith(Error);
     });
     // it should configure independent modules properly
     it('should configure independent modules properly', function () {
@@ -114,6 +117,28 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.callCount(2);
             expect(loggerSpy).to.have.been.calledWith('js-component-using-native.load');
         });
+    });
+    it('should honour different ways of naming a component ', function () {
+        var loggerSpy = sinon.spy();
+        return expect(resolver('./test/data/configs/configuration-componentname-test')).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]).then(function (resolver) {
+            process.LOG = loggerSpy;
+            return resolver.load();
+        }).then(function () {
+            expect(loggerSpy).to.have.callCount(5);
+            expect(loggerSpy.getCall(0)).to.have.been.calledWith('component-name-test1.load');
+            expect(loggerSpy.getCall(1)).to.have.been.calledWith('component-name-test2.load');
+            expect(loggerSpy.getCall(2)).to.have.been.calledWith('component-name-test3.load');
+            expect(loggerSpy.getCall(3)).to.have.been.calledWith('component-name-test1', 'component-name-test2',
+                'component-name-test3', undefined);
+            expect(loggerSpy.getCall(4)).to.have.been.calledWith('component-name-testall.load');
+        });
+    });
+    it('should throw an error if a native non npm module or repositories is specified', function () {
+        return expect(resolver('./test/data/configs/configuration-native-error')).to.eventually.be.rejectedWith(Error);
     });
     // it should configure dependent modules properly
     it('should configure npm modules and repositories properly with package.json', function () {

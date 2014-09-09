@@ -1,0 +1,9 @@
+[
+    {
+        "path": "soul-infra/base.logger",
+        "native": true
+    }, {
+        "path": "unknownnodejscomponentthatwillneverbe",
+        "native": true
+    }
+]

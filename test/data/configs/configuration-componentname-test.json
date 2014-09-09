@@ -1,0 +1,16 @@
+[
+    "../independent-components/component-name-test1.js",
+    {
+        "path": "../independent-components/component-name-test2.js",
+        "native": true
+    },
+    {
+        "path": "../independent-components/component-name-test3",
+        "native": true
+    },
+    "../independent-components/component-name-test4",
+    {
+        "path": "../independent-components/component-name-test-all",
+        "startup": true
+    }
+]

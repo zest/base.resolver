@@ -1,0 +1,9 @@
+'use strict';
+module.exports = function (unload) {
+    process.LOG('unload-component1.load');
+    unload(function () {
+        process.LOG('unload-component1.unload');
+    });
+    return 'unload-component1';
+};
+module.exports['soul-component'] = 'unload-component1';
