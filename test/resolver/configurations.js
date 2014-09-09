@@ -9,7 +9,7 @@ var resolver = require('../../lib'),
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 describe('base.resolver (configuration)', function () {
-    after(function (done) {
+    before(function (done) {
         /*jslint nomen: true */
         var baseDir = __dirname;
         /*jslint nomen: false */
