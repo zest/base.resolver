@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: resolver/resolution-provider.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: resolver/resolution-provider.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>'use strict';
+/**
+ * @fileOverview The base-resolver/resolution-provider module is used for storing, managing and creating soul
+ * components and for injecting them into other components.
+ * @module base-resolver/resolution-provider
+ * @requires base-resolver/unloader
+ * @requires base-resolver/utils
+ */
+var Q = require('q');
+var utils = require('./utils');
+var logger = require('base.logger')('RESOLVER/resolution-provider');
+/**
+ * Resolution provider is used to resolve modules by their names. This module takes
+ * {module:base-resolver/configurations~ConfigurationManager} as input.
+ * @returns {module:base-resolver/resolution-provider~ResolutionProvider} the resolver with one resolve method
+ */
+module.exports = function (configurations, unloader) {
+    // components map is used to cache components.
+    var componentsMap = {}, /**
+     * This function resolves an expression and returns a promise that resolves to the corresponding component
+     * @param {string} dependencyExpression - the expression to resolve
+     * @return {q} a promise that resolves to the corresponding component
+     * @memberof module:base-resolver/resolution-provider~ResolutionProvider
+     */
+    resolve = function (dependencyExpression) {
+        logger.log('trying to resolve:', dependencyExpression);
+        return utils.resolveExpression(
+            dependencyExpression, function (componentName, params, cacheKey) {
+                logger.log('\tparsing:', dependencyExpression);
+                var componentConfig = configurations.get(componentName);
+                var factoryFunction = componentConfig.factory.slice(-1)[0];
+                var dependencies = componentConfig.factory.slice(
+                    0, -1
+                );
+                if (!componentsMap[cacheKey]) {
+                    componentsMap[cacheKey] = Q.all(
+                        dependencies.map(
+                            function (dependency) {
+                                if (dependency === 'options') {
+                                    return utils.resolveExpression(
+                                        componentConfig.options, function (value) {
+                                            if (/^\{[0-9]+\}$/.test(value)) {
+                                                var index = parseInt(value.replace(/\{|\}/g, ''), 10) - 1;
+                                                return params[index];
+                                            }
+                                            return value;
+                                        }
+                                    );
+                                }
+                                if (dependency === 'unload') {
+                                    return unloader.register;
+                                }
+                                return resolve(dependency);
+                            }
+                        )
+                    ).then(
+                        function (args) {
+                            logger.log('resolved:', dependencyExpression);
+                            return factoryFunction.apply({}, args);
+                        }
+                    );
+                }
+                return componentsMap[cacheKey];
+            }
+        );
+    };
+    /**
+     * Resolver is returned by {@link module:base-resolver/resolution-provider}
+     * @namespace module:base-resolver/resolution-provider~ResolutionProvider
+     */
+    return {
+        resolve: resolve
+    };
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Sep 20 2014 22:05:17 GMT-0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
