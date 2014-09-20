@@ -8,7 +8,7 @@
 [![License][license-image]][license-link]
 
 
-# soul-infra / base.resolver
+# zest / base.resolver
 
 > The `base.resolver` component provides inversion of control and dependency injection api for running of SOUL 
 > infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components you
@@ -254,7 +254,7 @@ component configuration.
         path: "q",
         native: true
     }, {
-        packagePath: "soul-infra/datastore.mongo",
+        packagePath: "zest/datastore.mongo",
         options: {
             // parameters can be injected inside the options using the {param-number}
             // format. The OR modifier | can also be used to degrade to defaults. The
@@ -272,7 +272,7 @@ component configuration.
     
     // if path does not start with a ., and has a /, the component
     // is assumed to be a git repository
-    "soul-infra/base.logger",
+    "zest/base.logger",
     
     // if path starts with a ., it is assumed to be a local path
     "./filestore.disk",
@@ -326,17 +326,17 @@ This function returns a configured Resolver object. The returned resolver object
     promise is rejected with the error if reload fails.
 
 
-[dependencies-image]: http://img.shields.io/david/soul-infra/base.resolver.svg?style=flat-square
-[dependencies-link]: https://david-dm.org/soul-infra/base.resolver#info=dependencies&view=list
-[dev-dependencies-image]: http://img.shields.io/david/dev/soul-infra/base.resolver.svg?style=flat-square
-[dev-dependencies-link]: https://david-dm.org/soul-infra/base.resolver#info=devDependencies&view=list
-[peer-dependencies-image]: http://img.shields.io/david/peer/soul-infra/base.resolver.svg?style=flat-square
-[peer-dependencies-link]: https://david-dm.org/soul-infra/base.resolver#info=peerDependencies&view=list
+[dependencies-image]: http://img.shields.io/david/zest/base.resolver.svg?style=flat-square
+[dependencies-link]: https://david-dm.org/zest/base.resolver#info=dependencies&view=list
+[dev-dependencies-image]: http://img.shields.io/david/dev/zest/base.resolver.svg?style=flat-square
+[dev-dependencies-link]: https://david-dm.org/zest/base.resolver#info=devDependencies&view=list
+[peer-dependencies-image]: http://img.shields.io/david/peer/zest/base.resolver.svg?style=flat-square
+[peer-dependencies-link]: https://david-dm.org/zest/base.resolver#info=peerDependencies&view=list
 [license-image]: http://img.shields.io/badge/license-UNLICENSE-brightgreen.svg?style=flat-square
 [license-link]: http://unlicense.org
-[quality-image]: http://img.shields.io/codeclimate/github/soul-infra/base.resolver.svg?style=flat-square
-[quality-link]: https://codeclimate.com/github/soul-infra/base.resolver
-[build-status-image]: http://img.shields.io/travis/soul-infra/base.resolver.svg?style=flat-square
-[build-status-link]: https://travis-ci.org/soul-infra/base.resolver
-[coverage-status-image]: http://img.shields.io/coveralls/soul-infra/base.resolver.svg?style=flat-square
-[coverage-status-link]: https://coveralls.io/r/soul-infra/base.resolver
+[quality-image]: http://img.shields.io/codeclimate/github/zest/base.resolver.svg?style=flat-square
+[quality-link]: https://codeclimate.com/github/zest/base.resolver
+[build-status-image]: http://img.shields.io/travis/zest/base.resolver.svg?style=flat-square
+[build-status-link]: https://travis-ci.org/zest/base.resolver
+[coverage-status-image]: http://img.shields.io/coveralls/zest/base.resolver.svg?style=flat-square
+[coverage-status-link]: https://coveralls.io/r/zest/base.resolver

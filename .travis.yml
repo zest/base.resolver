@@ -2,9 +2,7 @@ language: node_js
 node_js:
     # nodejs version
   - "0.11"
-before_install:
-    # install grunt and bower dependencies
-  - "npm install grunt-cli -g"
 after_script:
     # run the coverage task and push the coverage report to coveralls
-  - "grunt coverage"
+  - "./node_modules/.bin/grunt coveralls"
+  - "./node_modules/.bin/grunt document gh-pages"

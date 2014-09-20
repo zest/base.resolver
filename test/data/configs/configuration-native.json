@@ -1,6 +1,6 @@
 [
     {
-        "path": "soul-infra/base.logger",
+        "path": "zest/base.logger",
         "native": true
     }, {
         "path": "q",
