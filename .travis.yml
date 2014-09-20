@@ -2,7 +2,7 @@ language: node_js
 node_js:
     # nodejs version
   - "0.11"
-after_script:
+after_success:
     # run the coverage task and push the coverage report to coveralls
   - "./node_modules/.bin/grunt coveralls"
   - "./node_modules/.bin/grunt document gh-pages"
