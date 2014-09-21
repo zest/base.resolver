@@ -1,4 +1,4 @@
 {
     "main": "./index.js",
-    "soul-component": "module-package-json-named-component"
+    "zest-component": "module-package-json-named-component"
 }

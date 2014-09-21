@@ -96,7 +96,7 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.been.calledWith('module-package-json-unnamed-component.load');
             expect(loggerSpy).to.have.been.calledWith([
                 {
-                    'soul-component': 'json-named-component',
+                    'zest-component': 'json-named-component',
                     name: 'json-named-component'
                 },
                 'js-named-component',
@@ -209,7 +209,7 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.been.calledWith('module-package-json-unnamed-component.load');
             expect(loggerSpy).to.have.been.calledWith([
                 {
-                    'soul-component': 'json-named-component',
+                    'zest-component': 'json-named-component',
                     name: 'json-named-component'
                 },
                 'js-named-component',
@@ -267,7 +267,7 @@ describe('base.resolver (configuration)', function () {
             expect(loggerSpy).to.have.been.calledWith('module-package-json-unnamed-component.load');
             expect(loggerSpy).to.have.been.calledWith([
                 {
-                    'soul-component': 'json-named-component',
+                    'zest-component': 'json-named-component',
                     name: 'json-named-component'
                 },
                 'js-named-component',

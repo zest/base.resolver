@@ -3,4 +3,4 @@ module.exports = ['configurable-component#alpha#beta', 'configuration-user1', fu
     process.LOG('configuration-user2.load');
     return 'configuration-user2';
 }];
-module.exports['soul-component'] = 'configuration-user2';
+module.exports['zest-component'] = 'configuration-user2';

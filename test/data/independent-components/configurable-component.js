@@ -4,4 +4,4 @@ module.exports = ['options', function (option) {
     process.LOG(option);
     return option;
 }];
-module.exports['soul-component'] = 'configurable-component';
+module.exports['zest-component'] = 'configurable-component';

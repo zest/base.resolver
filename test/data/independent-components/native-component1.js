@@ -6,4 +6,4 @@ module.exports = function (unload) {
     });
     return 'unload-component1';
 };
-module.exports['soul-component'] = 'unload-component1';
+module.exports['zest-component'] = 'unload-component1';

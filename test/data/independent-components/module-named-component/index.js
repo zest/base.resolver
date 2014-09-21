@@ -4,4 +4,4 @@ module.exports = function () {
     process.LOG(Array.prototype.slice.call(arguments));
     return 'module-named-component';
 };
-module.exports['soul-component'] = 'module-named-component';
+module.exports['zest-component'] = 'module-named-component';

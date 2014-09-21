@@ -10,10 +10,10 @@
 
 # zest / base.resolver
 
-> The `base.resolver` component provides inversion of control and dependency injection api for running of SOUL 
+> The `base.resolver` component provides inversion of control and dependency injection api for running of zest 
 > infrastructure components. Using resolver, you set up a simple configuration and tell resolver which components you
 > want to load. Each component registers itself with resolver, so other components can use its functions. Components
-> can be maintained as NPM packages so they can be dropped in to other soul integrations. Simple components can also 
+> can be maintained as NPM packages so they can be dropped in to other zest integrations. Simple components can also 
 > just be a file that can be `require`d from node. (A javascript file or even a JSON file) 
 
 
@@ -102,7 +102,7 @@ module.exports = [
 
 If a component is a node module complete with a package.json file (it need not actually be in npm, it can be a simple
 folder in the code tree.), for base.resolver to register this module as a named component that is injectable, a 
-`soul-component` entry must be added to the package.json file of the component.
+`zest-component` entry must be added to the package.json file of the component.
 
 The package.json structure for the component can be as described:
 
@@ -110,7 +110,7 @@ The package.json structure for the component can be as described:
 // package.json
 {
     ...
-    "soul-component": "privilege"
+    "zest-component": "privilege"
     ...
 }
 ```
@@ -118,7 +118,7 @@ The package.json structure for the component can be as described:
 
 ### Naming Non-Modularized Components
 
-Components that are not node modules can be named by setting the `soul-component` attribute in the returned exports
+Components that are not node modules can be named by setting the `zest-component` attribute in the returned exports
 object. Components that are JSON files can also use the same attribute.
 
 
@@ -234,7 +234,7 @@ component configuration.
             translate to a single `#`
      -  **`startup`** &#8594; is optional and is used to specify if a component is a starting component.
      -  **`native`** &#8594; is optional and is used to mark a component as native nodejs module.
-         -  Native modules are nodejs modules that are not compliant to the SOUL component structure
+         -  Native modules are nodejs modules that are not compliant to the zest component structure
          -  When a component is marked as native, no dependency will be injected in it.
          -  A native component can be injected into another component by its module name (as specified in 
             `package.json` file.

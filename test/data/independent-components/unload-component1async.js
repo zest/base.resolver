@@ -13,4 +13,4 @@ module.exports = ['q', 'unload', function (q, unload) {
 
     return 'unload-component1';
 }];
-module.exports['soul-component'] = 'unload-component1async';
+module.exports['zest-component'] = 'unload-component1async';
