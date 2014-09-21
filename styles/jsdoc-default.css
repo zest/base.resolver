@@ -75,6 +75,7 @@ nav {
     padding: 10px;
     overflow: auto;
     width: 230px;
+    background: #D3D3D3;
 }
 
 nav ul {
@@ -93,6 +94,10 @@ nav h2 a, nav h2 a:visited {
 
 nav h3 {
     margin-top: 12px;
+    border-top: 1px solid #999999;
+    padding-top: 12px;
+    color: #6B6B6B;
+    font-weight: bold;
 }
 
 nav li {
@@ -155,7 +160,6 @@ h3 {
     font-size: 150%;
     font-weight: normal;
     letter-spacing: -0.01em;
-    margin-top: 16px;
     margin: 6px 0 3px 0;
 }
 
@@ -163,7 +167,6 @@ h4 {
     font-size: 130%;
     font-weight: normal;
     letter-spacing: -0.01em;
-    margin-top: 16px;
     margin: 18px 0 3px 0;
     color: #A35A00;
 }
@@ -297,7 +300,7 @@ h6 {
 
 .params td, .params th, .props td, .props th {
     border: 1px solid #ddd;
-    margin: 0px;
+    margin: 0;
     text-align: left;
     vertical-align: top;
     padding: 4px 6px;
