@@ -1,0 +1,7 @@
+[
+    {
+        "path": "../independent-components/circular-component-immed",
+        "startup": true
+    },
+    "../independent-components/circular-component2"
+]
