@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600|Open+Sans+Condensed:300,300italic|Share+Tech+Mono);
+@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,300|Share+Tech+Mono);
 
 html {
     overflow: auto;
@@ -6,7 +6,7 @@ html {
 }
 
 body {
-    font-family: 'Open Sans Condensed', sans-serif;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
     font-weight: 300;
     line-height: 130%;
     color: #000;
@@ -45,6 +45,8 @@ header {
     right: 250px;
     bottom: 0;
     overflow: auto;
+    box-shadow: 0 0 5px #000000;
+    z-index: 2;
 }
 
 section {
@@ -79,7 +81,6 @@ nav {
 }
 
 nav ul {
-    font-family: 'Open Sans Condensed', sans-serif;
     font-size: 100%;
     line-height: 17px;
     padding: 0;
@@ -123,7 +124,7 @@ footer {
     margin-top: 12px;
     text-align: center;
     font-size: 100%;
-    background: #927F7F;
+    background: #e66000;
 }
 
 footer a {
@@ -145,7 +146,7 @@ h1 {
     text-shadow: 1px 1px 0 #000000;
     margin: 0;
     padding: 30px;
-    background: #927F7F;
+    background: #e66000;
     color: #ffffff;
 }
 
@@ -252,6 +253,10 @@ h6 {
     margin-bottom: 1em;
     margin-left: -16px;
     margin-top: 1em;
+}
+
+.description p{
+    margin: 0;
 }
 
 .code-caption {
