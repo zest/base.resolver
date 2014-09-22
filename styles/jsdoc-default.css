@@ -53,6 +53,7 @@ section {
     display: block;
     background-color: #fff;
     padding: 12px 24px;
+    min-height: calc(100% - 196px);
 }
 
 .variation {
