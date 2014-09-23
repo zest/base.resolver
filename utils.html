@@ -194,7 +194,7 @@ and validations</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line239">line 239</a>
+        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line245">line 245</a>
     </li></ul></dd>
     
     
@@ -499,7 +499,7 @@ sequence.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line222">line 222</a>
+        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line228">line 228</a>
     </li></ul></dd>
     
     
@@ -557,13 +557,19 @@ sequence.</p>
     
     
     <div class="description">
-        <p>Resolves any expression with modifiers. Modifiers are used to add logic to dependency injection. There are 3 kinds
-of modifiers. They are listed in their order of execution priority below:<br/></p>
-<p><ul><li><b># (parameter modifier)</b> will pass parameters to the component that can be used to construct the
-options object.</li></p>
-<p><li><b>| (OR modifier)</b> will inject the first resolvable component</li></p>
-<p><li><b>? (optional modifier)</b> will silently pass undefined if resolution fails</li></ul>
-If the expression is a primitive non string type, it will be returned as-is. All strings will be considered as
+        <p>Resolves any expression with modifiers. Modifiers are used to add logic to dependency injection. There are 4 kinds
+of modifiers. They are listed in their order of execution priority below:&lt;</p>
+<ul>
+<li><strong><code>#</code> (parameter modifier)</strong> will pass parameters to the component that can be used to construct the options
+object. See <a href="#configuring-resolver">Configuring Resolver</a> for more details on parameter usage.</li>
+<li><strong><code>!</code> (immediate modifier)</strong> will mark a dependency as immediate. When a dependency is immediate, resolver will
+not wait for it to resolve, but instead, pass a promise ( which will get resolved when the immediate dependency
+resolves ) to the component factory function. Immediate is discussed in detail in the 
+<a href="#circular-dependencies">Circular Dependencies</a> section.</li>
+<li><strong><code>|</code> (OR modifier)</strong> will inject the first resolvable component</li>
+<li><strong><code>?</code> (optional modifier)</strong> will silently pass undefined if resolution fails</li>
+</ul>
+<p>If the expression is a primitive non string type, it will be returned as-is. All strings will be considered as
 expressions and resolved. For objects or arrays, resolution will happen recursively.</p>
     </div>
     
@@ -668,7 +674,7 @@ expressions and resolved. For objects or arrays, resolution will happen recursiv
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line107">line 107</a>
+        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line113">line 113</a>
     </li></ul></dd>
     
     
@@ -952,7 +958,7 @@ circular dependency</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line242">line 242</a>
+        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line248">line 248</a>
     </li></ul></dd>
     
     

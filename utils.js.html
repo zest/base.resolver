@@ -91,12 +91,18 @@ exports.getDependencies = function (callback) {
     );
 };
 /**
- * Resolves any expression with modifiers. Modifiers are used to add logic to dependency injection. There are 3 kinds
- * of modifiers. They are listed in their order of execution priority below:&lt;br/>
- * &lt;ul>&lt;li>&lt;b># (parameter modifier)&lt;/b> will pass parameters to the component that can be used to construct the
- * options object.&lt;/li>
- * &lt;li>&lt;b>| (OR modifier)&lt;/b> will inject the first resolvable component&lt;/li>
- * &lt;li>&lt;b>? (optional modifier)&lt;/b> will silently pass undefined if resolution fails&lt;/li>&lt;/ul>
+ * Resolves any expression with modifiers. Modifiers are used to add logic to dependency injection. There are 4 kinds
+ * of modifiers. They are listed in their order of execution priority below:&lt;
+ *
+ *  - **`#` (parameter modifier)** will pass parameters to the component that can be used to construct the options
+ *    object. See [Configuring Resolver](#configuring-resolver) for more details on parameter usage.
+ *  - **`!` (immediate modifier)** will mark a dependency as immediate. When a dependency is immediate, resolver will
+ *    not wait for it to resolve, but instead, pass a promise ( which will get resolved when the immediate dependency
+ *    resolves ) to the component factory function. Immediate is discussed in detail in the 
+ *    [Circular Dependencies](#circular-dependencies) section.
+ *  - **`|` (OR modifier)** will inject the first resolvable component
+ *  - **`?` (optional modifier)** will silently pass undefined if resolution fails
+ *
  * If the expression is a primitive non string type, it will be returned as-is. All strings will be considered as
  * expressions and resolved. For objects or arrays, resolution will happen recursively.
  * @param {string} expression - the expression to evaluate

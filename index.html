@@ -139,11 +139,15 @@ object. Components that are JSON files can also use the same attribute.</p>
 component definition or a parameter name in the function syntax of component definition, see
 <a href="#component-structure">Component Structure</a>) The resolution follows the below steps:</p>
 <h4>Modifiers</h4>
-<p>Modifiers are used to add logic to dependency injection. There are 3 kinds of modifiers. They are listed in their order
+<p>Modifiers are used to add logic to dependency injection. There are 4 kinds of modifiers. They are listed in their order
 of execution priority below:</p>
 <ul>
 <li><strong><code>#</code> (parameter modifier)</strong> will pass parameters to the component that can be used to construct the options object.
  See <a href="#configuring-resolver">Configuring Resolver</a> for more details on parameter usage.</li>
+<li><strong><code>!</code> (immediate modifier)</strong> will mark a dependency as immediate. When a dependency is immediate, resolver will not
+ wait for it to resolve, but instead, pass a promise ( which will get resolved when the immediate dependency 
+ resolves ) to the component factory function. Immediate is discussed in detail in the 
+ <a href="#circular-dependencies">Circular Dependencies</a> section.</li>
 <li><strong><code>|</code> (OR modifier)</strong> will inject the first resolvable component</li>
 <li><strong><code>?</code> (optional modifier)</strong> will silently pass undefined if resolution fails</li>
 </ul>
@@ -164,6 +168,11 @@ of execution priority below:</p>
 <ul>
 <li>will resolve to databaseMongo if it can be resolved</li>
 <li>will inject <code>undefined</code> if databaseMongo cannot be resolved</li>
+</ul>
+<p><code>databaseMongo!</code></p>
+<ul>
+<li>will immediately resolve to databaseMongo if it can be resolved</li>
+<li>will throw an error if databaseMongo cannot be resolved immediately</li>
 </ul>
 <p><code>databaseMongo|databaseSQL?</code></p>
 <ul>
@@ -236,7 +245,7 @@ the following keys:</p>
 <li><strong><code>options</code></strong> &#8594; the options to be passed to instantiate the component.<ul>
 <li>The <a href="#modifiers">Parameter Modifier</a> can be used here using the <code>{param-number}</code> format</li>
 <li>The <code>|</code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)</li>
-<li>If <code>#</code>, <code>|</code> or <code>/</code> are to be used as literals in option, they must be escaped by a <code>/</code>. Eg. <code>/#</code> will 
+<li>If <code>#</code>, <code>|</code>, <code>!</code> or <code>/</code> are to be used as literals in option, they must be escaped by a <code>/</code>. Eg. <code>/#</code> will 
 translate to a single <code>#</code></li>
 </ul>
 </li>
@@ -326,7 +335,88 @@ called before the previous <code>reload</code> is over, the previous <code>reloa
 <p>This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
 promise is rejected with the error if reload fails.</p>
 </li>
-</ol></article>
+</ol>
+<h2>Circular Dependencies</h2>
+<p>Circular Dependencies must always be avoided, but, we realized that most of the times, it is un-avoidable!</p>
+<p>If a circular dependency is required, we use the immediate resolution (<code>!</code>) modifier at one place. to break the
+deadlock scenario. This is explained in detail below:</p>
+<h3>The deadlock scenario</h3>
+<p><em>zest config</em></p>
+<pre><code class="lang-json">[
+    {
+        &quot;path&quot;: &quot;circular-component1&quot;,
+        &quot;startup&quot;: true
+    },
+    &quot;circular-component2&quot;
+]</code></pre>
+<p><em>component 1</em></p>
+<pre><code class="lang-js">module.exports = [
+    'circular-component2',
+    function (c2) {
+        console.log('circular-component1.load');
+        console.log(c2);
+        return 'circular-component1';
+    }
+];
+module.exports['zest-component'] = 'circular-component1';</code></pre>
+<p><em>component 2</em></p>
+<pre><code class="lang-js">module.exports = [
+    'circular-component1',
+    function (c1) {
+        console.log('circular-component2.load');
+        console.log(c1);
+        return 'circular-component2';
+    }
+];
+module.exports['zest-component'] = 'circular-component2';</code></pre>
+<p>The above zest configuration will never resolve.</p>
+<ul>
+<li>To load <code>component1</code>, <code>component2</code> is required.</li>
+<li>But <code>component2</code> needs <code>component1</code> to be resolved in order to load.</li>
+</ul>
+<h3>Breaking the deadlock scenario</h3>
+<p><em>zest config</em></p>
+<pre><code class="lang-json">[
+    {
+        &quot;path&quot;: &quot;circular-component1&quot;,
+        &quot;startup&quot;: true
+    },
+    &quot;circular-component2&quot;
+]</code></pre>
+<p><em>component 1</em></p>
+<pre><code class="lang-js">module.exports = [
+    'circular-component2',
+    function (c2) {
+        console.log('circular-component1.load');
+        console.log(c2);
+        return 'circular-component1';
+    }
+];
+module.exports['zest-component'] = 'circular-component1';</code></pre>
+<p><em>component 2</em></p>
+<pre><code class="lang-js">module.exports = [
+    'circular-component1!',
+    function (c1) {
+        console.log('circular-component2.load');
+        c1.promise.then(function (data) {
+            console.log(data);
+        });
+        return 'circular-component2';
+    }
+];
+module.exports['zest-component'] = 'circular-component2';</code></pre>
+<p>The above zest configuration will however resolve.</p>
+<ul>
+<li>To load <code>component1</code>, <code>component2</code> is required.</li>
+<li><code>component2</code> needs immediate value of <code>component1</code> in order to load.</li>
+<li>Instead of <code>component1</code>, an object will be injected in the <code>component2</code> factory function.</li>
+<li>This object will have a property <code>promise</code> which is a Promise that gets resolved when <code>component1</code> is available.</li>
+</ul>
+<p>So, the sequence of consle logs in this case will be:</p>
+<pre><code>circular-component2.load
+circular-component1.load
+circular-component2
+circular-component1</code></pre></article>
     </section>
 
 
