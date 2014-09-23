@@ -142,4 +142,22 @@ describe('base.resolver (resolution-provider)', function () {
             return expect(resolver.load()).to.eventually.be.rejectedWith(Error);
         });
     });
+    // it should resolve circular dependency when it is expected to be immediate
+    it('should resolve circular dependency when it is expected to be immediate', function () {
+        var loggerSpy = sinon.spy();
+        return expect(resolver('./test/data/configs/configuration-circular-deps')).to.eventually.have.keys([
+            'load',
+            'unload',
+            'reload'
+        ]).then(function (resolver) {
+            process.LOG = loggerSpy;
+            return resolver.load();
+        }).then(function () {
+            expect(loggerSpy).to.have.callCount(4);
+            expect(loggerSpy.getCall(0)).to.have.been.calledWith('circular-component2.load');
+            expect(loggerSpy.getCall(1)).to.have.been.calledWith('circular-component1.load');
+            expect(loggerSpy.getCall(2)).to.have.been.calledWith('circular-component2');
+            expect(loggerSpy.getCall(3)).to.have.been.calledWith('circular-component1');
+        });
+    });
 });
