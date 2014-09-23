@@ -135,11 +135,15 @@ component definition or a parameter name in the function syntax of component def
 
 
 #### Modifiers
-Modifiers are used to add logic to dependency injection. There are 3 kinds of modifiers. They are listed in their order
+Modifiers are used to add logic to dependency injection. There are 4 kinds of modifiers. They are listed in their order
 of execution priority below:
 
  - **`#` (parameter modifier)** will pass parameters to the component that can be used to construct the options object.
     See [Configuring Resolver](#configuring-resolver) for more details on parameter usage.
+ - **`!` (immediate modifier)** will mark a dependency as immediate. When a dependency is immediate, resolver will not
+    wait for it to resolve, but instead, pass a promise ( which will get resolved when the immediate dependency 
+    resolves ) to the component factory function. Immediate is discussed in detail in the 
+    [Circular Dependencies](#circular-dependencies) section.
  - **`|` (OR modifier)** will inject the first resolvable component
  - **`?` (optional modifier)** will silently pass undefined if resolution fails
 
@@ -160,6 +164,11 @@ of execution priority below:
 > 
 > - will resolve to databaseMongo if it can be resolved
 > - will inject `undefined` if databaseMongo cannot be resolved
+>
+> `databaseMongo!`
+> 
+> - will immediately resolve to databaseMongo if it can be resolved
+> - will throw an error if databaseMongo cannot be resolved immediately
 > 
 > `databaseMongo|databaseSQL?`
 > 
@@ -230,7 +239,7 @@ component configuration.
      -  **`options`** &#8594; the options to be passed to instantiate the component.
          -  The [Parameter Modifier](#modifiers) can be used here using the `{param-number}` format
          -  The `|` (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)
-         -  If `#`, `|` or `/` are to be used as literals in option, they must be escaped by a `/`. Eg. `/#` will 
+         -  If `#`, `|`, `!` or `/` are to be used as literals in option, they must be escaped by a `/`. Eg. `/#` will 
             translate to a single `#`
      -  **`startup`** &#8594; is optional and is used to specify if a component is a starting component.
      -  **`native`** &#8594; is optional and is used to mark a component as native nodejs module.
@@ -324,6 +333,122 @@ This function returns a configured Resolver object. The returned resolver object
     
     This function returns a Promise that gets resolved with the resolver object when the reload is complete. This 
     promise is rejected with the error if reload fails.
+
+
+## Circular Dependencies
+
+Circular Dependencies must always be avoided, but, we realized that most of the times, it is un-avoidable!
+
+If a circular dependency is required, we use the immediate resolution (`!`) modifier at one place. to break the
+deadlock scenario. This is explained in detail below:
+
+### The deadlock scenario
+
+_zest config_
+
+```json
+[
+    {
+        "path": "circular-component1",
+        "startup": true
+    },
+    "circular-component2"
+]
+```
+
+_component 1_
+
+```js
+module.exports = [
+    'circular-component2',
+    function (c2) {
+        console.log('circular-component1.load');
+        console.log(c2);
+        return 'circular-component1';
+    }
+];
+module.exports['zest-component'] = 'circular-component1';
+```
+
+_component 2_
+
+```js
+module.exports = [
+    'circular-component1',
+    function (c1) {
+        console.log('circular-component2.load');
+        console.log(c1);
+        return 'circular-component2';
+    }
+];
+module.exports['zest-component'] = 'circular-component2';
+```
+
+The above zest configuration will never resolve.
+
+ -  To load `component1`, `component2` is required.
+ -  But `component2` needs `component1` to be resolved in order to load.
+
+
+### Breaking the deadlock scenario
+
+_zest config_
+
+```json
+[
+    {
+        "path": "circular-component1",
+        "startup": true
+    },
+    "circular-component2"
+]
+```
+
+_component 1_
+
+```js
+module.exports = [
+    'circular-component2',
+    function (c2) {
+        console.log('circular-component1.load');
+        console.log(c2);
+        return 'circular-component1';
+    }
+];
+module.exports['zest-component'] = 'circular-component1';
+```
+
+_component 2_
+
+```js
+module.exports = [
+    'circular-component1!',
+    function (c1) {
+        console.log('circular-component2.load');
+        c1.promise.then(function (data) {
+            console.log(data);
+        });
+        return 'circular-component2';
+    }
+];
+module.exports['zest-component'] = 'circular-component2';
+```
+
+The above zest configuration will however resolve.
+
+ -  To load `component1`, `component2` is required.
+ -  `component2` needs immediate value of `component1` in order to load.
+ -  Instead of `component1`, an object will be injected in the `component2` factory function.
+ -  This object will have a property `promise` which is a Promise that gets resolved when `component1` is available.
+
+So, the sequence of consle logs in this case will be:
+
+```
+circular-component2.load
+circular-component1.load
+circular-component2
+circular-component1
+```
 
 
 [dependencies-image]: http://img.shields.io/david/zest/base.resolver.svg?style=flat-square
