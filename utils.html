@@ -194,7 +194,7 @@ and validations</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line227">line 227</a>
+        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line239">line 239</a>
     </li></ul></dd>
     
     
@@ -499,7 +499,7 @@ sequence.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line210">line 210</a>
+        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line222">line 222</a>
     </li></ul></dd>
     
     
@@ -755,7 +755,7 @@ expressions and resolved. For objects or arrays, resolution will happen recursiv
         <dl>
                 
 <dt>
-    <h4 class="name" id="ResolverCallback"><span class="type-signature"></span>ResolverCallback<span class="signature">(expression, params, expressionWithParams)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ResolverCallback"><span class="type-signature"></span>ResolverCallback<span class="signature">(expression, params, expressionWithParams, <span class="optional">immediate</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -787,6 +787,8 @@ consolidated and a result is obtained.</p>
 		<th>Type</th>
 		
 		
+		<th>Argument</th>
+		
 		
 		
 		
@@ -812,6 +814,14 @@ consolidated and a result is obtained.</p>
             </td>
             
             
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
             
             
             
@@ -834,6 +844,14 @@ consolidated and a result is obtained.</p>
             
             </td>
             
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
             
             
             
@@ -858,10 +876,52 @@ consolidated and a result is obtained.</p>
             </td>
             
             
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
             
             
             
             <td class="description last"><p>the original expression. This can be used for caching results.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>immediate</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>if true, the callback should not return a promise. This is useful when resolving a
+circular dependency</p></td>
         </tr>
 	
 	
@@ -892,7 +952,7 @@ consolidated and a result is obtained.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line230">line 230</a>
+        <a href="utils.js.html">resolver/utils.js</a>, <a href="utils.js.html#line242">line 242</a>
     </li></ul></dd>
     
     
