@@ -1,6 +1,6 @@
 'use strict';
 // silence the logger
-require('base.logger').configure([]);
+require('base.logger').stop();
 var utils = require('../../lib/resolver/utils'),
     Q = require('q'),
     chai = require('chai'),
