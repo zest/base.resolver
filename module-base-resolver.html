@@ -37,7 +37,7 @@
     
         
 <dt>
-    <h4 class="name" id="module:base-resolver"><span class="type-signature"></span>require("base-resolver")<span class="signature">(configPathOrArray, <span class="optional">basePath</span>)</span><span class="type-signature"> &rarr; {q}</span></h4>
+    <h4 class="name" id="module:base-resolver"><span class="type-signature"></span>require("base-resolver")<span class="signature">(configPathOrArray, <span class="optional">basePath</span>)</span><span class="type-signature"> &rarr; {<a href="external-q.html">external:q</a>}</span></h4>
     
     
 </dt>
@@ -207,8 +207,8 @@ current working directory for the process</li></ul></td>
     
             
 <div class="param-desc">
-    <p>a Promise that gets resolved with <a href="module-base-resolver-Resolver.html">module:base-resolver~Resolver</a> when the resolver is set up.
-This promise is rejected with the error if the resolver set-up fails.</p>
+    <p>a Promise that gets resolved with <a href="module-base-resolver-Resolver.html">module:base-resolver~Resolver</a> when the resolver is
+set up. This promise is rejected with the error if the resolver set-up fails.</p>
 </div>
 
 
@@ -219,7 +219,7 @@ This promise is rejected with the error if the resolver set-up fails.</p>
 	</dt>
 	<dd>
 		
-<span class="param-type">q</span>
+<span class="param-type"><a href="external-q.html">external:q</a></span>
 
 
 	</dd>
@@ -296,7 +296,7 @@ can also just be a file that can be required from node. (A javascript file or ev
         
             <li><a href="utils.html">module:base-resolver/utils</a></li>
         
-            <li>module:q</li>
+            <li><a href="external-q.html">external:q</a></li>
         </ul>
     
     
@@ -399,11 +399,11 @@ can also just be a file that can be required from node. (A javascript file or ev
             
             
             <td class="description last"><p>specifies the path of the component</p>
-<ul><li>if path does not start with a <code>.</code>, or does not contain <code>/</code> the component is assumed to
-be an npm module</li>
-<li>if path does not start with a <code>.</code>, and has a single <code>/</code>, the component is assumed to be a
-git repository</li>
-<li>in all other cases, the component is assumed to be located at the path specified in the local disk.</li></ul></td>
+<ul>
+<li>if path does not start with a <code>.</code>, or does not contain <code>/</code> the component is assumed to be an npm module</li>
+<li>if path does not start with a <code>.</code>, and has a single <code>/</code>, the component is assumed to be a git repository</li>
+<li>in all other cases, the component is assumed to be located at the path specified in the local disk.</li>
+</ul></td>
         </tr>
 	
 	
@@ -434,12 +434,11 @@ git repository</li>
             
             
             
-            <td class="description last"><p>the options to be passed to instantiate the component.</p>
-<ul><li>The Parameter Modifier can be used here using the <code>{param-number}</code> format</li>
-<li>The <code>|</code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example
-below)</li>
-<li>If <code>#</code>, <code>|</code> or <code>/</code> are to be used as literals in option, they must be escaped
-by a <code>/</code>. Eg. <code>/#</code> will translate to a single <code>#</code></li></ul></td>
+            <td class="description last"><p>the options to be passed to instantiate the component.
+ -  The Parameter Modifier can be used here using the <code>{param-number}</code> format
+ -  The <code>|</code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)
+ -  If <code>#</code>, <code>|</code> or <code>/</code> are to be used as literals in option, they must be escaped by a <code>/</code>. Eg. <code>/#</code> will translate
+    to a single <code>#</code></p></td>
         </tr>
 	
 	
@@ -502,12 +501,13 @@ by a <code>/</code>. Eg. <code>/#</code> will translate to a single <code>#</cod
             
             
             <td class="description last"><p>is optional and is used to mark a component as native nodejs module.</p>
-<ul><li>Native modules are nodejs modules that are not compliant to the zest component structure</li>
+<ul>
+<li>Native modules are nodejs modules that are not compliant to the zest component structure</li>
 <li>When a component is marked as native, no dependency will be injected in it</li>
-<li>A native component can be injected into another component by its module name (as specified in
-<code>package.json</code> file</li>
-<li>If no <code>package.json</code> file is found, or if no name is there in <code>package.json</code>, the native
-component will be named as the last part of the path in configuration excluding extension.</li></ul></td>
+<li>A native component can be injected into another component by its module name (as specified in <code>package.json</code> file</li>
+<li>If no <code>package.json</code> file is found, or if no name is there in <code>package.json</code>, the native component will be named
+as the last part of the path in configuration excluding extension.</li>
+</ul></td>
         </tr>
 	
 	
@@ -535,7 +535,7 @@ component will be named as the last part of the path in configuration excluding 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line173">line 173</a>
+        <a href="typedefs.js.html">typedefs.js</a>, <a href="typedefs.js.html#line2">line 2</a>
     </li></ul></dd>
     
     
@@ -567,7 +567,7 @@ component will be named as the last part of the path in configuration excluding 
 </div>
 
 <nav>
-    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
+    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Externals</h3><ul><li><a href="external-base-logger.html">base-logger</a></li><li><a href="external-q.html">q</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
 </nav>
 <script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>

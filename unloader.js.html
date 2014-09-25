@@ -30,7 +30,7 @@
  * @fileOverview The base-resolver/unloader module is used for registering unloaders. This module is responsible for
  * invoking all handlers registered to unload dependency and executing them in the proper sequence on unload.
  * @module base-resolver/unloader
- * @requires q
+ * @requires {@link external:q}
  */
 var q = require('q');
 var logger = require('base.logger')('RESOLVER/unloader');
@@ -52,12 +52,12 @@ module.exports = function () {
          * @memberof module:base-resolver/unloader~Unloader
          */
         register: function (callback) {
-            logger.log('registering unloader');
+            logger.debug('registering unloader');
             unloaders.push(callback);
         },
         /**
          * This function is called when the resolver is unloaded.
-         * @return {q} a promise that resolves when all callbacks registeres are executed.
+         * @return {external:q} a promise that resolves when all callbacks registeres are executed.
          * @memberof module:base-resolver/unloader~Unloader
          */
         unload: function () {
@@ -70,14 +70,14 @@ module.exports = function () {
                 };
             };
             var unloaderFn;
-            logger.log('executing unloaders...');
+            logger.debug('executing unloaders...');
             while (unloaders.length) {
                 unloaderFn = unloaders.pop();
                 retVal = retVal.then(unloaderFn, eatError(unloaderFn));
             }
             return retVal.then(
                 function () {
-                    logger.log('All registered unloaders executed successfully.');
+                    logger.debug('All registered unloaders executed successfully.');
                 }, eatError(
                     function () {
                         return;
@@ -100,7 +100,7 @@ module.exports = function () {
 </div>
 
 <nav>
-    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
+    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Externals</h3><ul><li><a href="external-base-logger.html">base-logger</a></li><li><a href="external-q.html">q</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
 </nav>
 <script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>

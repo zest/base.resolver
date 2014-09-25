@@ -13,29 +13,30 @@ body {
     background-color: #fff;
 }
 
+ul {
+    list-style: square;
+}
+
 a {
-    color: #444;
+    color: #e66000;
+    text-decoration: none;
 }
 
 a:visited {
-    color: #444;
+    color: #e66000;
 }
 
 a:active {
-    color: #444;
+    color: #e66000;
+}
+
+strong {
+    font-weight: 400;
 }
 
 header {
     display: block;
     padding: 6px 4px;
-}
-
-.class-description {
-    font-style: italic;
-    font-size: 130%;
-    line-height: 140%;
-    margin-bottom: 1em;
-    margin-top: 1em;
 }
 
 #main {
@@ -54,6 +55,16 @@ section {
     background-color: #fff;
     padding: 12px 24px;
     min-height: calc(100% - 196px);
+    max-width: 850px;
+    margin: auto;
+}
+
+.class-description {
+    font-style: italic;
+    font-size: 130%;
+    line-height: 140%;
+    margin-bottom: 1em;
+    margin-top: 1em;
 }
 
 .variation {
@@ -78,7 +89,8 @@ nav {
     padding: 10px;
     overflow: auto;
     width: 230px;
-    background: #D3D3D3;
+    background: #FFFFFF;
+    font-weight: 400;
 }
 
 nav ul {
@@ -92,14 +104,14 @@ nav ul {
 nav h2 a, nav h2 a:visited {
     color: #A35A00;
     text-decoration: none;
+    font-weight: 300;
 }
 
 nav h3 {
     margin-top: 12px;
-    border-top: 1px solid #999999;
+    border-top: 1px solid #e66000;
     padding-top: 12px;
-    color: #6B6B6B;
-    font-weight: bold;
+    font-weight: 300;
 }
 
 nav li {
@@ -133,58 +145,47 @@ footer a {
     color: #ffffff !important;
 }
 
-h1 {
-    font-size: 200%;
-    font-weight: normal;
-    letter-spacing: -0.01em;
-    margin: 6px 0 9px 0;
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.5;
+    color: #441d00;
 }
 
-.page-title {
+h1 {
     font-size: 200%;
-    font-weight: normal;
-    letter-spacing: -0.01em;
-    text-shadow: 1px 1px 0 #000000;
-    margin: 0;
-    padding: 30px;
-    background: #e66000;
-    color: #ffffff;
 }
 
 h2 {
     font-size: 170%;
-    font-weight: normal;
-    letter-spacing: -0.01em;
-    margin: 6px 0 3px 0;
 }
 
 h3 {
-    font-size: 150%;
-    font-weight: normal;
-    letter-spacing: -0.01em;
-    margin: 6px 0 3px 0;
+    font-size: 140%;
 }
 
 h4 {
     font-size: 130%;
-    font-weight: normal;
-    letter-spacing: -0.01em;
-    margin: 18px 0 3px 0;
-    color: #A35A00;
 }
 
 h5, .container-overview .subsection-title {
     font-size: 120%;
-    font-weight: normal;
-    letter-spacing: -0.01em;
-    margin: 8px 0 3px -16px;
 }
 
 h6 {
-    font-size: 100%;
-    letter-spacing: -0.01em;
-    margin: 6px 0 3px 0;
-    font-style: italic;
+    font-size: 110%;
+}
+
+.page-title {
+    text-align: center;
+    background: #e66000;
+    margin: 0;
+    padding: 40px;
+    color: #ffffff;
+    text-shadow: 1px 1px 0 #000000;
+    font-size: 250%;
+    font-weight: 300;
+    line-height: 0.5;
 }
 
 .ancestors {
@@ -209,13 +210,13 @@ h6 {
     color: #aaa;
 }
 
-.name, .signature {
-    font-family: 'Share Tech Mono', monospace;
+h4.name {
+    border-left: 10px solid #e66000;
+    padding: 0 20px;
 }
 
 .details {
     margin-top: 14px;
-    border-left: 2px solid #DDD;
 }
 
 .details dt {
@@ -250,14 +251,29 @@ h6 {
     padding-top: 0;
 }
 
+dd > .description {
+    margin-left: -16px;
+}
+
 .description {
     margin-bottom: 1em;
-    margin-left: -16px;
+    margin-left: 20px;
     margin-top: 1em;
 }
 
-.description p{
+.description > ul {
+    list-style: square;
+    padding: 0;
+    margin: 10px;
+}
+
+.description p {
     margin: 0;
+}
+
+tt, code, kbd, samp, pre {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 90%;
 }
 
 .code-caption {
@@ -277,8 +293,6 @@ h6 {
 }
 
 .prettyprint code {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 100%;
     line-height: 18px;
     display: block;
     padding: 4px 12px;
@@ -296,6 +310,7 @@ h6 {
     border-spacing: 0;
     border: 0;
     border-collapse: collapse;
+    border: 1px solid #FFCFAC;
 }
 
 .params .name, .props .name, .name code {
@@ -305,7 +320,7 @@ h6 {
 }
 
 .params td, .params th, .props td, .props th {
-    border: 1px solid #ddd;
+    border: 1px solid #FFCFAC;
     margin: 0;
     text-align: left;
     vertical-align: top;
@@ -313,24 +328,45 @@ h6 {
     display: table-cell;
 }
 
+.params th, .props th {
+    color: #ffffff;
+    font-weight: 300;
+}
+
 .params thead tr, .props thead tr {
-    background-color: #ddd;
-    font-weight: normal;
+    background-color: #e66000;
+    font-weight: 300;
 }
 
 .params .params thead tr, .props .props thead tr {
     background-color: #fff;
-    font-weight: normal;
-}
-
-.params th, .props th {
-    border-right: 1px solid #aaa;
-}
-
-.params thead .last, .props thead .last {
-    border-right: 1px solid #ddd;
+    font-weight: 300;
 }
 
 .disabled {
     color: #454545;
+}
+
+blockquote {
+    background: #ffecdf;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+    quotes: "\201C" "\201D";
+    position: relative;
+}
+
+blockquote:before {
+    color: #e66000;
+    content: open-quote;
+    font-size: 4em;
+    position: absolute;
+    left: 0;
+}
+
+blockquote:after {
+    color: #ccc;
+    content: close-quote;
+    font-size: 4em;
+    position: absolute;
+    right: 0;
 }

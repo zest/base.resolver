@@ -37,7 +37,7 @@
  * @requires base-resolver/resolution-provider
  * @requires base-resolver/unloader
  * @requires base-resolver/utils
- * @requires q
+ * @requires {@link external:q}
  */
 var q = require('q');
 var path = require('path');
@@ -63,7 +63,7 @@ var resolverFactory = function (configPathOrArray, basePath) {
     /**
      * @description The load function runs all starting components in the configuration, injecting all other
      * dependencies required.
-     * @returns {q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the load is
+     * @returns {external:q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the load is
      * executed. This promise is rejected with the error if load execution fails.
      * @memberof module:base-resolver~Resolver
      */
@@ -89,7 +89,7 @@ var resolverFactory = function (configPathOrArray, basePath) {
     /**
      * @description The unload function will call all registered unload handlers and clear off the dependency
      * tree
-     * @returns {q} a Promise that gets resolved when the unload is executed. This promise is rejected with the
+     * @returns {external:q} a Promise that gets resolved when the unload is executed. This promise is rejected with the
      * error if unload execution fails.
      * @memberof module:base-resolver~Resolver
      */
@@ -113,12 +113,12 @@ var resolverFactory = function (configPathOrArray, basePath) {
          * The reload function will re-configure and start all starting components in the
          * configuration. If a reload is called before the previous reload is over, the previous reload will be
          * interrupted.
-         * @returns {q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the reload is
-         * executed. This promise is rejected with the error if reload execution fails.
+         * @returns {external:q} a Promise that gets resolved with {@link module:base-resolver~Resolver} when the
+         * reload is executed. This promise is rejected with the error if reload execution fails.
          * @memberof module:base-resolver~Resolver
          */
         reload: function () {
-            logger.log('reloading components.');
+            logger.debug('reloading components.');
             return unload().then(
                 function () {
                     return resolverFactory.apply({}, args);
@@ -161,7 +161,7 @@ var resolverFactory = function (configPathOrArray, basePath) {
         baseDir = __dirname;
         /*jslint nomen: false */
     }
-    logger.log(baseDir, configArray);
+    logger.debug(baseDir, configArray);
     return configurations.setup(configArray, baseDir).then(
         function () {
             logger.info('initialization successful.');
@@ -186,8 +186,8 @@ var resolverFactory = function (configPathOrArray, basePath) {
  * &lt;code>configPath&lt;/code>&lt;/li>
  * &lt;li>if the first parameter is a not a &lt;code>configPath&lt;/code> string, the &lt;code>basePath&lt;/code> is assumed to be the
  * current working directory for the process&lt;/li>&lt;/ul>
- * @returns {q}  a Promise that gets resolved with {@link module:base-resolver~Resolver} when the resolver is set up.
- * This promise is rejected with the error if the resolver set-up fails.
+ * @returns {external:q}  a Promise that gets resolved with {@link module:base-resolver~Resolver} when the resolver is
+ * set up. This promise is rejected with the error if the resolver set-up fails.
  */
 module.exports = function (configPathOrArray, basePath) {
     return q.Promise(
@@ -195,34 +195,7 @@ module.exports = function (configPathOrArray, basePath) {
             resolve(resolverFactory(configPathOrArray, basePath));
         }
     );
-};
-// documenting the Configuration object
-/**
- * An array of Configuration object is passed to configure resolver
- * @typedef {object} module:base-resolver~Configuration
- * @property {string} path - specifies the path of the component
- * &lt;ul>&lt;li>if path does not start with a &lt;code>.&lt;/code>, or does not contain &lt;code>/&lt;/code> the component is assumed to
- * be an npm module&lt;/li>
- * &lt;li>if path does not start with a &lt;code>.&lt;/code>, and has a single &lt;code>/&lt;/code>, the component is assumed to be a
- * git repository&lt;/li>
- * &lt;li>in all other cases, the component is assumed to be located at the path specified in the local disk.&lt;/li>&lt;/ul>
- * @property {*} [options] - the options to be passed to instantiate the component.
- * &lt;ul>&lt;li>The Parameter Modifier can be used here using the &lt;code>{param-number}&lt;/code> format&lt;/li>
- * &lt;li>The &lt;code>|&lt;/code> (OR modifier) can also be used to gracefully degrade to defaults (explained in the example
- * below)&lt;/li>
- * &lt;li>If &lt;code>#&lt;/code>, &lt;code>|&lt;/code> or &lt;code>/&lt;/code> are to be used as literals in option, they must be escaped
- * by a &lt;code>/&lt;/code>. Eg. &lt;code>/#&lt;/code> will translate to a single &lt;code>#&lt;/code>&lt;/li>&lt;/ul>
- * @property {boolean} [startup] - startup is optional and is used to specify if a component is a starting component.
- * @property {boolean} [native] - is optional and is used to mark a component as native nodejs module.
- * &lt;ul>&lt;li>Native modules are nodejs modules that are not compliant to the zest component structure&lt;/li>
- * &lt;li>When a component is marked as native, no dependency will be injected in it&lt;/li>
- * &lt;li>A native component can be injected into another component by its module name (as specified in
- * &lt;code>package.json&lt;/code> file&lt;/li>
- * &lt;li>If no &lt;code>package.json&lt;/code> file is found, or if no name is there in &lt;code>package.json&lt;/code>, the native
- * component will be named as the last part of the path in configuration excluding extension.&lt;/li>&lt;/ul>
- */
-
-</code></pre>
+};</code></pre>
         </article>
     </section>
 
@@ -235,7 +208,7 @@ module.exports = function (configPathOrArray, basePath) {
 </div>
 
 <nav>
-    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
+    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Externals</h3><ul><li><a href="external-base-logger.html">base-logger</a></li><li><a href="external-q.html">q</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
 </nav>
 <script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>

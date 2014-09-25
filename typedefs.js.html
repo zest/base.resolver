@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ZEST / base.resolver / Source: typedefs.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">ZEST / base.resolver / Source: typedefs.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>// documenting the Configuration object
+/**
+ * An array of Configuration object is passed to configure resolver
+ * @typedef {object} module:base-resolver~Configuration
+ * @property {string} path - specifies the path of the component
+ *
+ *  -  if path does not start with a `.`, or does not contain `/` the component is assumed to be an npm module
+ *  -  if path does not start with a `.`, and has a single `/`, the component is assumed to be a git repository
+ *  -  in all other cases, the component is assumed to be located at the path specified in the local disk.
+ *
+ * @property {*} [options] - the options to be passed to instantiate the component.
+ *  -  The Parameter Modifier can be used here using the `{param-number}` format
+ *  -  The `|` (OR modifier) can also be used to gracefully degrade to defaults (explained in the example below)
+ *  -  If `#`, `|` or `/` are to be used as literals in option, they must be escaped by a `/`. Eg. `/#` will translate
+ *     to a single `#`
+ *
+ * @property {boolean} [startup] - startup is optional and is used to specify if a component is a starting component.
+ * @property {boolean} [native] - is optional and is used to mark a component as native nodejs module.
+ *
+ *  -  Native modules are nodejs modules that are not compliant to the zest component structure
+ *  -  When a component is marked as native, no dependency will be injected in it
+ *  -  A native component can be injected into another component by its module name (as specified in `package.json` file
+ *  -  If no `package.json` file is found, or if no name is there in `package.json`, the native component will be named
+ *     as the last part of the path in configuration excluding extension.
+ */
+// external zest modules
+/**
+ * base.logger is a basic logger module used throughout zest-infra to log onto the node console or files. It takes a
+ * module name as reference and returns a logger object with log, info, warn and error methods.
+ * @external base-logger
+ * @see {@link https://github.com/zest/base.logger/blob/master/README.md}
+ */
+// external node modules
+/**
+ * q is a promise library for node.
+ * @external q
+ * @see {@link https://www.npmjs.org/package/q}
+ */</code></pre>
+        </article>
+    </section>
+
+
+
+
+    <footer>
+        <a href="http://zest.github.io/base.resolver/">base.resolver</a>  | <a href="http://zest.github.io/base.resolver-cli/">base.resolver-cli</a>  | <a href="http://zest.github.io/base.logger/">base.logger</a>  | <a href="http://zest.github.io/base.gruntrunner/">base.gruntrunner</a>  | <a href="http://zest.github.io/datastore.mongo/">datastore.mongo</a>  | <a href="http://zest.github.io/filestore.disk/">filestore.disk</a>  | <a href="http://zest.github.io/privilege.datastore/">privilege.datastore</a>  | <a href="http://zest.github.io/user.datastore/">user.datastore</a>  | <a href="http://zest.github.io/application.rest/">application.rest</a>  | <a href="http://zest.github.io/integration.embodier/">integration.embodier</a> 
+    </footer>
+</div>
+
+<nav>
+    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Externals</h3><ul><li><a href="external-base-logger.html">base-logger</a></li><li><a href="external-q.html">q</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
+</nav>
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

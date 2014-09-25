@@ -59,7 +59,7 @@ module.exports = function () {
          * @param {Array.&lt;module:base-resolver~Configuration|string>} configArray - the array of configurations to
          * use
          * @param {string} baseDir - the directory relative to which the component paths should be resolved.
-         * @returns {q} a Promise that gets resolved with this
+         * @returns {external:q} a Promise that gets resolved with this
          * {@link base-resolver/configurations~ConfigurationManager} when the setup is complete. This promise is
          * rejected with the error if reload execution fails.
          * @memberof module:base-resolver/configurations~ConfigurationManager
@@ -84,7 +84,7 @@ module.exports = function () {
                                 var resolvedPath, normalizedPath, npmInstall;
                                 if (config.path.indexOf('.') === 0 || config.path.split(/\//).length > 2) {
                                     // if the path is relative and in the local drive, just make the path absolute
-                                    logger.log('fetching component from relative path:', config.path);
+                                    logger.debug('fetching component from relative path:', config.path);
                                     resolvedPath = path.resolve(config.path);
                                     normalizedPath = path.normalize(config.path);
                                     if (resolvedPath === normalizedPath) {
@@ -98,8 +98,8 @@ module.exports = function () {
                                 }
                                 // if path does not start with a ., or contains only one / the component is assumed to
                                 // be an npm module or git repo which can be fetched using npm install
-                                logger.log('fetching component using npm install:', config.path);
-                                logger.log('installing at path:', baseDir);
+                                logger.debug('fetching component using npm install:', config.path);
+                                logger.debug('installing at path:', baseDir);
                                 // first check if there is a package.json file in the baseDir
                                 Q.Promise(
                                     function (resolve) {
@@ -128,7 +128,7 @@ module.exports = function () {
                                         );
                                         npmInstall.stdout.on(
                                             'data', function (data) {
-                                                logger.log(data);
+                                                logger.debug(data);
                                             }
                                         );
                                         npmInstall.stderr.on(
@@ -139,11 +139,11 @@ module.exports = function () {
                                         npmInstall.on(
                                             'close', function (code) {
                                                 if (code === 0) {
-                                                    logger.log('installed', config.path, '...');
+                                                    logger.debug('installed', config.path, '...');
                                                     config.path = path.join(
                                                         baseDir, 'node_modules', config.path.split(/\//).pop()
                                                     );
-                                                    logger.log('\t at', config.path);
+                                                    logger.debug('\t at', config.path);
                                                     resolve(config.path);
                                                 } else {
                                                     logger.error('npm install exited with code', code);
@@ -164,12 +164,12 @@ module.exports = function () {
                             function () {
                                 // then we normalize the factory function
                                 var factoryFunction, componentObject;
-                                logger.log('normalizing the factory functions for:', config.path, '...');
+                                logger.debug('normalizing the factory functions for:', config.path, '...');
                                 config.factory = require(config.path);
                                 //noinspection JSHint
                                 if (config.native) {
                                     // if the node module is native, just return it from the factory function
-                                    logger.log('\tfactory is a native component.');
+                                    logger.debug('\tfactory is a native component.');
                                     componentObject = config.factory;
                                     config.factory = [
                                         function () {
@@ -179,15 +179,15 @@ module.exports = function () {
                                     config.factory['zest-component'] = componentObject['zest-component'];
                                 } else if (typeof config.factory === 'function') {
                                     // if factory is a normal function, change it to an injector array
-                                    logger.log('\tfactory is a normal function.');
+                                    logger.debug('\tfactory is a normal function.');
                                     factoryFunction = config.factory;
                                     config.factory = utils.getDependencies(factoryFunction);
-                                    logger.log('\tdependencies:', config.factory);
+                                    logger.debug('\tdependencies:', config.factory);
                                     config.factory.push(factoryFunction);
                                     config.factory['zest-component'] = factoryFunction['zest-component'];
                                 } else if (!utils.isInjectorArray(config.factory)) {
                                     // if component returns an object, return it from the factory function
-                                    logger.log('\tfactory is an object.');
+                                    logger.debug('\tfactory is an object.');
                                     componentObject = config.factory;
                                     config.factory = [
                                         function () {
@@ -197,8 +197,8 @@ module.exports = function () {
                                     config.factory['zest-component'] = componentObject['zest-component'];
                                 } else {
                                     // if component is an injector array, don't do anything
-                                    logger.log('\tfactory is an injector array. No normalization required.');
-                                    logger.log('\tdependencies:', config.factory.slice(0, -1).join(', '));
+                                    logger.debug('\tfactory is an injector array. No normalization required.');
+                                    logger.debug('\tdependencies:', config.factory.slice(0, -1).join(', '));
                                 }
                             }
                         ).then(
@@ -250,8 +250,8 @@ module.exports = function () {
                         ).then(
                             function (packageName) {
                                 // finally set the package configuration
-                                logger.log('resolved package name:', packageName);
-                                logger.log('\tfor', config.path);
+                                logger.debug('resolved package name:', packageName);
+                                logger.debug('\tfor', config.path);
                                 configurationsMap[packageName] = config;
                                 if (config.startup) {
                                     // if we have a startup component, add its name in the startup list
@@ -277,7 +277,7 @@ module.exports = function () {
          * @see module:base-resolver~Configuration
          */
         get: function (dependencyName) {
-            logger.log('fetching configuration for:', dependencyName);
+            logger.debug('fetching configuration for:', dependencyName);
             return configurationsMap[dependencyName];
         },
         /**
@@ -287,8 +287,8 @@ module.exports = function () {
          * @see module:base-resolver~Configuration
          */
         startupDependencies: function () {
-            logger.log('fetching startup dependencies...');
-            logger.log('\tfound:', startups);
+            logger.debug('fetching startup dependencies...');
+            logger.debug('\tfound:', startups);
             return startups;
         }
     };
@@ -307,7 +307,7 @@ module.exports = function () {
 </div>
 
 <nav>
-    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
+    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Externals</h3><ul><li><a href="external-base-logger.html">base-logger</a></li><li><a href="external-q.html">q</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
 </nav>
 <script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>

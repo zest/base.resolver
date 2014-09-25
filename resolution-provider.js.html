@@ -46,17 +46,17 @@ module.exports = function (configurations, unloader) {
     var componentsMap = {}, /**
      * This function resolves an expression and returns a promise that resolves to the corresponding component
      * @param {string} dependencyExpression - the expression to resolve
-     * @return {q} a promise that resolves to the corresponding component
+     * @return {external:q} a promise that resolves to the corresponding component
      * @memberof module:base-resolver/resolution-provider~ResolutionProvider
      */
     resolve = function (dependencyExpression) {
-        logger.log('trying to resolve:', dependencyExpression);
+        logger.debug('trying to resolve:', dependencyExpression);
         return utils.resolveExpression(
             dependencyExpression, function (componentName, params, cacheKey, immediate) {
-                logger.log('\tparsing  :', componentName);
-                logger.log('\tparams   :', params);
-                logger.log('\timmediate:',immediate);
-                logger.log('\tcache key:', cacheKey);
+                logger.debug('\tparsing  :', componentName);
+                logger.debug('\tparams   :', params);
+                logger.debug('\timmediate:',immediate);
+                logger.debug('\tcache key:', cacheKey);
                 var componentConfig = configurations.get(componentName);
                 var factoryFunction = componentConfig.factory.slice(-1)[0];
                 var dependencies = componentConfig.factory.slice(
@@ -85,14 +85,14 @@ module.exports = function (configurations, unloader) {
                         )
                     ).then(
                         function (args) {
-                            logger.log('resolved:', dependencyExpression);
+                            logger.debug('resolved:', dependencyExpression);
                             return factoryFunction.apply({}, args);
                         }
                     );
                 }
                 // if the resolution is to be done immediately, we do so
                 if(immediate) {
-                    logger.log('\tresolving immediately!');
+                    logger.debug('\tresolving immediately!');
                     return {
                         promise: componentsMap[cacheKey]
                     };
@@ -122,7 +122,7 @@ module.exports = function (configurations, unloader) {
 </div>
 
 <nav>
-    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
+    <h2><a href="index.html">base.resolver</a></h2><h3>Modules</h3><ul><li><a href="module-base-resolver.html">base-resolver</a></li><li><a href="configurations.html">base-resolver/configurations</a></li><li><a href="resolution-provider.html">base-resolver/resolution-provider</a></li><li><a href="unloader.html">base-resolver/unloader</a></li><li><a href="utils.html">base-resolver/utils</a></li></ul><h3>Externals</h3><ul><li><a href="external-base-logger.html">base-logger</a></li><li><a href="external-q.html">q</a></li></ul><h3>Namespaces</h3><ul><li><a href="configurations-ConfigurationManager.html">ConfigurationManager</a></li><li><a href="resolution-provider-ResolutionProvider.html">ResolutionProvider</a></li><li><a href="unloader-Unloader.html">Unloader</a></li><li><a href="module-base-resolver-Resolver.html">Resolver</a></li></ul>
 </nav>
 <script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>
